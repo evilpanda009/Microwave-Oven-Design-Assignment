@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Calculator using an 80C51">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="calc.c"/>
+  <FILE GROUP="Header Files" NAME="Calc.h"/>
+  <FILE GROUP="Source Files" NAME="KEYPAD.ASM"/>
+  <FILE GROUP="Source Files" NAME="LCD.ASM"/>
+  <FILE GROUP="Design Files" NAME="calc.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="Keil for 8051" NAME="Debug">
+  <CONTROLLER FAMILY="8051" CLOCK="4MHz" TYPE="80C51"/>
+  <FILE TOOL="LD" NAME="Debug.OMF">
+   <FILE TOOL="CC" NAME="calc.OBJ">
+    <FILE NAME="calc.c"/>
+   </FILE>
+   <FILE TOOL="ASM" NAME="KEYPAD.OBJ">
+    <FILE NAME="KEYPAD.ASM"/>
+   </FILE>
+   <FILE TOOL="ASM" NAME="LCD.OBJ">
+    <FILE NAME="LCD.ASM"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="Calc.h"/>
+  <FILE NAME="calc.DSN"/>
+  <OPTION TOOL="CC" NAME="ROM(" VALUE="SMALL)"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="BROWSE"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="DEBUG"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="CODE"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="OBJECTEXTEND"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="PREPRINT"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="DEBUG"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="SYMBOLS"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="Keil for 8051" NAME="Release">
+  <CONTROLLER FAMILY="8051" CLOCK="4000000" TYPE="80C51"/>
+  <FILE TOOL="LD">
+   <FILE TOOL="CC">
+    <FILE NAME="calc.c"/>
+   </FILE>
+   <FILE TOOL="ASM">
+    <FILE NAME="KEYPAD.ASM"/>
+   </FILE>
+   <FILE TOOL="ASM">
+    <FILE NAME="LCD.ASM"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="Calc.h"/>
+  <FILE NAME="calc.DSN"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="ROM(" VALUE="SMALL)"/>
+ </CONFIGURATION>
+</PROJECT>

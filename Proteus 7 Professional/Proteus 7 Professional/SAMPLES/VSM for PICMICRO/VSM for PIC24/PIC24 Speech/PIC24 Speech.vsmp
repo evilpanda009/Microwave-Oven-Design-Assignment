@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="PIC24 Speech Output of Temperature Reading">
+ <KEYWORDS>
+  <KEYWORD NAME="ADC/DAC"/>
+  <KEYWORD NAME="Temperature Sensing"/>
+  <KEYWORD NAME="Filter Design"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE TYPE="Source" NAME="adpcm.c"/>
+  <FILE TYPE="Header" NAME="adpcm.h"/>
+  <FILE TYPE="Header" NAME="Compiler.h"/>
+  <FILE TYPE="Source" NAME="jspeech.c"/>
+  <FILE TYPE="Source" NAME="mpfs.c"/>
+  <FILE TYPE="Header" NAME="mpfs.h"/>
+  <FILE TYPE="Design" NAME="PIC24 Speech.DSN"/>
+  <FILE TYPE="Header" NAME="StackTsk.h"/>
+  <FILE TYPE="Source" NAME="vdata1.c"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPLAB C30" NAME="Debug">
+  <CONTROLLER FAMILY="PIC24" CLOCK="24MHz" TYPE="PIC24FJ128GA010"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <FILE TOOL="CC" NAME="adpcm.obj">
+    <FILE NAME="adpcm.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="jspeech.obj">
+    <FILE NAME="jspeech.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="mpfs.obj">
+    <FILE NAME="mpfs.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="vdata1.obj">
+    <FILE NAME="vdata1.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="adpcm.h"/>
+  <FILE NAME="Compiler.h"/>
+  <FILE NAME="mpfs.h"/>
+  <FILE NAME="PIC24 Speech.DSN"/>
+  <FILE NAME="StackTsk.h"/>
+  <OPTION TOOL="CC" NAME="-mcpu=" VALUE="24FJ128GA010"/>
+  <OPTION TOOL="LD" NAME="-mcpu=" VALUE="24FJ128GA010"/>
+  <OPTION TOOL="LD" NAME="-Xlinker --script=&quot;p24FJ128GA010.gld&quot;"/>
+  <OPTION TOOL="LD" NAME="-g"/>
+  <OPTION TOOL="LD" NAME="--debug"/>
+  <OPTION TOOL="CC" NAME="-g"/>
+  <OPTION TOOL="CC" NAME="--debug"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="MPLAB C30" NAME="Release">
+  <CONTROLLER FAMILY="PIC24" CLOCK="4MHz" TYPE="PIC24FJ128GA010"/>
+  <FILE TOOL="BIN2HEX">
+   <FILE TOOL="LD">
+    <FILE TOOL="CC">
+     <FILE NAME="adpcm.c"/>
+    </FILE>
+   </FILE>
+  </FILE>
+  <FILE NAME="adpcm.h"/>
+  <FILE NAME="Compiler.h"/>
+  <FILE NAME="jspeech.c"/>
+  <FILE NAME="mpfs.c"/>
+  <FILE NAME="mpfs.h"/>
+  <FILE NAME="PIC24 Speech.DSN"/>
+  <FILE NAME="StackTsk.h"/>
+  <FILE NAME="vdata1.c"/>
+  <OPTION TOOL="CC" NAME="-mcpu=" VALUE="24FJ128GA010"/>
+  <OPTION TOOL="LD" NAME="-mcpu=" VALUE="24FJ128GA010"/>
+  <OPTION TOOL="LD" NAME="-Xlinker --script=&quot;p24FJ128GA010.gld&quot;"/>
+ </CONFIGURATION>
+</PROJECT>

@@ -1,0 +1,61 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex16 - Counter.BS2
+' Purpose... Counts external events
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' Counts extenal events by wait for a low-to-high transition on the event
+' input pin.
+' ------------------------------------------------------------------------------
+' Revision History
+' ------------------------------------------------------------------------------
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+EventIn VAR In15 ' event input pin
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+IsLow CON 0
+IsHigh CON 1
+Target CON 1000 ' target count
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+eCount VAR Word ' event count
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Init:
+PAUSE 250 ' let DEBUG window open
+DEBUG CLS, "Started... ", CR
+eCount = 0 ' clear counter
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Wait_For_Count ' wait for 1000 pulses
+DEBUG "Count complete."
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Wait_For_Count:
+IF (EventIn = IsLow) THEN Wait_For_Count ' wait for input to go high
+eCount = eCount + 1 ' increment event count
+DEBUG Home, 10, "Count = ", DEC eCount, CR
+IF (eCount = Target) THEN Wait_Done ' check against target
+Wait_Low:
+IF (EventIn = IsHigh) THEN Wait_Low ' wait for input to go low
+GOTO Wait_For_Count
+Wait_Done:
+RETURN

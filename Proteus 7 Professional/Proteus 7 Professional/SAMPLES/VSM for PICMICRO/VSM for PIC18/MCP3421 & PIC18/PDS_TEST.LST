@@ -1,0 +1,4096 @@
+MPASM  5.20                               A.S   1-29-2009  9:53:01         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+
+                      00002         LIST
+                      00003 ;{
+                      00004 ;FILE F1 = K:\PROLIBS\MICROCHIP\VSM\MCP342X\MCP3421_PDS_TEST\PDS_TEST.BAS
+                      00005 ;FILE F2 = K:\PROLIBS\MICROCHIP\VSM\MCP342X\MCP3421_PDS_TEST\PDS_TEST.PRP
+                      00006 ;FILE F3 = C:\PROGRAMMI\CROWNHILL\PDS\INCLUDES\SOURCES\FONT.INC
+                      00007 ;}
+                      00008 ;[Variable Listing]
+                      00009 ;DEVADDR,0033,DT_BYTE,1
+                      00010 ;VALUE_1ST,0034,DT_BYTE,1
+                      00011 ;VALUE_2ND,0035,DT_BYTE,1
+                      00012 ;VALUE_3RD,0036,DT_BYTE,1
+                      00013 ;CONFREG,0037,DT_BYTE,1
+                      00014 ;RAWMEASURE,0038,DT_DWORD,4
+                      00015 ;INPMEASURE,003C,DT_MCHP_FLOAT,4
+                      00016 ;RESISTANCE,0040,DT_MCHP_FLOAT,4
+                      00017 ;TEMPERATURE,0044,DT_MCHP_FLOAT,4
+                      00018 ;GAIN,0048,DT_MCHP_FLOAT,4
+                      00019 ;R0,004C,DT_MCHP_FLOAT,4
+                      00020 ;COEFFA,0050,DT_MCHP_FLOAT,4
+                      00021 ;COEFFB,0054,DT_MCHP_FLOAT,4
+                      00022 ;TRIALRES,0058,DT_MCHP_FLOAT,4
+                      00023 ;ERR,005C,DT_MCHP_FLOAT,4
+                      00024 ;ABSERROR,0060,DT_MCHP_FLOAT,4
+                      00025 ;TEMPHIGH,0064,DT_MCHP_FLOAT,4
+                      00026 ;TEMPLOW,0068,DT_MCHP_FLOAT,4
+                      00027 ;[End Listing]
+                      00028 ;[TOTAL VARS] 108
+
+                      00030 #DEFINE CONFIG_REQ 1
+MESSAGE[308]: WARNING LEVEL SUPERSEDED BY COMMAND LINE VALUE. (2)
+                      00031  LIST  P = 18F452, F = INHX32, W = 2, X = ON, R = DEC, MM = ON, N = 0, C = 255
+  00000FFF            00032 TOSU EQU 0X0FFF
+  00000FFE            00033 TOSLH EQU 0X0FFE
+  00000FFE            00034 TOSH EQU 0X0FFE
+  00000FFD            00035 TOSL EQU 0X0FFD
+  00000FFC            00036 STKPTR EQU 0X0FFC
+  00000FFB            00037 PCLATU EQU 0X0FFB
+  00000FFA            00038 PCLATH EQU 0X0FFA
+  00000FF9            00039 PCL EQU 0X0FF9
+  00000FF8            00040 TBLPTRLHH EQU 0X0FF8
+  00000FF8            00041 TBLPTRU EQU 0X0FF8
+  00000FF7            00042 TBLPTRLH EQU 0X0FF7
+  00000FF7            00043 TBLPTRH EQU 0X0FF7
+  00000FF6            00044 TBLPTRL EQU 0X0FF6
+  00000FF5            00045 TABLAT EQU 0X0FF5
+  00000FF4            00046 PRODLH EQU 0X0FF4
+  00000FF4            00047 PRODH EQU 0X0FF4
+  00000FF3            00048 PRODL EQU 0X0FF3
+  00000FF2            00049 INTCON EQU 0X0FF2
+  00000FF2            00050 INTCON1 EQU 0X0FF2
+  00000FF1            00051 INTCON2 EQU 0X0FF1
+  00000FF0            00052 INTCON3 EQU 0X0FF0
+  00000FEF            00053 INDF0 EQU 0X0FEF
+  00000FEE            00054 POSTINC0 EQU 0X0FEE
+  00000FED            00055 POSTDEC0 EQU 0X0FED
+  00000FEC            00056 PREINC0 EQU 0X0FEC
+  00000FEB            00057 PLUSW0 EQU 0X0FEB
+  00000FEA            00058 FSR0LH EQU 0X0FEA
+  00000FEA            00059 FSR0H EQU 0X0FEA
+  00000FE9            00060 FSR0L EQU 0X0FE9
+  00000FE8            00061 WREG EQU 0X0FE8
+  00000FE7            00062 INDF1 EQU 0X0FE7
+  00000FE6            00063 POSTINC1 EQU 0X0FE6
+  00000FE5            00064 POSTDEC1 EQU 0X0FE5
+  00000FE4            00065 PREINC1 EQU 0X0FE4
+  00000FE3            00066 PLUSW1 EQU 0X0FE3
+  00000FE2            00067 FSR1LH EQU 0X0FE2
+  00000FE2            00068 FSR1H EQU 0X0FE2
+  00000FE1            00069 FSR1L EQU 0X0FE1
+  00000FE0            00070 BSR EQU 0X0FE0
+  00000FDF            00071 INDF2 EQU 0X0FDF
+  00000FDE            00072 POSTINC2 EQU 0X0FDE
+  00000FDD            00073 POSTDEC2 EQU 0X0FDD
+  00000FDC            00074 PREINC2 EQU 0X0FDC
+  00000FDB            00075 PLUSW2 EQU 0X0FDB
+  00000FDA            00076 FSR2LH EQU 0X0FDA
+  00000FDA            00077 FSR2H EQU 0X0FDA
+  00000FD9            00078 FSR2L EQU 0X0FD9
+  00000FD8            00079 STATUS EQU 0X0FD8
+  00000FD7            00080 TMR0LH EQU 0X0FD7
+  00000FD7            00081 TMR0H EQU 0X0FD7
+  00000FD6            00082 TMR0L EQU 0X0FD6
+  00000FD5            00083 T0CON EQU 0X0FD5
+  00000FD3            00084 OSCCON EQU 0X0FD3
+  00000FD2            00085 LVDCON EQU 0X0FD2
+  00000FD2            00086 HLVDCON EQU 0X0FD2
+  00000FD1            00087 WDTCON EQU 0X0FD1
+  00000FD0            00088 RCON EQU 0X0FD0
+  00000FCF            00089 TMR1LH EQU 0X0FCF
+  00000FCF            00090 TMR1H EQU 0X0FCF
+  00000FCE            00091 TMR1L EQU 0X0FCE
+  00000FCD            00092 T1CON EQU 0X0FCD
+  00000FCC            00093 TMR2 EQU 0X0FCC
+  00000FCB            00094 PR2 EQU 0X0FCB
+  00000FCA            00095 T2CON EQU 0X0FCA
+  00000FC9            00096 SSPBUF EQU 0X0FC9
+  00000FC8            00097 SSPADD EQU 0X0FC8
+  00000FC7            00098 SSPSTAT EQU 0X0FC7
+  00000FC6            00099 SSPCON1 EQU 0X0FC6
+  00000FC5            00100 SSPCON2 EQU 0X0FC5
+  00000FC4            00101 ADRESLH EQU 0X0FC4
+  00000FC4            00102 ADRESH EQU 0X0FC4
+  00000FC3            00103 ADRESL EQU 0X0FC3
+  00000FC2            00104 ADCON0 EQU 0X0FC2
+  00000FC1            00105 ADCON1 EQU 0X0FC1
+  00000FBF            00106 CCPR1LH EQU 0X0FBF
+  00000FBF            00107 CCPR1H EQU 0X0FBF
+  00000FBE            00108 CCPR1L EQU 0X0FBE
+  00000FBD            00109 CCP1CON EQU 0X0FBD
+  00000FBC            00110 CCPR2LH EQU 0X0FBC
+  00000FBC            00111 CCPR2H EQU 0X0FBC
+  00000FBB            00112 CCPR2L EQU 0X0FBB
+  00000FBA            00113 CCP2CON EQU 0X0FBA
+  00000FB3            00114 TMR3LH EQU 0X0FB3
+  00000FB3            00115 TMR3H EQU 0X0FB3
+  00000FB2            00116 TMR3L EQU 0X0FB2
+  00000FB1            00117 T3CON EQU 0X0FB1
+  00000FAF            00118 SPBRG EQU 0X0FAF
+  00000FAE            00119 RCREG EQU 0X0FAE
+  00000FAD            00120 TXREG EQU 0X0FAD
+  00000FAC            00121 TXSTA EQU 0X0FAC
+  00000FAB            00122 RCSTA EQU 0X0FAB
+  00000FA9            00123 EEADR EQU 0X0FA9
+  00000FA8            00124 EEDATL EQU 0X0FA8
+  00000FA8            00125 EEDATA EQU 0X0FA8
+  00000FA7            00126 EECON2 EQU 0X0FA7
+  00000FA6            00127 EECON1 EQU 0X0FA6
+  00000FA2            00128 IPR2 EQU 0X0FA2
+  00000FA1            00129 PIR2 EQU 0X0FA1
+  00000FA0            00130 PIE2 EQU 0X0FA0
+  00000F9F            00131 IPR1 EQU 0X0F9F
+  00000F9E            00132 PIR1 EQU 0X0F9E
+  00000F9D            00133 PIE1 EQU 0X0F9D
+  00000F96            00134 TRISE EQU 0X0F96
+  00000F95            00135 TRISD EQU 0X0F95
+  00000F94            00136 TRISC EQU 0X0F94
+  00000F93            00137 TRISB EQU 0X0F93
+  00000F92            00138 TRISA EQU 0X0F92
+  00000F8D            00139 LATE EQU 0X0F8D
+  00000F8C            00140 LATD EQU 0X0F8C
+  00000F8B            00141 LATC EQU 0X0F8B
+  00000F8A            00142 LATB EQU 0X0F8A
+  00000F89            00143 LATA EQU 0X0F89
+  00000F84            00144 PORTE EQU 0X0F84
+  00000F83            00145 PORTD EQU 0X0F83
+  00000F82            00146 PORTC EQU 0X0F82
+  00000F81            00147 PORTB EQU 0X0F81
+  00000F80            00148 PORTA EQU 0X0F80
+  00000F94            00149 _I2C_SCL_PORT = TRISC
+  00000003            00150 _I2C_SCL_PIN = 3
+  00000F94            00151 _I2C_SDA_PORT = TRISC
+  00000004            00152 _I2C_SDA_PIN = 4
+  00000007            00153 STKFUL=7
+  00000006            00154 STKUNF=6
+  00000007            00155 GIE=7
+  00000007            00156 GIEH=7
+  00000006            00157 PEIE=6
+  00000006            00158 GIEL=6
+  00000005            00159 TMR0IE=5
+  00000005            00160 T0IE=5
+  00000004            00161 INT0IE=4
+  00000004            00162 INT0E=4
+  00000003            00163 RBIE=3
+  00000002            00164 TMR0IF=2
+  00000002            00165 T0IF=2
+  00000001            00166 INT0IF=1
+  00000001            00167 INT0F=1
+  00000000            00168 RBIF=0
+  00000007            00169 NOT_RBPU=7
+  00000007            00170 RBPU=7
+  00000006            00171 INTEDG0=6
+  00000005            00172 INTEDG1=5
+  00000004            00173 INTEDG2=4
+  00000002            00174 TMR0IP=2
+  00000002            00175 T0IP=2
+  00000000            00176 RBIP=0
+  00000007            00177 INT2IP=7
+  00000006            00178 INT1IP=6
+  00000004            00179 INT2IE=4
+  00000003            00180 INT1IE=3
+  00000001            00181 INT2IF=1
+  00000000            00182 INT1IF=0
+  00000004            00183 N=4
+  00000003            00184 OV=3
+  00000002            00185 Z=2
+  00000001            00186 DC=1
+  00000000            00187 C=0
+  00000007            00188 TMR0ON=7
+  00000006            00189 T08BIT=6
+  00000005            00190 T0CS=5
+  00000004            00191 T0SE=4
+  00000003            00192 PSA=3
+  00000002            00193 T0PS2=2
+  00000001            00194 T0PS1=1
+  00000000            00195 T0PS0=0
+  00000000            00196 SCS=0
+  00000005            00197 IRVST=5
+  00000004            00198 LVDEN=4
+  00000003            00199 LVDL3=3
+  00000002            00200 LVDL2=2
+  00000001            00201 LVDL1=1
+  00000000            00202 LVDL0=0
+  00000000            00203 SWDTE=0
+  00000000            00204 SWDTEN=0
+  00000007            00205 IPEN=7
+  00000004            00206 NOT_RI=4
+  00000004            00207 RI=4
+  00000003            00208 NOT_TO=3
+  00000003            00209 TO=3
+  00000002            00210 NOT_PD=2
+  00000002            00211 PD=2
+  00000001            00212 NOT_POR=1
+  00000001            00213 POR=1
+  00000000            00214 NOT_BOR=0
+  00000000            00215 BOR=0
+  00000007            00216 RD16=7
+  00000005            00217 T1CKPS1=5
+  00000004            00218 T1CKPS0=4
+  00000003            00219 T1OSCEN=3
+  00000002            00220 NOT_T1SYNC=2
+  00000002            00221 T1SYNC=2
+  00000002            00222 T1INSYNC=2
+  00000001            00223 TMR1CS=1
+  00000000            00224 TMR1ON=0
+  00000006            00225 TOUTPS3=6
+  00000005            00226 TOUTPS2=5
+  00000004            00227 TOUTPS1=4
+  00000003            00228 TOUTPS0=3
+  00000002            00229 TMR2ON=2
+  00000002            00230 PP_TMR2ON=2
+  00000001            00231 T2CKPS1=1
+  00000001            00232 PP_T2CKPS1=1
+  00000000            00233 T2CKPS0=0
+  00000000            00234 PP_T2CKPS0=0
+  00000007            00235 SMP=7
+  00000006            00236 CKE=6
+  00000005            00237 D=5
+  00000005            00238 I2C_DAT=5
+  00000005            00239 NOT_A=5
+  00000005            00240 NOT_ADDRESS=5
+  00000005            00241 D_A=5
+  00000005            00242 DATA_ADDRESS=5
+  00000004            00243 P=4
+  00000004            00244 I2C_STOP=4
+  00000003            00245 S=3
+  00000003            00246 I2C_START=3
+  00000002            00247 R=2
+  00000002            00248 I2C_READ=2
+  00000002            00249 NOT_W=2
+  00000002            00250 NOT_WRITE=2
+  00000002            00251 R_W=2
+  00000002            00252 PP_R_W=2
+  00000002            00253 READ_WRITE=2
+  00000001            00254 UA=1
+  00000000            00255 BF=0
+  00000007            00256 WCOL=7
+  00000006            00257 SSPOV=6
+  00000005            00258 SSPEN=5
+  00000004            00259 CKP=4
+  00000003            00260 SSPM3=3
+  00000002            00261 SSPM2=2
+  00000001            00262 SSPM1=1
+  00000000            00263 SSPM0=0
+  00000007            00264 GCEN=7
+  00000006            00265 ACKSTAT=6
+  00000005            00266 ACKDT=5
+  00000004            00267 ACKEN=4
+  00000004            00268 PP_ACKEN=4
+  00000003            00269 RCEN=3
+  00000003            00270 PP_RCEN=3
+  00000002            00271 PEN=2
+  00000002            00272 PP_PEN=2
+  00000001            00273 RSEN=1
+  00000001            00274 PP_RSEN=1
+  00000000            00275 SEN=0
+  00000000            00276 PP_SEN=0
+  00000007            00277 ADCS1=7
+  00000006            00278 ADCS0=6
+  00000005            00279 CHS2=5
+  00000004            00280 CHS1=4
+  00000003            00281 CHS0=3
+  00000002            00282 GO=2
+  00000002            00283 NOT_DONE=2
+  00000002            00284 DONE=2
+  00000002            00285 GO_DONE=2
+  00000002            00286 PP_GO_DONE=2
+  00000000            00287 ADON=0
+  00000000            00288 PP_ADON=0
+  00000007            00289 ADFM=7
+  00000006            00290 ADCS2=6
+  00000003            00291 PCFG3=3
+  00000002            00292 PCFG2=2
+  00000001            00293 PCFG1=1
+  00000000            00294 PCFG0=0
+  00000005            00295 DC1B1=5
+  00000005            00296 CCP1X=5
+  00000004            00297 DC1B0=4
+  00000004            00298 CCP1Y=4
+  00000003            00299 CCP1M3=3
+  00000002            00300 CCP1M2=2
+  00000001            00301 CCP1M1=1
+  00000000            00302 CCP1M0=0
+  00000005            00303 DC2B1=5
+  00000005            00304 CCP2X=5
+  00000004            00305 DC2B0=4
+  00000004            00306 CCP2Y=4
+  00000003            00307 CCP2M3=3
+  00000002            00308 CCP2M2=2
+  00000001            00309 CCP2M1=1
+  00000000            00310 CCP2M0=0
+  00000007            00311 RD16=7
+  00000006            00312 T3CCP2=6
+  00000005            00313 T3CKPS1=5
+  00000004            00314 T3CKPS0=4
+  00000003            00315 T3CCP1=3
+  00000002            00316 NOT_T3SYNC=2
+  00000002            00317 T3SYNC=2
+  00000002            00318 T3INSYNC=2
+  00000001            00319 TMR3CS=1
+  00000000            00320 TMR3ON=0
+  00000007            00321 CSRC=7
+  00000006            00322 TX9=6
+  00000006            00323 NOT_TX8=6
+  00000006            00324 TX8_9=6
+  00000005            00325 TXEN=5
+  00000004            00326 SYNC=4
+  00000002            00327 BRGH=2
+  00000001            00328 TRMT=1
+  00000000            00329 TX9D=0
+  00000000            00330 TXD8=0
+  00000007            00331 SPEN=7
+  00000006            00332 RX9=6
+  00000006            00333 RC9=6
+  00000006            00334 NOT_RC8=6
+  00000006            00335 RC8_9=6
+  00000005            00336 SREN=5
+  00000004            00337 CREN=4
+  00000004            00338 PP_CREN=4
+  00000003            00339 ADDEN=3
+  00000002            00340 FERR=2
+  00000001            00341 OERR=1
+  00000001            00342 PP_OERR=1
+  00000000            00343 RX9D=0
+  00000000            00344 RCD8=0
+  00000004            00345 EEIP=4
+  00000003            00346 BCLIP=3
+  00000002            00347 LVDIP=2
+  00000001            00348 TMR3IP=1
+  00000000            00349 CCP2IP=0
+  00000004            00350 EEIF=4
+  00000003            00351 BCLIF=3
+  00000002            00352 LVDIF=2
+  00000001            00353 TMR3IF=1
+  00000000            00354 CCP2IF=0
+  00000004            00355 EEIE=4
+  00000003            00356 BCLIE=3
+  00000002            00357 LVDIE=2
+  00000001            00358 TMR3IE=1
+  00000000            00359 CCP2IE=0
+  00000007            00360 PSPIP=7
+  00000006            00361 ADIP=6
+  00000005            00362 RCIP=5
+  00000004            00363 TXIP=4
+  00000003            00364 SSPIP=3
+  00000002            00365 CCP1IP=2
+  00000001            00366 TMR2IP=1
+  00000000            00367 TMR1IP=0
+  00000007            00368 PSPIF=7
+  00000006            00369 ADIF=6
+  00000005            00370 RCIF=5
+  00000005            00371 PP_RCIF=5
+  00000004            00372 TXIF=4
+  00000004            00373 PP_TXIF=4
+  00000003            00374 SSPIF=3
+  00000002            00375 CCP1IF=2
+  00000001            00376 TMR2IF=1
+  00000000            00377 TMR1IF=0
+  00000007            00378 PSPIE=7
+  00000006            00379 ADIE=6
+  00000005            00380 RCIE=5
+  00000004            00381 TXIE=4
+  00000003            00382 SSPIE=3
+  00000002            00383 CCP1IE=2
+  00000001            00384 TMR2IE=1
+  00000000            00385 TMR1IE=0
+  00000007            00386 IBF=7
+  00000006            00387 OBF=6
+  00000005            00388 IBOV=5
+  00000004            00389 PSPMODE=4
+  00000002            00390 TRISE2=2
+  00000001            00391 TRISE1=1
+  00000000            00392 TRISE0=0
+  00000007            00393 EEPGD=7
+  00000007            00394 PP_EEPGD=7
+  00000006            00395 CFGS=6
+  00000004            00396 FREE=4
+  00000003            00397 WRERR=3
+  00000002            00398 WREN=2
+  00000002            00399 PP_WREN=2
+  00000001            00400 WR=1
+  00000001            00401 PP_WR=1
+  00000000            00402 RD=0
+  00000000            00403 PP_RD=0
+  00000000            00404 RA0=0
+  00000000            00405 AN0=0
+  00000001            00406 RA1=1
+  00000001            00407 AN1=1
+  00000002            00408 RA2=2
+  00000002            00409 AN2=2
+  00000002            00410 VREFM=2
+  00000003            00411 RA3=3
+  00000003            00412 AN3=3
+  00000003            00413 VREFP=3
+  00000004            00414 RA4=4
+  00000004            00415 T0CKI=4
+  00000005            00416 RA5=5
+  00000005            00417 AN4=5
+  00000005            00418 SS=5
+  00000005            00419 LVDIN=5
+  00000006            00420 RA6=6
+  00000006            00421 OSC2=6
+  00000006            00422 CLKO=6
+  00000000            00423 RB0=0
+  00000000            00424 INT0=0
+  00000001            00425 RB1=1
+  00000001            00426 INT1=1
+  00000002            00427 RB2=2
+  00000002            00428 INT2=2
+  00000003            00429 RB3=3
+  00000003            00430 CCP2A=3
+  00000004            00431 RB4=4
+  00000005            00432 RB5=5
+  00000006            00433 RB6=6
+  00000007            00434 RB7=7
+  00000000            00435 RC0=0
+  00000000            00436 T1OSO=0
+  00000000            00437 T1CKI=0
+  00000001            00438 RC1=1
+  00000001            00439 T1OSI=1
+  00000001            00440 CCP2=1
+  00000002            00441 RC2=2
+  00000002            00442 CCP1=2
+  00000003            00443 RC3=3
+  00000003            00444 SCK=3
+  00000003            00445 SCL=3
+  00000004            00446 RC4=4
+  00000004            00447 SDI=4
+  00000004            00448 SDA=4
+  00000005            00449 RC5=5
+  00000005            00450 SDO=5
+  00000006            00451 RC6=6
+  00000006            00452 TX=6
+  00000006            00453 CK=6
+  00000007            00454 RC7=7
+  00000007            00455 RX=7
+  00000000            00456 RD0=0
+  00000000            00457 PSP0=0
+  00000001            00458 RD1=1
+  00000001            00459 PSP1=1
+  00000002            00460 RD2=2
+  00000002            00461 PSP2=2
+  00000003            00462 RD3=3
+  00000003            00463 PSP3=3
+  00000004            00464 RD4=4
+  00000004            00465 PSP4=4
+  00000005            00466 RD5=5
+  00000005            00467 PSP5=5
+  00000006            00468 RD6=6
+  00000006            00469 PSP6=6
+  00000007            00470 RD7=7
+  00000007            00471 PSP7=7
+  00000000            00472 RE0=0
+  00000000            00473 RD=0
+  00000000            00474 PP_RD=0
+  00000000            00475 AN5=0
+  00000001            00476 RE1=1
+  00000001            00477 WR=1
+  00000001            00478 PP_WR=1
+  00000001            00479 AN6=1
+  00000002            00480 RE2=2
+  00000002            00481 CS=2
+  00000002            00482 AN7=2
+  00000FFF            00483   __MAXRAM 0XFFF
+                      00484   __BADRAM 0X600-0XF7F
+                      00485   __BADRAM 0XF85-0XF88
+                      00486   __BADRAM 0XF8E-0XF91
+                      00487   __BADRAM 0XF97-0XF9C
+                      00488   __BADRAM 0XFA3-0XFA5
+                      00489   __BADRAM 0XFAA
+                      00490   __BADRAM 0XFB4-0XFB9
+  000000DF            00491 OSCS_ON_1 EQU 0XDF
+  000000FF            00492 OSCS_OFF_1 EQU 0XFF
+  000000F8            00493 LP_OSC_1 EQU 0XF8
+  000000F9            00494 XT_OSC_1 EQU 0XF9
+  000000FA            00495 HS_OSC_1 EQU 0XFA
+  000000FB            00496 RC_OSC_1 EQU 0XFB
+  000000FC            00497 EC_OSC_1 EQU 0XFC
+  000000FD            00498 ECIO_OSC_1 EQU 0XFD
+  000000FE            00499 HSPLL_OSC_1 EQU 0XFE
+  000000FF            00500 RCIO_OSC_1 EQU 0XFF
+  000000FF            00501 BOR_ON_2 EQU 0XFF
+  000000FD            00502 BOR_OFF_2 EQU 0XFD
+  000000FF            00503 PWRT_OFF_2 EQU 0XFF
+  000000FE            00504 PWRT_ON_2 EQU 0XFE
+  000000FF            00505 BORV_20_2 EQU 0XFF
+  000000FB            00506 BORV_27_2 EQU 0XFB
+  000000F7            00507 BORV_42_2 EQU 0XF7
+  000000F3            00508 BORV_45_2 EQU 0XF3
+  000000FF            00509 WDT_ON_2 EQU 0XFF
+  000000FE            00510 WDT_OFF_2 EQU 0XFE
+  000000FF            00511 WDTPS_128_2 EQU 0XFF
+  000000FD            00512 WDTPS_64_2 EQU 0XFD
+  000000FB            00513 WDTPS_32_2 EQU 0XFB
+  000000F9            00514 WDTPS_16_2 EQU 0XF9
+  000000F7            00515 WDTPS_8_2 EQU 0XF7
+  000000F5            00516 WDTPS_4_2 EQU 0XF5
+  000000F3            00517 WDTPS_2_2 EQU 0XF3
+  000000F1            00518 WDTPS_1_2 EQU 0XF1
+  000000FF            00519 CCP2MX_ON_3 EQU 0XFF
+  000000FE            00520 CCP2MX_OFF_3 EQU 0XFE
+  000000FF            00521 STVR_ON_4 EQU 0XFF
+  000000FE            00522 STVR_OFF_4 EQU 0XFE
+  000000FF            00523 LVP_ON_4 EQU 0XFF
+  000000FB            00524 LVP_OFF_4 EQU 0XFB
+  0000007F            00525 DEBUG_ON_4 EQU 0X7F
+  000000FF            00526 DEBUG_OFF_4 EQU 0XFF
+  000000FE            00527 CP0_ON_5 EQU 0XFE
+  000000FF            00528 CP0_OFF_5 EQU 0XFF
+  000000FD            00529 CP1_ON_5 EQU 0XFD
+  000000FF            00530 CP1_OFF_5 EQU 0XFF
+  000000FB            00531 CP2_ON_5 EQU 0XFB
+  000000FF            00532 CP2_OFF_5 EQU 0XFF
+  000000F7            00533 CP3_ON_5 EQU 0XF7
+  000000FF            00534 CP3_OFF_5 EQU 0XFF
+  000000BF            00535 CPB_ON_5 EQU 0XBF
+  000000FF            00536 CPB_OFF_5 EQU 0XFF
+  0000007F            00537 CPD_ON_5 EQU 0X7F
+  000000FF            00538 CPD_OFF_5 EQU 0XFF
+  000000FE            00539 WRT0_ON_6 EQU 0XFE
+  000000FF            00540 WRT0_OFF_6 EQU 0XFF
+  000000FD            00541 WRT1_ON_6 EQU 0XFD
+  000000FF            00542 WRT1_OFF_6 EQU 0XFF
+  000000FB            00543 WRT2_ON_6 EQU 0XFB
+  000000FF            00544 WRT2_OFF_6 EQU 0XFF
+  000000F7            00545 WRT3_ON_6 EQU 0XF7
+  000000FF            00546 WRT3_OFF_6 EQU 0XFF
+  000000DF            00547 WRTC_ON_6 EQU 0XDF
+  000000FF            00548 WRTC_OFF_6 EQU 0XFF
+  000000BF            00549 WRTB_ON_6 EQU 0XBF
+  000000FF            00550 WRTB_OFF_6 EQU 0XFF
+  0000007F            00551 WRTD_ON_6 EQU 0X7F
+  000000FF            00552 WRTD_OFF_6 EQU 0XFF
+  000000FE            00553 EBTR0_ON_7 EQU 0XFE
+  000000FF            00554 EBTR0_OFF_7 EQU 0XFF
+  000000FD            00555 EBTR1_ON_7 EQU 0XFD
+  000000FF            00556 EBTR1_OFF_7 EQU 0XFF
+  000000FB            00557 EBTR2_ON_7 EQU 0XFB
+  000000FF            00558 EBTR2_OFF_7 EQU 0XFF
+  000000F7            00559 EBTR3_ON_7 EQU 0XF7
+  000000FF            00560 EBTR3_OFF_7 EQU 0XFF
+  000000BF            00561 EBTRB_ON_7 EQU 0XBF
+  000000FF            00562 EBTRB_OFF_7 EQU 0XFF
+  00300000            00563 CONFIG1L EQU 0X300000
+  00300001            00564 CONFIG1H EQU 0X300001
+  00300002            00565 CONFIG2L EQU 0X300002
+  00300003            00566 CONFIG2H EQU 0X300003
+  00300004            00567 CONFIG3L EQU 0X300004
+  00300005            00568 CONFIG3H EQU 0X300005
+  00300006            00569 CONFIG4L EQU 0X300006
+  00300007            00570 CONFIG4H EQU 0X300007
+  00300008            00571 CONFIG5L EQU 0X300008
+  00300009            00572 CONFIG5H EQU 0X300009
+  0030000A            00573 CONFIG6L EQU 0X30000A
+  0030000B            00574 CONFIG6H EQU 0X30000B
+  0030000C            00575 CONFIG7L EQU 0X30000C
+  0030000D            00576 CONFIG7H EQU 0X30000D
+  003FFFFE            00577 DEVID1 EQU 0X3FFFFE
+  003FFFFF            00578 DEVID2 EQU 0X3FFFFF
+  00200000            00579 IDLOC0 EQU 0X200000
+  00200000            00580 __IDLOC0 EQU 0X200000
+  00200001            00581 IDLOC1 EQU 0X200001
+  00200001            00582 __IDLOC1 EQU 0X200001
+  00200002            00583 IDLOC2 EQU 0X200002
+  00200002            00584 __IDLOC2 EQU 0X200002
+  00200003            00585 IDLOC3 EQU 0X200003
+  00200003            00586 __IDLOC3 EQU 0X200003
+  00200004            00587 IDLOC4 EQU 0X200004
+  00200004            00588 __IDLOC4 EQU 0X200004
+  00200005            00589 IDLOC5 EQU 0X200005
+  00200005            00590 __IDLOC5 EQU 0X200005
+  00200006            00591 IDLOC6 EQU 0X200006
+  00200006            00592 __IDLOC6 EQU 0X200006
+  00200007            00593 IDLOC7 EQU 0X200007
+  00200007            00594 __IDLOC7 EQU 0X200007
+                      00663 #DEFINE __18F452 1
+                      00664 #DEFINE XTAL 4
+                      00665 #DEFINE _CORE 16
+                      00666 #DEFINE _MAXRAM 1536
+                      00667 #DEFINE _RAM_END 1536
+                      00668 #DEFINE _MAXMEM 32768
+                      00669 #DEFINE _ADC 8
+                      00670 #DEFINE _ADC_RES 10
+                      00671 #DEFINE _EEPROM 256
+                      00672 #DEFINE RAM_BANKS 6
+                      00673 #DEFINE _USART 1
+                      00674 #DEFINE _USB 0
+                      00675 #DEFINE _FLASH 1
+                      00676 #DEFINE _CWRITE_BLOCK 8
+                      00677 #DEFINE BANK0_START 128
+                      00678 #DEFINE BANK0_END 255
+                      00679 #DEFINE BANK1_START 256
+                      00680 #DEFINE BANK1_END 511
+                      00681 #DEFINE BANK2_START 512
+                      00682 #DEFINE BANK2_END 767
+                      00683 #DEFINE BANK3_START 768
+                      00684 #DEFINE BANK3_END 1023
+                      00685 #DEFINE BANK4_START 1024
+                      00686 #DEFINE BANK4_END 1279
+                      00687 #DEFINE BANK5_START 1280
+                      00688 #DEFINE BANK5_END 1535
+                      00689 #DEFINE BANKA_START 0
+                      00690 #DEFINE BANKA_END 127
+                      00691 #DEFINE _SYSTEM_VARIABLE_COUNT 51
+  00000000            00692 RAM_BANK = 0
+                      00693 #DEFINE LCD#DTPORT PORTD
+                      00694 #DEFINE LCD#DTPIN 4
+                      00695 #DEFINE LCD#RSPORT PORTB
+                      00696 #DEFINE LCD#RSPIN 0
+                      00697 #DEFINE LCD#ENPORT PORTB
+                      00698 #DEFINE LCD#ENPIN 1
+                      00699 #DEFINE LCD#RWPORT PORTB
+                      00700 #DEFINE LCD#RWPIN 2
+                      00701 #DEFINE LCD#CS1PORT PORTB
+                      00702 #DEFINE LCD#CS1PIN 3
+                      00703 #DEFINE LCD#CS2PORT PORTB
+                      00704 #DEFINE LCD#CS2PIN 4
+                      00705 #DEFINE LCD#TYPE 1
+                      00706 #DEFINE INTERNAL#FONT 1
+                      00718 #DEFINE CLRW CLRF WREG
+                      00719 #DEFINE NEGW NEGF WREG
+                      00720 #DEFINE SKPC BTFSS STATUS,0
+                      00721 #DEFINE SKPNC BTFSC STATUS,0
+                      00722 #DEFINE CLRC BCF STATUS,0
+                      00723 #DEFINE SETC BSF STATUS,0
+                      00724 #DEFINE SKPZ BTFSS STATUS,2
+                      00725 #DEFINE SKPNZ BTFSC STATUS,2
+                      00726 #DEFINE CLRZ BCF STATUS,2
+                      00727 #DEFINE SETZ BSF STATUS,2
+                      00728 MOVFW MACRO M#VARIN
+                      00729         MOVF M#VARIN,W
+                      00730         ENDM
+                      00731 RLF MACRO M#VARIN,M#DEST
+                      00732         RLCF M#VARIN,M#DEST
+                      00733         ENDM
+                      00734 RRF MACRO M#VARIN,M#DEST
+                      00735         RRCF M#VARIN,M#DEST
+                      00736         ENDM
+                      00737 JUMP MACRO LABEL
+                      00738         GOTO LABEL
+                      00739         ENDM
+                      00740 F@CALL MACRO M#DEST
+                      00741 IF (M#DEST < 1)
+                      00742         CALL M#DEST
+                      00743 ELSE
+                      00744 IF (M#DEST > $)
+                      00745         CALL M#DEST
+                      00746 ELSE
+                      00747 IF (M#DEST < ($ - 0X03FF))
+                      00748         CALL M#DEST
+                      00749 ELSE
+                      00750         RCALL M#DEST
+                      00751 ENDIF
+                      00752 ENDIF
+                      00753 ENDIF
+                      00754         ENDM
+                      00755 F@JUMP MACRO M#DEST
+                      00756 IFDEF WATCHDOG_REQ
+                      00757 IF ($ == M#DEST)
+                      00758         CLRWDT
+                      00759 ENDIF
+                      00760 ENDIF
+                      00761 IF (M#DEST < 1)
+                      00762         GOTO M#DEST
+                      00763 ELSE
+                      00764 IF ((M#DEST) > $)
+                      00765         GOTO M#DEST
+                      00766 ELSE
+                      00767 IF ((M#DEST) < ($ - 0X03FF))
+                      00768         GOTO M#DEST
+                      00769 ELSE
+                      00770         BRA M#DEST
+                      00771 ENDIF
+                      00772 ENDIF
+                      00773 ENDIF
+                      00774         ENDM
+                      00775 IFDEF WATCHDOG_REQ
+                      00776         CHK@SLF MACRO M#DEST
+                      00777 IF ($ == M#DEST)
+                      00778         CLRWDT
+                      00779 ENDIF
+                      00780         ENDM
+                      00781 ENDIF
+                      00782 G@OTO MACRO M#DEST
+                      00783 IF (M#DEST < 1)
+                      00784         BTFSC STATUS,OV
+                      00785         GOTO M#DEST
+                      00786 ELSE
+                      00787 IF (M#DEST > $)
+                      00788         BTFSC STATUS,OV
+                      00789         GOTO M#DEST
+                      00790 ELSE
+                      00791 IF (M#DEST < ($ - 127))
+                      00792         BTFSC STATUS,OV
+                      00793         GOTO M#DEST
+                      00794 ELSE
+                      00795         BOV M#DEST
+                      00796 ENDIF
+                      00797 ENDIF
+                      00798 ENDIF
+                      00799         ENDM
+                      00800 GO@TO MACRO M#DEST
+                      00801 IF (M#DEST < 1)
+                      00802         GOTO M#DEST
+                      00803 ELSE
+                      00804 IF (M#DEST > $)
+                      00805         GOTO M#DEST
+                      00806 ELSE
+                      00807 IF (M#DEST < ($ - 0X03FF))
+                      00808         GOTO M#DEST
+                      00809 ELSE
+                      00810         BRA M#DEST
+                      00811 ENDIF
+                      00812 ENDIF
+                      00813 ENDIF
+                      00814         ENDM
+                      00815 S@B MACRO M#VARIN
+                      00816 IF ((M#VARIN > BANKA_END) & (M#VARIN < 0X0F80))
+                      00817 IF ((M#VARIN & 0X0F00) != (RAM_BANK << 8))
+                      00818         MOVLB HIGH (M#VARIN)
+                      00819         RAM_BANK = (M#VARIN >> 8)
+                      00820 ENDIF
+                      00821 ENDIF
+                      00822         ENDM
+                      00823 R@B MACRO
+                      00824 IF(RAM_BANK != 0)
+                      00825         MOVLB 0
+                      00826         RAM_BANK = 0
+                      00827 ENDIF
+                      00828         ENDM
+                      00829 WREG_BYTE MACRO M#BYTEOUT
+                      00830         MOVFF WREG,M#BYTEOUT
+                      00831         ENDM
+                      00832 WREG_BIT MACRO M#VAROUT,M#BITOUT
+                      00833         S@B M#VAROUT
+                      00834         BTFSC WREG,0
+                      00835         BSF M#VAROUT,M#BITOUT
+                      00836         BTFSS WREG,0
+                      00837         BCF M#VAROUT,M#BITOUT
+                      00838         R@B
+                      00839         ENDM
+                      00840 WREG_WORD MACRO M#WORDOUT
+                      00841         MOVFF WREG,M#WORDOUT
+                      00842         MOVLW 0
+                      00843         MOVFF WREG,M#WORDOUT + 1
+                      00844         ENDM
+                      00845 WREG_DWORD MACRO M#DWORDOUT
+                      00846         MOVFF WREG,M#DWORDOUT
+                      00847         MOVLW 0
+                      00848         MOVFF WREG,M#DWORDOUT + 3
+                      00849         MOVFF WREG,M#DWORDOUT + 2
+                      00850         MOVFF WREG,M#DWORDOUT + 1
+                      00851         ENDM
+                      00852 BYTE_WREG MACRO M#BYTEIN
+                      00853         MOVFF M#BYTEIN,WREG
+                      00854         ENDM
+                      00855 NUM_WREG MACRO M#NUMIN
+                      00856         MOVLW (M#NUMIN & 255)
+                      00857         ENDM
+                      00858 NUM_BYTE MACRO M#NUMIN,M#BYTEOUT
+                      00859         MOVLW (M#NUMIN & 255)
+                      00860         MOVFF WREG,M#BYTEOUT
+                      00861         ENDM
+                      00862 NUM_BIT MACRO M#NUMIN,M#VAROUT,M#BITOUT
+                      00863         S@B M#VAROUT
+                      00864 IF((M#NUMIN & 1) == 1)
+                      00865         BSF M#VAROUT,M#BITOUT
+                      00866 ELSE
+                      00867         BCF M#VAROUT,M#BITOUT
+                      00868 ENDIF
+                      00869         R@B
+                      00870         ENDM
+                      00871 NUM_WORD MACRO M#NUMIN,M#WORDOUT
+                      00872 IFDEF _USELFSR
+                      00873 IF(M#WORDOUT == FSR0L)
+                      00874         LFSR 0,M#NUMIN
+                      00875         EXITM
+                      00876 ENDIF
+                      00877 IF(M#WORDOUT == FSR1L)
+                      00878         LFSR 1,M#NUMIN
+                      00879         EXITM
+                      00880 ENDIF
+                      00881 IF(M#WORDOUT == FSR2L)
+                      00882         LFSR 2,M#NUMIN
+                      00883         EXITM
+                      00884 ENDIF
+                      00885 ENDIF
+                      00886         S@B M#WORDOUT
+                      00887         MOVLW (M#NUMIN & 255)
+                      00888         MOVWF M#WORDOUT
+                      00889         S@B M#WORDOUT + 1
+                      00890         MOVLW HIGH (M#NUMIN)
+                      00891         MOVWF M#WORDOUT + 1
+                      00892         R@B
+                      00893         ENDM
+                      00894 NUM_DWORD MACRO M#NUMIN,M#DWORDOUT
+                      00895         S@B M#DWORDOUT
+                      00896         MOVLW LOW (M#NUMIN)
+                      00897         MOVWF M#DWORDOUT
+                      00898         S@B M#DWORDOUT + 1
+                      00899         MOVLW HIGH (M#NUMIN)
+                      00900         MOVWF M#DWORDOUT + 1
+                      00901         S@B M#DWORDOUT + 2
+                      00902         MOVLW ((M#NUMIN >> 16) & 255)
+                      00903         MOVWF M#DWORDOUT + 2
+                      00904         S@B M#DWORDOUT + 3
+                      00905         MOVLW ((M#NUMIN >> 24) & 255)
+                      00906         MOVWF M#DWORDOUT + 3
+                      00907         R@B
+                      00908         ENDM
+                      00909 BIT_WREG MACRO M#VARIN,M#BITIN
+                      00910         S@B M#VARIN
+                      00911         CLRW
+                      00912         BTFSC M#VARIN,M#BITIN
+                      00913         MOVLW 1
+                      00914         R@B
+                      00915         ENDM
+                      00916 BIT_BYTE MACRO M#VARIN,M#BITIN,M#BYTEOUT
+                      00917         S@B M#VARIN
+                      00918         CLRW
+                      00919         BTFSC M#VARIN,M#BITIN
+                      00920         MOVLW 1
+                      00921         S@B M#BYTEOUT
+                      00922         MOVWF M#BYTEOUT
+                      00923         R@B
+                      00924         ENDM
+                      00925 BIT_BIT MACRO M#VARIN,M#BITIN,M#VAROUT,M#BITOUT
+                      00926 IF ((M#VARIN & 0X0F00) == (M#VAROUT & 0X0F00))
+                      00927         S@B M#VARIN
+                      00928         BTFSC M#VARIN,M#BITIN
+                      00929         BSF M#VAROUT,M#BITOUT
+                      00930         BTFSS M#VARIN,M#BITIN
+                      00931         BCF M#VAROUT,M#BITOUT
+                      00932 ELSE
+                      00933 IF ((M#VARIN <= BANKA_END) | (M#VARIN >= 0X0F80))
+                      00934         S@B M#VAROUT
+                      00935         BTFSC M#VARIN,M#BITIN
+                      00936         BSF M#VAROUT,M#BITOUT
+                      00937         BTFSS M#VARIN,M#BITIN
+                      00938         BCF M#VAROUT,M#BITOUT
+                      00939 ELSE
+                      00940 IF ((M#VAROUT <= BANKA_END) | (M#VAROUT >= 0X0F80))
+                      00941         S@B M#VARIN
+                      00942         BTFSC M#VARIN,M#BITIN
+                      00943         BSF M#VAROUT,M#BITOUT
+                      00944         BTFSS M#VARIN,M#BITIN
+                      00945         BCF M#VAROUT,M#BITOUT
+                      00946 ELSE
+                      00947         S@B M#VARIN
+                      00948         CLRDC
+                      00949         BTFSC M#VARIN,M#BITIN
+                      00950         SETDC
+                      00951         S@B M#VAROUT
+                      00952         SKPNDC
+                      00953         BSF M#VAROUT,M#BITOUT
+                      00954         SKPDC
+                      00955         BCF M#VAROUT,M#BITOUT
+                      00956 ENDIF
+                      00957 ENDIF
+                      00958 ENDIF
+                      00959         R@B
+                      00960         ENDM
+                      00961 BIT_WORD MACRO M#VARIN,M#BITIN,M#WORDOUT
+                      00962         S@B M#WORDOUT + 1
+                      00963         CLRF M#WORDOUT + 1
+                      00964         BIT_BYTE M#VARIN,M#BITIN,M#WORDOUT
+                      00965         ENDM
+                      00966 BIT_DWORD MACRO M#VARIN,M#BITIN,M#DWORDOUT
+                      00967         S@B M#DWORDOUT + 3
+                      00968         CLRF M#DWORDOUT + 3
+                      00969         S@B M#DWORDOUT + 2
+                      00970         CLRF M#DWORDOUT + 2
+                      00971         S@B M#DWORDOUT + 1
+                      00972         CLRF M#DWORDOUT + 1
+                      00973         BIT_BYTE M#VARIN,M#BITIN,M#DWORDOUT
+                      00974         ENDM
+                      00975 WORD_WREG MACRO M#WORDIN
+                      00976         BYTE_WREG M#WORDIN
+                      00977         ENDM
+                      00978 WORD_BYTE MACRO M#WORDIN,M#BYTEOUT
+                      00979         BYTE_BYTE M#WORDIN,M#BYTEOUT
+                      00980         ENDM
+                      00981 WORD_BIT MACRO M#WORDIN,M#VAROUT,M#BITOUT
+                      00982         BYTE_BIT M#WORDIN, M#VAROUT, M#BITOUT
+                      00983         ENDM
+                      00984 WORD_WORD MACRO M#WORDIN,M#WORDOUT
+                      00985         MOVFF M#WORDIN + 1,M#WORDOUT + 1
+                      00986         MOVFF M#WORDIN,M#WORDOUT
+                      00987         ENDM
+                      00988 WORD_DWORD MACRO M#WORDIN,M#DWORDOUT
+                      00989         MOVLW 0
+                      00990         MOVFF WREG,M#DWORDOUT + 3
+                      00991         MOVFF WREG,M#DWORDOUT + 2
+                      00992         WORD_WORD M#WORDIN,M#DWORDOUT
+                      00993         ENDM
+                      00994 BYTE_BYTE MACRO M#BYTEIN,M#BYTEOUT
+                      00995         MOVFF M#BYTEIN,M#BYTEOUT
+                      00996         ENDM
+                      00997 BYTE_WORD MACRO M#BYTEIN,M#WORDOUT
+                      00998         MOVLW 0
+                      00999         MOVFF WREG,M#WORDOUT + 1
+                      01000         BYTE_BYTE M#BYTEIN,M#WORDOUT
+                      01001         ENDM
+                      01002 BYTE_DWORD MACRO M#BYTEIN,M#DWORDOUT
+                      01003         MOVLW 0
+                      01004         MOVFF WREG,M#DWORDOUT + 3
+                      01005         MOVFF WREG,M#DWORDOUT + 2
+                      01006         MOVFF WREG,M#DWORDOUT + 1
+                      01007         BYTE_BYTE M#BYTEIN,M#DWORDOUT
+                      01008         ENDM
+                      01009 BYTE_BIT MACRO M#BYTEIN,M#VAROUT,M#BITOUT
+                      01010 IF ((M#BYTEIN & 0X0F00) == (M#VAROUT & 0X0F00))
+                      01011         S@B M#BYTEIN
+                      01012         BTFSC M#BYTEIN,0
+                      01013         BSF M#VAROUT,M#BITOUT
+                      01014         BTFSS M#BYTEIN,0
+                      01015         BCF M#VAROUT,M#BITOUT
+                      01016 ELSE
+                      01017 IF ((M#BYTEIN <= BANKA_END) | (M#BYTEIN >= 0X0F80))
+                      01018         S@B M#VAROUT
+                      01019         BTFSC M#BYTEIN,0
+                      01020         BSF M#VAROUT,M#BITOUT
+                      01021         BTFSS M#BYTEIN,0
+                      01022         BCF M#VAROUT,M#BITOUT
+                      01023 ELSE
+                      01024 IF ((M#VAROUT <= BANKA_END) | (M#VAROUT >= 0X0F80))
+                      01025         S@B M#BYTEIN
+                      01026         BTFSC M#BYTEIN,0
+                      01027         BSF M#VAROUT,M#BITOUT
+                      01028         BTFSS M#BYTEIN,0
+                      01029         BCF M#VAROUT,M#BITOUT
+                      01030 ELSE
+                      01031         S@B M#BYTEIN
+                      01032         RRF M#BYTEIN,W
+                      01033         S@B M#VAROUT
+                      01034         SKPNC
+                      01035         BSF M#VAROUT,M#BITOUT
+                      01036         SKPC
+                      01037         BCF M#VAROUT,M#BITOUT
+                      01038 ENDIF
+                      01039 ENDIF
+                      01040 ENDIF
+                      01041         R@B
+                      01042         ENDM
+                      01043 DWORD_WREG MACRO M#DWORDIN
+                      01044         BYTE_WREG M#DWORDIN
+                      01045         ENDM
+                      01046 DWORD_BYTE MACRO M#DWORDIN,M#BYTEOUT
+                      01047         BYTE_BYTE M#DWORDIN,M#BYTEOUT
+                      01048         ENDM
+                      01049 DWORD_WORD MACRO M#DWORDIN,M#WORDOUT
+                      01050         MOVFF M#DWORDIN + 1,M#WORDOUT + 1
+                      01051         MOVFF M#DWORDIN,M#WORDOUT
+                      01052         ENDM
+                      01053 DWORD_DWORD MACRO M#DWORDIN,M#DWORDOUT
+                      01054         MOVFF M#DWORDIN + 3,M#DWORDOUT + 3
+                      01055         MOVFF M#DWORDIN + 2,M#DWORDOUT + 2
+                      01056         MOVFF M#DWORDIN + 1,M#DWORDOUT + 1
+                      01057         MOVFF M#DWORDIN,M#DWORDOUT
+                      01058         ENDM
+                      01059 DWORD_BIT MACRO M#DWORDIN,M#VAROUT,M#BITOUT
+                      01060         BYTE_BIT M#DWORDIN,M#VAROUT,M#BITOUT
+                      01061         ENDM
+                      01062 NUM_FLOAT MACRO M#NUMIN,FLOATOUT
+                      01063         NUM_BYTE M#NUMIN,FLOATOUT + 3
+                      01064         NUM_BYTE ((M#NUMIN >> 8) & 255),FLOATOUT + 2
+                      01065         NUM_BYTE ((M#NUMIN >> 16) & 255),FLOATOUT + 1
+                      01066         NUM_BYTE ((M#NUMIN >> 24) & 255),FLOATOUT
+                      01067         ENDM
+                      01068 WREG_FLOAT MACRO FLOATOUT
+                      01069         CALL FLO@0832U
+                      01070         MOVFF PBP_AARG,FLOATOUT
+                      01071         MOVFF PBP_AARGH,FLOATOUT + 1
+                      01072         MOVFF PBP_AARGHH,FLOATOUT + 2
+                      01073         MOVFF PBP_AARGHHH,FLOATOUT + 3
+                      01074         ENDM
+                      01075 BIT_FLOAT MACRO M#VARIN,M#BITIN,FLOATOUT
+                      01076         BIT_WREG M#VARIN,M#BITIN
+                      01077         CALL FLO@0832U
+                      01078         MOVFF PBP_AARG,FLOATOUT
+                      01079         MOVFF PBP_AARGH,FLOATOUT + 1
+                      01080         MOVFF PBP_AARGHH,FLOATOUT + 2
+                      01081         MOVFF PBP_AARGHHH,FLOATOUT + 3
+                      01082         ENDM
+                      01083 BYTE_FLOAT MACRO M#BYTEIN,FLOATOUT
+                      01084         BYTE_WREG M#BYTEIN
+                      01085         CALL FLO@0832U
+                      01086         MOVFF PBP_AARG,FLOATOUT
+                      01087         MOVFF PBP_AARGH,FLOATOUT + 1
+                      01088         MOVFF PBP_AARGHH,FLOATOUT + 2
+                      01089         MOVFF PBP_AARGHHH,FLOATOUT + 3
+                      01090         ENDM
+                      01091 WORD_FLOAT MACRO M#WORDIN,FLOATOUT
+                      01092         BYTE_BYTE M#WORDIN,PBP_AARG
+                      01093         BYTE_BYTE M#WORDIN + 1,PBP_AARGH
+                      01094         CALL FLO@1632U
+                      01095         MOVFF PBP_AARG,FLOATOUT
+                      01096         MOVFF PBP_AARGH,FLOATOUT + 1
+                      01097         MOVFF PBP_AARGHH,FLOATOUT + 2
+                      01098         MOVFF PBP_AARGHHH,FLOATOUT + 3
+                      01099         ENDM
+                      01100 DWORD_FLOAT MACRO M#DWORDIN,FLOATOUT
+                      01101         MOVFF M#DWORDIN,PBP_AARG
+                      01102         MOVFF M#DWORDIN + 1,PBP_AARGH
+                      01103         MOVFF M#DWORDIN + 2,PBP_AARGHH
+                      01104         MOVFF M#DWORDIN + 3,PBP_AARGHHH
+                      01105         CALL FLO@3232S
+                      01106         MOVFF PBP_AARG,FLOATOUT
+                      01107         MOVFF PBP_AARGH,FLOATOUT + 1
+                      01108         MOVFF PBP_AARGHH,FLOATOUT + 2
+                      01109         MOVFF PBP_AARGHHH,FLOATOUT + 3
+                      01110         ENDM
+                      01111 FLOAT_FLOAT MACRO FLOATIN,FLOATOUT
+                      01112         MOVFF FLOATIN,FLOATOUT
+                      01113         MOVFF FLOATIN + 1,FLOATOUT + 1
+                      01114         MOVFF FLOATIN + 2,FLOATOUT + 2
+                      01115         MOVFF FLOATIN + 3,FLOATOUT + 3
+                      01116         ENDM
+                      01117 FLOAT_WREG MACRO FLOATIN
+                      01118         FLOAT_FLOAT FLOATIN,PBP_AARG
+                      01119         CALL INT@3232
+                      01120         ENDM
+                      01121 FLOAT_BIT MACRO FLOATIN,M#VAROUT,M#BITOUT
+                      01122         FLOAT_FLOAT FLOATIN,PBP_AARG
+                      01123         CALL INT@3232
+                      01124         WREG_BIT M#VAROUT,M#BITOUT
+                      01125         ENDM
+                      01126 FLOAT_BYTE MACRO FLOATIN,M#BYTEOUT
+                      01127         FLOAT_FLOAT FLOATIN,PBP_AARG
+                      01128         CALL INT@3232
+                      01129         WREG_BYTE M#BYTEOUT
+                      01130         ENDM
+                      01131 FLOAT_WORD MACRO FLOATIN,M#WORDOUT
+                      01132         FLOAT_FLOAT FLOATIN,PBP_AARG
+                      01133         CALL INT@3232
+                      01134         MOVFF PBP_AARGHHH,M#WORDOUT
+                      01135         MOVFF PBP_AARGHH,M#WORDOUT + 1
+                      01136         ENDM
+                      01137 FLOAT_DWORD MACRO FLOATIN,M#DWORDOUT
+                      01138         FLOAT_FLOAT FLOATIN,PBP_AARG
+                      01139         CALL INT@3232
+                      01140         MOVFF PBP_AARGHHH,M#DWORDOUT
+                      01141         MOVFF PBP_AARGHH,M#DWORDOUT + 1
+                      01142         MOVFF PBP_AARGH,M#DWORDOUT + 2
+                      01143         MOVFF PBP_AARG,M#DWORDOUT + 3
+                      01144         ENDM
+                      01145 NUM_FSR0 MACRO M#NUMIN
+                      01146         LFSR 0, M#NUMIN
+                      01147         ENDM
+                      01148 NUM_FSR1 MACRO M#NUMIN
+                      01149         LFSR 1, M#NUMIN
+                      01150         ENDM
+                      01151 NUM_FSR2 MACRO M#NUMIN
+                      01152         LFSR 2, M#NUMIN
+                      01153         ENDM
+                      01154 LABEL_WORD MACRO LABELIN,M#WORDOUT
+                      01155         MOVLW LOW (LABELIN)
+                      01156         MOVFF WREG, M#WORDOUT
+                      01157         MOVLW HIGH (LABELIN)
+                      01158         MOVFF WREG, M#WORDOUT + 1
+                      01159         ENDM
+  00000000            01161 BPF = 0
+  00000001            01162 BPFH = 1
+  00000002            01163 CSTR#CT = 2
+  00000003            01164 GEN = 3
+  00000004            01165 GEN3 = 4
+  00000005            01166 GEN3H = 5
+  00000006            01167 GEN4 = 6
+  00000007            01168 GEN4H = 7
+  00000008            01169 GPR = 8
+  00000009            01170 PBP_AARG = 9
+  0000000A            01171 PBP_AARGH = 10
+  0000000B            01172 PBP_AARGHH = 11
+  0000000C            01173 PBP_AARGHHH = 12
+  0000000D            01174 PBP_BARG = 13
+  0000000E            01175 PBP_BARGH = 14
+  0000000F            01176 PBP_BARGHH = 15
+  00000010            01177 PBP_BARGHHH = 16
+  00000011            01178 PP0 = 17
+  00000012            01179 PP0H = 18
+  00000013            01180 PP0HH = 19
+  00000014            01181 PP0HHH = 20
+  00000015            01182 PP1 = 21
+  00000016            01183 PP1H = 22
+  00000017            01184 PP1HH = 23
+  00000018            01185 PP1HHH = 24
+  00000019            01186 PP2 = 25
+  0000001A            01187 PP2H = 26
+  0000001B            01188 PP2HH = 27
+  0000001C            01189 PP2HHH = 28
+  0000001D            01190 PP3 = 29
+  0000001E            01191 PP3H = 30
+  0000001F            01192 PP4 = 31
+  00000020            01193 PP5 = 32
+  00000021            01194 PP5H = 33
+  00000022            01195 PP6 = 34
+  00000023            01196 PP6H = 35
+  00000024            01197 PP7 = 36
+  00000025            01198 PP7H = 37
+  00000026            01199 PP7HH = 38
+  00000027            01200 PP7HHH = 39
+  00000028            01201 PPZ = 40
+  00000029            01202 PPZH = 41
+  0000002A            01203 PPZHH = 42
+  0000002B            01204 PPZHHH = 43
+  0000002C            01205 _AEXP = 44
+  0000002D            01206 _BEXP = 45
+  0000002E            01207 _FP_FLAGS = 46
+  0000002F            01208 _FP_TEMP = 47
+  00000030            01209 _FP_TEMPB0 = 48
+  00000031            01210 _GLCD_XPOS = 49
+  00000032            01211 _SIGN = 50
+  00000033            01212 DEVADDR = 51
+  00000034            01213 VALUE_1ST = 52
+  00000035            01214 VALUE_2ND = 53
+  00000036            01215 VALUE_3RD = 54
+  00000037            01216 CONFREG = 55
+  00000038            01217 RAWMEASURE = 56
+  00000039            01218 RAWMEASUREH = 57
+  0000003A            01219 RAWMEASUREHH = 58
+  0000003B            01220 RAWMEASUREHHH = 59
+  0000003C            01221 INPMEASURE = 60
+  0000003D            01222 INPMEASUREH = 61
+  0000003E            01223 INPMEASUREHH = 62
+  0000003F            01224 INPMEASUREHHH = 63
+  00000040            01225 RESISTANCE = 64
+  00000041            01226 RESISTANCEH = 65
+  00000042            01227 RESISTANCEHH = 66
+  00000043            01228 RESISTANCEHHH = 67
+  00000044            01229 TEMPERATURE = 68
+  00000045            01230 TEMPERATUREH = 69
+  00000046            01231 TEMPERATUREHH = 70
+  00000047            01232 TEMPERATUREHHH = 71
+  00000048            01233 GAIN = 72
+  00000049            01234 GAINH = 73
+  0000004A            01235 GAINHH = 74
+  0000004B            01236 GAINHHH = 75
+  0000004C            01237 R0 = 76
+  0000004D            01238 R0H = 77
+  0000004E            01239 R0HH = 78
+  0000004F            01240 R0HHH = 79
+  00000050            01241 COEFFA = 80
+  00000051            01242 COEFFAH = 81
+  00000052            01243 COEFFAHH = 82
+  00000053            01244 COEFFAHHH = 83
+  00000054            01245 COEFFB = 84
+  00000055            01246 COEFFBH = 85
+  00000056            01247 COEFFBHH = 86
+  00000057            01248 COEFFBHHH = 87
+  00000058            01249 TRIALRES = 88
+  00000059            01250 TRIALRESH = 89
+  0000005A            01251 TRIALRESHH = 90
+  0000005B            01252 TRIALRESHHH = 91
+  0000005C            01253 ERR = 92
+  0000005D            01254 ERRH = 93
+  0000005E            01255 ERRHH = 94
+  0000005F            01256 ERRHHH = 95
+  00000060            01257 ABSERROR = 96
+  00000061            01258 ABSERRORH = 97
+  00000062            01259 ABSERRORHH = 98
+  00000063            01260 ABSERRORHHH = 99
+  00000064            01261 TEMPHIGH = 100
+  00000065            01262 TEMPHIGHH = 101
+  00000066            01263 TEMPHIGHHH = 102
+  00000067            01264 TEMPHIGHHHH = 103
+  00000068            01265 TEMPLOW = 104
+  00000069            01266 TEMPLOWH = 105
+  0000006A            01267 TEMPLOWHH = 106
+  0000006B            01268 TEMPLOWHHH = 107
+                      01269 #DEFINE __LCD_DTPORT PORTD
+                      01270 #DEFINE __LCD_RSPORT PORTB
+                      01271 #DEFINE __LCD_ENPORT PORTB
+                      01272 #DEFINE __LCD_RWPORT PORTB
+                      01273 #DEFINE __LCD_CS1PORT PORTB
+                      01274 #DEFINE __LCD_CS2PORT PORTB
+                      01275 #DEFINE __SCL_PORT PORTC
+                      01276 #DEFINE __SDA_PORT PORTC
+                      01277 #DEFINE __XTAL 4
+                      01278 #DEFINE __INTERNAL_FONT 1
+                      01279 #DEFINE __LCD_RSPIN 0
+                      01280 #DEFINE __LCD_ENPIN 1
+                      01281 #DEFINE __LCD_RWPIN 2
+                      01282 #DEFINE __LCD_CS1PIN 3
+                      01283 #DEFINE __LCD_CS2PIN 4
+                      01284 #DEFINE __LCD_TYPE 1
+                      01285 #DEFINE __SCL_PIN 3
+                      01286 #DEFINE __SDA_PIN 4
+000000                01287 PROTON#CODE#START
+000000                01288         ORG 0
+000000 EF1D F004      01289         GOTO PROTON#MAIN#START
+000008                01290         ORG 8
+000008                01291 OUT@FLOAT
+000008 6E2C           01292         MOVWF 44
+00000A AE25           01293         BTFSS 37,7
+00000C D003           01294         BRA OUT@FLOATSK1
+00000E 0E2D           01295         MOVLW 45
+000010 EC3F F001      01296         CALL CH@SND
+000014                01297 OUT@FLOATSK1
+000014 6A09           01298         CLRF 9
+000016 6A0A           01299         CLRF 10
+000018 6A0B           01300         CLRF 11
+00001A 6A0C           01301         CLRF 12
+00001C 8E25           01302         BSF 37,7
+00001E 0E6A           01303         MOVLW 106
+000020 2624           01304         ADDWF 36,F
+000022                01305 OUT@FLOATSK2
+000022 90D8           01306         BCF 4056,0
+000024 3225           01307         RRCF 37,F
+000026 3226           01308         RRCF 38,F
+000028 3227           01309         RRCF 39,F
+00002A 320C           01310         RRCF 12,F
+00002C 320B           01311         RRCF 11,F
+00002E 320A           01312         RRCF 10,F
+000030 3209           01313         RRCF 9,F
+000032 3E24           01314         INCFSZ 36,F
+000034 D7F6           01315         BRA OUT@FLOATSK2
+000036 5027           01316         MOVF 39,W
+000038 5C24           01317         SUBWF 36,W
+00003A 2627           01318         ADDWF 39,F
+00003C 5E24           01319         SUBWF 36,F
+00003E 5026           01320         MOVF 38,W
+000040 5C25           01321         SUBWF 37,W
+000042 2626           01322         ADDWF 38,F
+000044 5E25           01323         SUBWF 37,F
+000046 6A07           01324         CLRF 7
+000048 D83A           01325         RCALL OUT@DEC32
+00004A 0E2E           01326         MOVLW 46
+00004C EC3F F001      01327         CALL CH@SND
+000050                01328 FL@OUT
+000050 6A2D           01329         CLRF 45
+000052 90D8           01330         BCF 4056,0
+000054 3409           01331         RLCF 9,W
+000056 6E27           01332         MOVWF 39
+000058 340A           01333         RLCF 10,W
+00005A 6E26           01334         MOVWF 38
+00005C 340B           01335         RLCF 11,W
+00005E 6E25           01336         MOVWF 37
+000060 340C           01337         RLCF 12,W
+000062 6E24           01338         MOVWF 36
+000064 362D           01339         RLCF 45,F
+000066 90D8           01340         BCF 4056,0
+000068 3627           01341         RLCF 39,F
+00006A 3626           01342         RLCF 38,F
+00006C 3625           01343         RLCF 37,F
+00006E 3624           01344         RLCF 36,F
+000070 362D           01345         RLCF 45,F
+000072 5009           01346         MOVF 9,W
+000074 2627           01347         ADDWF 39,F
+000076 500A           01348         MOVF 10,W
+000078 B0D8           01349         BTFSC 4056,0
+00007A 3C0A           01350         INCFSZ 10,W
+00007C 2626           01351         ADDWF 38,F
+00007E 500B           01352         MOVF 11,W
+000080 B0D8           01353         BTFSC 4056,0
+000082 3C0B           01354         INCFSZ 11,W
+000084 2625           01355         ADDWF 37,F
+000086 500C           01356         MOVF 12,W
+000088 B0D8           01357         BTFSC 4056,0
+00008A 3C0C           01358         INCFSZ 12,W
+00008C 2624           01359         ADDWF 36,F
+00008E B0D8           01360         BTFSC 4056,0
+000090 3E2D           01361         INCFSZ 45,F
+000092 90D8           01362         BCF 4056,0
+000094 3627           01363         RLCF 39,F
+000096 3626           01364         RLCF 38,F
+000098 3625           01365         RLCF 37,F
+00009A 3624           01366         RLCF 36,F
+00009C 362D           01367         RLCF 45,F
+00009E 502D           01368         MOVF 45,W
+0000A0 0F30           01369         ADDLW 48
+0000A2 EC3F F001      01370         CALL CH@SND
+0000A6 C027 F009      01371         MOVFF 39,9
+0000AA C026 F00A      01372         MOVFF 38,10
+0000AE C025 F00B      01373         MOVFF 37,11
+0000B2 C024 F00C      01374         MOVFF 36,12
+0000B6 2E2C           01375         DECFSZ 44,F
+0000B8 D7CB           01376         BRA FL@OUT
+0000BA 90D8           01377         BCF 4056,0
+0000BC 0012           01378         RETURN
+0000BE                01379 OUT@DEC32
+0000BE 9600           01380         BCF 0,3
+0000C0 5007           01381         MOVF 7,W
+0000C2 E103           01382         BNZ O@D32L1
+0000C4 8600           01383         BSF 0,3
+0000C6 0E0A           01384         MOVLW 10
+0000C8 6E07           01385         MOVWF 7
+0000CA                01386 O@D32L1
+0000CA C027 F014      01387         MOVFF 39,20
+0000CE C026 F013      01388         MOVFF 38,19
+0000D2 C025 F012      01389         MOVFF 37,18
+0000D6 C024 F011      01390         MOVFF 36,17
+0000DA 6A06           01391         CLRF 6
+0000DC                01392 O@D32L2
+0000DC 6A1C           01393         CLRF 28
+0000DE 6A1B           01394         CLRF 27
+0000E0 6A1A           01395         CLRF 26
+0000E2 0E0A           01396         MOVLW 10
+0000E4 6E19           01397         MOVWF 25
+0000E6 ECCB F001      01398         CALL L@DIV
+0000EA 2A06           01399         INCF 6,F
+0000EC 5006           01400         MOVF 6,W
+0000EE 5C07           01401         SUBWF 7,W
+0000F0 A4D8           01402         BTFSS 4056,2
+0000F2 D7F4           01403         BRA O@D32L2
+0000F4 5019           01404         MOVF 25,W
+0000F6 A4D8           01405         BTFSS 4056,2
+0000F8 9600           01406         BCF 0,3
+0000FA A600           01407         BTFSS 0,3
+0000FC D002           01408         BRA O@D32SKP
+0000FE 2C07           01409         DECFSZ 7,W
+000100 D004           01410         BRA O@D32L3
+000102                01411 O@D32SKP
+000102 5019           01412         MOVF 25,W
+000104 0F30           01413         ADDLW 48
+000106 EC3F F001      01414         CALL CH@SND
+00010A                01415 O@D32L3
+00010A 2E07           01416         DECFSZ 7,F
+00010C D7DE           01417         BRA O@D32L1
+00010E 0012           01418         RETURN
+000110                01419 PRINT@MSTR
+000110                01420 PRINT@MSTRL
+000110 6AA6           01421         CLRF 4006
+000112 8EA6           01422         BSF 4006,PP_EEPGD
+000114                01423 PRT@MTL2
+000114 6A02           01424         CLRF 2
+000116                01425 PRT@MTL3
+000116 C006 FFF6      01426         MOVFF 6,4086
+00011A C007 FFF7      01427         MOVFF 7,4087
+00011E 0009           01428         TBLRD*+
+000120 50F5           01429         MOVF 4085,W
+000122 E005           01430         BZ PRT@MTEXT
+000124 D805           01431         RCALL PRINT
+000126 4A06           01432         INFSNZ 6,F
+000128 2A07           01433         INCF 7,F
+00012A 3E02           01434         INCFSZ 2,F
+00012C D7F4           01435         BRA PRT@MTL3
+00012E                01436 PRT@MTEXT
+00012E 0012           01437         RETURN
+000130                01438 PRINT
+000130 6E1E           01439         MOVWF 30
+000132 ECCC F000      01440         CALL SETUP@LCD
+000136                01441 GLCD@FLP
+000136 5031           01442         MOVF 49,W
+000138 ECE9 F000      01443         CALL CHECK@PAGE
+00013C C019 F004      01444         MOVFF 25,4
+000140 C01A F005      01445         MOVFF 26,5
+000144 0E06           01446         MOVLW 6
+000146 021E           01447         MULWF 30
+000148 0E2E           01448         MOVLW LOW (FONT)
+00014A 24F3           01449         ADDWF 4083,W
+00014C 6EF6           01450         MOVWF 4086
+00014E 0E0D           01451         MOVLW HIGH (FONT)
+000150 B0D8           01452         BTFSC 4056,0
+000152 0F01           01453         ADDLW 1
+000154 24F4           01454         ADDWF 4084,W
+000156 6EF7           01455         MOVWF 4087
+000158 0E06           01456         MOVLW 6
+00015A 6E22           01457         MOVWF 34
+00015C                01458 GLCD_L@2
+                      01459  IF (FONT > 65535)
+                      01460         ERROR "GRAPHIC LCD'S INTERNAL FONT MUST BE LOCATED BELOW CODE ADDRESS 65535"
+                      01461  ENDIF
+00015C 6AA6           01462         CLRF 4006
+00015E 8EA6           01463         BSF 4006,PP_EEPGD
+000160 0009           01464         TBLRD*+
+000162 50F5           01465         MOVF 4085,W
+000164 D809           01466         RCALL LCDWRITE@WREG
+000166 2E22           01467         DECFSZ 34,F
+000168 D7F9           01468         BRA GLCD_L@2
+00016A C004 F019      01469         MOVFF 4,25
+00016E C005 F01A      01470         MOVFF 5,26
+000172                01471 LCD@DONE
+000172 501E           01472         MOVF 30,W
+000174 0012           01473         RETURN
+000176                01474 LCDWRITE
+000176 5019           01475         MOVF 25,W
+000178                01476 LCDWRITE@WREG
+000178 9081           01477         BCF PORTB,0
+00017A D83A           01478         RCALL READ@STATUS
+00017C 8081           01479         BSF PORTB,0
+00017E D833           01480         RCALL TG@L
+000180 0E7D           01481         MOVLW 125
+000182 6031           01482         CPFSLT 49
+000184 D002           01483         BRA $ + 6
+000186 2A31           01484         INCF 49,F
+000188 D001           01485         BRA $ + 4
+00018A 6A31           01486         CLRF 49
+00018C 5031           01487         MOVF 49,W
+00018E D821           01488         RCALL CHECK@PAGE
+000190 9081           01489         BCF PORTB,0
+000192 5031           01490         MOVF 49,W
+000194 D82D           01491         RCALL READ@STATUS
+000196 D027           01492         BRA TG@L
+                      01493 #DEFINE LCD#IS#SETUP 1
+000198                01494 SETUP@LCD
+000198 B200           01495         BTFSC 0,1
+00019A D019           01496         BRA SKP@GCSIN
+00019C 6E21           01497         MOVWF 33
+00019E 9293           01498         BCF TRISB,1
+0001A0 9093           01499         BCF TRISB,0
+0001A2 9493           01500         BCF TRISB,2
+0001A4 9693           01501         BCF TRISB,3
+0001A6 9893           01502         BCF TRISB,4
+0001A8 6A95           01503         CLRF TRISD
+0001AA 8200           01504         BSF 0,1
+0001AC 928A           01505         BCF LATB,1
+0001AE 948A           01506         BCF LATB,2
+0001B0 908A           01507         BCF LATB,0
+0001B2 6A31           01508         CLRF _GLCD_XPOS
+0001B4 0EB8           01509         MOVLW 184
+0001B6 D81C           01510         RCALL READ@STATUS
+0001B8 D816           01511         RCALL TG@L
+0001BA 0E40           01512         MOVLW 64
+0001BC D819           01513         RCALL READ@STATUS
+0001BE D813           01514         RCALL TG@L
+0001C0 0EC0           01515         MOVLW 192
+0001C2 D816           01516         RCALL READ@STATUS
+0001C4 D810           01517         RCALL TG@L
+0001C6 0E3F           01518         MOVLW 63
+0001C8 D813           01519         RCALL READ@STATUS
+0001CA D80D           01520         RCALL TG@L
+0001CC 5021           01521         MOVF 33,W
+0001CE                01522 SKP@GCSIN
+0001CE 9081           01523         BCF PORTB,0
+0001D0 0012           01524         RETURN
+0001D2                01525 CHECK@PAGE
+0001D2 BCE8           01526         BTFSC 4072,6
+0001D4 D004           01527         BRA EN@RIGHT
+0001D6 9681           01528         BCF PORTB,3
+0001D8 0000           01529         NOP
+0001DA 8881           01530         BSF PORTB,4
+0001DC 0012           01531         RETURN
+0001DE                01532 EN@RIGHT
+0001DE 8681           01533         BSF PORTB,3
+0001E0 0000           01534         NOP
+0001E2 9881           01535         BCF PORTB,4
+0001E4 0012           01536         RETURN
+0001E6                01537 TG@L
+0001E6 8281           01538         BSF PORTB,1
+0001E8 6E83           01539         MOVWF PORTD
+0001EA 0000           01540         NOP
+0001EC 9281           01541         BCF PORTB,1
+0001EE 0012           01542         RETURN
+0001F0                01543 READ@STATUS
+0001F0 8481           01544         BSF PORTB,2
+0001F2 6895           01545         SETF TRISD
+0001F4 6A11           01546         CLRF 17
+0001F6                01547 R@SLP1
+0001F6 8281           01548         BSF PORTB,1
+0001F8 0000           01549         NOP
+0001FA 9281           01550         BCF PORTB,1
+0001FC 0000           01551         NOP
+0001FE AE83           01552         BTFSS PORTD,7
+000200 D002           01553         BRA $ + 6
+000202 3E11           01554         INCFSZ 17,F
+000204 D7F8           01555         BRA R@SLP1
+000206 9481           01556         BCF PORTB,2
+000208 6A83           01557         CLRF PORTD
+00020A 6A95           01558         CLRF TRISD
+00020C 0012           01559         RETURN
+00020E                01560 GLCD@CUR
+00020E DFC4           01561         RCALL SETUP@LCD
+000210 6E31           01562         MOVWF 49
+000212 9681           01563         BCF PORTB,3
+000214 9881           01564         BCF PORTB,4
+000216 8200           01565         BSF 0,1
+000218 0E3F           01566         MOVLW 63
+00021A DFE5           01567         RCALL TG@L
+00021C 0EB8           01568         MOVLW 184
+00021E 1003           01569         IORWF 3,W
+000220 DFE7           01570         RCALL READ@STATUS
+000222 DFE1           01571         RCALL TG@L
+000224 5031           01572         MOVF 49,W
+000226 0D06           01573         MULLW 6
+000228 50F3           01574         MOVF 4083,W
+00022A DFD3           01575         RCALL CHECK@PAGE
+00022C 50F3           01576         MOVF 4083,W
+00022E 0B7F           01577         ANDLW 127
+000230 6E31           01578         MOVWF 49
+000232 0940           01579         IORLW 64
+000234 DFDD           01580         RCALL READ@STATUS
+000236 D7D7           01581         BRA TG@L
+000238                01582 GLCD@CLS
+000238 9200           01583         BCF 0,1
+00023A ECCC F000      01584         CALL SETUP@LCD
+00023E 9681           01585         BCF PORTB,3
+000240 0000           01586         NOP
+000242 9881           01587         BCF PORTB,4
+000244 0E3E           01588         MOVLW 62
+000246 DFCF           01589         RCALL TG@L
+000248 6A22           01590         CLRF 34
+00024A                01591 GLD@L1
+00024A 9081           01592         BCF PORTB,0
+00024C 5022           01593         MOVF 34,W
+00024E 09B8           01594         IORLW 184
+000250 DFCF           01595         RCALL READ@STATUS
+000252 DFC9           01596         RCALL TG@L
+000254 6A23           01597         CLRF 35
+000256                01598 GLCD@L2
+000256 9081           01599         BCF PORTB,0
+000258 5023           01600         MOVF 35,W
+00025A 0940           01601         IORLW 64
+00025C DFC9           01602         RCALL READ@STATUS
+00025E DFC3           01603         RCALL TG@L
+000260 0E00           01604         MOVLW 0
+000262 9081           01605         BCF PORTB,0
+000264 DFC5           01606         RCALL READ@STATUS
+000266 8081           01607         BSF PORTB,0
+000268 DFBE           01608         RCALL TG@L
+00026A 2A23           01609         INCF 35,F
+00026C AC23           01610         BTFSS 35,6
+00026E D7F3           01611         BRA GLCD@L2
+000270 2A22           01612         INCF 34,F
+000272 A622           01613         BTFSS 34,3
+000274 D7EA           01614         BRA GLD@L1
+000276 9081           01615         BCF PORTB,0
+000278 9200           01616         BCF 0,1
+00027A DF8E           01617         RCALL SETUP@LCD
+00027C 0012           01618         RETURN
+00027E                01619 CH@SND
+00027E BE01           01620         BTFSC 1,7
+000280 EF98 F000      01621         GOTO PRINT
+000284 B201           01622         BTFSC 1,1
+000286 D003           01623         BRA HBUSOUT@STM1
+000288 B001           01624         BTFSC 1,0
+00028A EF6C F001      01625         GOTO HBUSOUT
+00028E                01626 HBUSOUT@STM1
+00028E                01627 HBUSINB
+00028E 9800           01628         BCF 0,4
+000290 8A00           01629         BSF 0,5
+000292 8C00           01630         BSF 0,6
+000294 8E00           01631         BSF 0,7
+000296 8400           01632         BSF 0,2
+000298 D00A           01633         BRA HBUS@INA
+00029A                01634 HBUSIN2
+00029A 8800           01635         BSF 0,4
+00029C A800           01636         BTFSS 0,4
+00029E                01637 HBUSIN
+00029E 9800           01638         BCF 0,4
+0002A0 BA00           01639         BTFSC 0,5
+0002A2 D003           01640         BRA HBUS@ARR
+0002A4 8A00           01641         BSF 0,5
+0002A6 D837           01642         RCALL HBUS@RST
+0002A8 E22B           01643         BC HBUS@STP
+0002AA                01644 HBUS@ARR
+0002AA 9400           01645         BCF 0,2
+0002AC D848           01646         RCALL HBUS@WAIT_FOR_IDLE
+0002AE                01647 HBUS@INA
+0002AE 86C5           01648         BSF 4037,PP_RCEN
+0002B0 D846           01649         RCALL HBUS@WAIT_FOR_IDLE
+0002B2 50C9           01650         MOVF 4041,W
+0002B4 B400           01651         BTFSC 0,2
+0002B6 D007           01652         BRA HI2C@EX
+0002B8 B800           01653         BTFSC 0,4
+0002BA D004           01654         BRA HBUS@SKA
+0002BC                01655 HBUS@ACK
+0002BC 88C5           01656         BSF 4037,PP_ACKEN
+0002BE B8C5           01657         BTFSC 4037,PP_ACKEN
+0002C0 D7FE           01658         BRA $ - 2
+0002C2 B800           01659         BTFSC 0,4
+0002C4                01660 HBUS@SKA
+0002C4 D81D           01661         RCALL HBUS@STP
+0002C6                01662 HI2C@EX
+0002C6 90D8           01663         BCF 4056,0
+0002C8 6E15           01664         MOVWF 21
+0002CA D021           01665         BRA HI2C@FIN
+0002CC                01666 HBUSOUTB
+0002CC 8A00           01667         BSF 0,5
+0002CE 8C00           01668         BSF 0,6
+0002D0 8E00           01669         BSF 0,7
+0002D2 D002           01670         BRA HBUSOUT
+0002D4                01671 HBUSOUT2
+0002D4 8800           01672         BSF 0,4
+0002D6 A800           01673         BTFSS 0,4
+0002D8                01674 HBUSOUT
+0002D8 9800           01675         BCF 0,4
+0002DA BC00           01676         BTFSC 0,6
+0002DC D005           01677         BRA HBUS@ARW
+0002DE 0BFE           01678         ANDLW 254
+0002E0 6E08           01679         MOVWF 8
+0002E2 8C00           01680         BSF 0,6
+0002E4 90D8           01681         BCF 4056,0
+0002E6 D013           01682         BRA HI2C@FIN
+0002E8                01683 HBUS@ARW
+0002E8 BE00           01684         BTFSC 0,7
+0002EA D006           01685         BRA HBUS@SSC
+0002EC 6E1D           01686         MOVWF 29
+0002EE 8E00           01687         BSF 0,7
+0002F0 D814           01688         RCALL HBUS@ST
+0002F2 B0D8           01689         BTFSC 4056,0
+0002F4 D005           01690         BRA HBUS@STP
+0002F6 501D           01691         MOVF 29,W
+0002F8                01692 HBUS@SSC
+0002F8 D814           01693         RCALL HBUS@WRC
+0002FA E202           01694         BC HBUS@STP
+0002FC A800           01695         BTFSS 0,4
+0002FE D007           01696         BRA HI2C@FIN
+000300                01697 HBUS@STP
+000300 84C5           01698         BSF 4037,PP_PEN
+000302 B4C5           01699         BTFSC 4037,PP_PEN
+000304 D7FE           01700         BRA $ - 2
+000306 9C00           01701         BCF 0,6
+000308 9E00           01702         BCF 0,7
+00030A 9A00           01703         BCF 0,5
+00030C 9400           01704         BCF 0,2
+00030E                01705 HI2C@FIN
+00030E 801F           01706         BSF 31,0
+000310 A0D8           01707         BTFSS 4056,0
+000312 901F           01708         BCF 31,0
+000314 0012           01709         RETURN
+000316                01710 HBUS@RST
+000316 D80D           01711         RCALL HBUS@RESTRT
+000318 D001           01712         BRA $ + 4
+00031A                01713 HBUS@ST
+00031A D805           01714         RCALL HBUS@STRT
+00031C 5008           01715         MOVF 8,W
+00031E BA00           01716         BTFSC 0,5
+000320 0901           01717         IORLW 1
+000322                01718 HBUS@WRC
+000322 6EC9           01719         MOVWF 4041
+000324 D00A           01720         BRA HBUS@WAIT_FOR_IDLE_WITH_WRITE
+000326                01721 HBUS@STRT
+000326 8694           01722         BSF _I2C_SCL_PORT,_I2C_SCL_PIN
+000328 8894           01723         BSF _I2C_SDA_PORT,_I2C_SDA_PIN
+00032A 80C5           01724         BSF 4037,PP_SEN
+00032C B0C5           01725         BTFSC 4037,PP_SEN
+00032E D7FE           01726         BRA $ - 2
+000330 0012           01727         RETURN
+000332                01728 HBUS@RESTRT
+000332 82C5           01729         BSF 4037,PP_RSEN
+000334 B2C5           01730         BTFSC 4037,PP_RSEN
+000336 D7FE           01731         BRA $ - 2
+000338 0012           01732         RETURN
+00033A                01733 HBUS@WAIT_FOR_IDLE_WITH_WRITE
+00033A B4C7           01734         BTFSC 4039,PP_R_W
+00033C D7FE           01735         BRA $ - 2
+00033E                01736 HBUS@WAIT_FOR_IDLE
+00033E 6815           01737         SETF 21
+000340                01738 HBUS@LP1
+000340 50C5           01739         MOVF 4037,W
+000342 0B1F           01740         ANDLW 31
+000344 0000           01741         NOP
+000346 90D8           01742         BCF 4056,0
+000348 B4D8           01743         BTFSC 4056,2
+00034A 0012           01744         RETURN
+00034C 2E15           01745         DECFSZ 21,F
+00034E D7F8           01746         BRA HBUS@LP1
+000350 80D8           01747         BSF 4056,0
+000352 0012           01748         RETURN
+000354                01749 DL@MS
+000354 6A16           01750         CLRF 22
+000356                01751 DLY@W
+000356 6E15           01752         MOVWF 21
+000358                01753 DLY@P
+000358 0EFF           01754         MOVLW 255
+00035A 2615           01755         ADDWF 21,F
+00035C 2216           01756         ADDWFC 22,F
+00035E D000           01757         BRA $ + 2
+000360 A0D8           01758         BTFSS 4056,0
+000362 0012           01759         RETURN
+000364 0E03           01760         MOVLW 3
+000366 6E12           01761         MOVWF 18
+000368 0EDF           01762         MOVLW 223
+00036A D802           01763         RCALL DLUS@W
+00036C D7F5           01764         BRA DLY@P
+00036E                01765 DL@US
+00036E 6A12           01766         CLRF 18
+000370                01767 DLUS@W
+000370 0FE9           01768         ADDLW 233
+000372 6E11           01769         MOVWF 17
+000374 0EFC           01770         MOVLW 252
+000376 E305           01771         BNC $ + 12
+000378 0000           01772         NOP
+00037A 0000           01773         NOP
+00037C 2611           01774         ADDWF 17,F
+00037E E2FD           01775         BC $ - 4
+000380 0000           01776         NOP
+000382 2611           01777         ADDWF 17,F
+000384 0612           01778         DECF 18,F
+000386 E2F9           01779         BC $ - 12
+000388 B011           01780         BTFSC 17,0
+00038A D000           01781         BRA $ + 2
+00038C A211           01782         BTFSS 17,1
+00038E D002           01783         BRA $ + 6
+000390 D000           01784         BRA $ + 2
+000392 0000           01785         NOP
+000394 0012           01786         RETURN
+000396                01787 L@DIV
+000396                01788 L@MOD
+000396 5014           01789         MOVF 20,W
+000398 181C           01790         XORWF 28,W
+00039A 0B80           01791         ANDLW 128
+00039C 6EF4           01792         MOVWF 4084
+00039E AE14           01793         BTFSS 20,7
+0003A0 D006           01794         BRA DIVS@32X32SKIP1
+0003A2 80D8           01795         BSF 4056,0
+0003A4 0E00           01796         MOVLW 0
+0003A6 5611           01797         SUBFWB 17,F
+0003A8 5612           01798         SUBFWB 18,F
+0003AA 5613           01799         SUBFWB 19,F
+0003AC 5614           01800         SUBFWB 20,F
+0003AE                01801 DIVS@32X32SKIP1
+0003AE AE1C           01802         BTFSS 28,7
+0003B0 D006           01803         BRA DIVS@32X32SKIP2
+0003B2 80D8           01804         BSF 4056,0
+0003B4 0E00           01805         MOVLW 0
+0003B6 5619           01806         SUBFWB 25,F
+0003B8 561A           01807         SUBFWB 26,F
+0003BA 561B           01808         SUBFWB 27,F
+0003BC 561C           01809         SUBFWB 28,F
+0003BE                01810 DIVS@32X32SKIP2
+0003BE 6A15           01811         CLRF 21
+0003C0 6A16           01812         CLRF 22
+0003C2 6A17           01813         CLRF 23
+0003C4 6A18           01814         CLRF 24
+0003C6 6A28           01815         CLRF 40
+0003C8 6A29           01816         CLRF 41
+0003CA 6A2A           01817         CLRF 42
+0003CC 6A2B           01818         CLRF 43
+0003CE 501C           01819         MOVF 28,W
+0003D0 101B           01820         IORWF 27,W
+0003D2 101A           01821         IORWF 26,W
+0003D4 1019           01822         IORWF 25,W
+0003D6 E023           01823         BZ DIVS@32X32SKIP5
+0003D8 0E20           01824         MOVLW 32
+0003DA 6EF3           01825         MOVWF 4083
+0003DC                01826 DIVS@32X32LOOP
+0003DC 90D8           01827         BCF 4056,0
+0003DE 3611           01828         RLCF 17,F
+0003E0 3612           01829         RLCF 18,F
+0003E2 3613           01830         RLCF 19,F
+0003E4 3614           01831         RLCF 20,F
+0003E6 3628           01832         RLCF 40,F
+0003E8 3629           01833         RLCF 41,F
+0003EA 362A           01834         RLCF 42,F
+0003EC 362B           01835         RLCF 43,F
+0003EE 5019           01836         MOVF 25,W
+0003F0 5C28           01837         SUBWF 40,W
+0003F2 501A           01838         MOVF 26,W
+0003F4 5829           01839         SUBWFB 41,W
+0003F6 501B           01840         MOVF 27,W
+0003F8 582A           01841         SUBWFB 42,W
+0003FA 501C           01842         MOVF 28,W
+0003FC 582B           01843         SUBWFB 43,W
+0003FE E309           01844         BNC DIVS@32X32SKIP4
+000400 5019           01845         MOVF 25,W
+000402 5E28           01846         SUBWF 40,F
+000404 501A           01847         MOVF 26,W
+000406 5A29           01848         SUBWFB 41,F
+000408 501B           01849         MOVF 27,W
+00040A 5A2A           01850         SUBWFB 42,F
+00040C 501C           01851         MOVF 28,W
+00040E 5A2B           01852         SUBWFB 43,F
+000410 80D8           01853         BSF 4056,0
+000412                01854 DIVS@32X32SKIP4
+000412 3615           01855         RLCF 21,F
+000414 3616           01856         RLCF 22,F
+000416 3617           01857         RLCF 23,F
+000418 3618           01858         RLCF 24,F
+00041A 2EF3           01859         DECFSZ 4083,F
+00041C D7DF           01860         BRA DIVS@32X32LOOP
+00041E                01861 DIVS@32X32SKIP5
+00041E AEF4           01862         BTFSS 4084,7
+000420 D006           01863         BRA DIVS@32X32EXIT
+000422 80D8           01864         BSF 4056,0
+000424 0E00           01865         MOVLW 0
+000426 5615           01866         SUBFWB 21,F
+000428 5616           01867         SUBFWB 22,F
+00042A 5617           01868         SUBFWB 23,F
+00042C 5618           01869         SUBFWB 24,F
+00042E                01870 DIVS@32X32EXIT
+00042E C015 F011      01871         MOVFF 21,17
+000432 C016 F012      01872         MOVFF 22,18
+000436 C017 F013      01873         MOVFF 23,19
+00043A C018 F014      01874         MOVFF 24,20
+00043E C028 F019      01875         MOVFF 40,25
+000442 C029 F01A      01876         MOVFF 41,26
+000446 C02A F01B      01877         MOVFF 42,27
+00044A C02B F01C      01878         MOVFF 43,28
+00044E 0012           01879         RETURN
+000450                01880 TAGEB@32
+000450 500E           01881         MOVF 14,W
+000452 180A           01882         XORWF 10,W
+000454 6E30           01883         MOVWF 48
+000456 BE30           01884         BTFSC 48,7
+000458 D030           01885         BRA TAGEB@32O
+00045A BE0E           01886         BTFSC 14,7
+00045C D017           01887         BRA TAGEB@32N
+00045E                01888 TAGEB@32P
+00045E 500D           01889         MOVF 13,W
+000460 5C09           01890         SUBWF 9,W
+000462 A0D8           01891         BTFSS 4056,0
+000464 0C00           01892         RETLW 0
+000466 A4D8           01893         BTFSS 4056,2
+000468 0C01           01894         RETLW 1
+00046A 500E           01895         MOVF 14,W
+00046C 5C0A           01896         SUBWF 10,W
+00046E A0D8           01897         BTFSS 4056,0
+000470 0C00           01898         RETLW 0
+000472 A4D8           01899         BTFSS 4056,2
+000474 0C01           01900         RETLW 1
+000476 500F           01901         MOVF 15,W
+000478 5C0B           01902         SUBWF 11,W
+00047A A0D8           01903         BTFSS 4056,0
+00047C 0C00           01904         RETLW 0
+00047E A4D8           01905         BTFSS 4056,2
+000480 0C01           01906         RETLW 1
+000482 5010           01907         MOVF 16,W
+000484 5C0C           01908         SUBWF 12,W
+000486 A0D8           01909         BTFSS 4056,0
+000488 0C00           01910         RETLW 0
+00048A 0C01           01911         RETLW 1
+00048C                01912 TAGEB@32N
+00048C 5009           01913         MOVF 9,W
+00048E 5C0D           01914         SUBWF 13,W
+000490 A0D8           01915         BTFSS 4056,0
+000492 0C00           01916         RETLW 0
+000494 A4D8           01917         BTFSS 4056,2
+000496 0C01           01918         RETLW 1
+000498 500A           01919         MOVF 10,W
+00049A 5C0E           01920         SUBWF 14,W
+00049C A0D8           01921         BTFSS 4056,0
+00049E 0C00           01922         RETLW 0
+0004A0 A4D8           01923         BTFSS 4056,2
+0004A2 0C01           01924         RETLW 1
+0004A4 500B           01925         MOVF 11,W
+0004A6 5C0F           01926         SUBWF 15,W
+0004A8 A0D8           01927         BTFSS 4056,0
+0004AA 0C00           01928         RETLW 0
+0004AC A4D8           01929         BTFSS 4056,2
+0004AE 0C01           01930         RETLW 1
+0004B0 500C           01931         MOVF 12,W
+0004B2 5C10           01932         SUBWF 16,W
+0004B4 A0D8           01933         BTFSS 4056,0
+0004B6 0C00           01934         RETLW 0
+0004B8 0C01           01935         RETLW 1
+0004BA                01936 TAGEB@32O
+0004BA AE0A           01937         BTFSS 10,7
+0004BC 0C01           01938         RETLW 1
+0004BE 0C00           01939         RETLW 0
+0004C0                01940 FPS@32
+0004C0 0E80           01941         MOVLW 128
+0004C2 1A0E           01942         XORWF 14,F
+0004C4                01943 FPA@32
+0004C4 500D           01944         MOVF 13,W
+0004C6 5C09           01945         SUBWF 9,W
+0004C8 6E2D           01946         MOVWF 45
+0004CA E211           01947         BC FL@ADD_1
+0004CC 6C2D           01948         NEGF 45
+0004CE 5009           01949         MOVF 9,W
+0004D0 C00D F009      01950         MOVFF 13,9
+0004D4 6E0D           01951         MOVWF 13
+0004D6 500A           01952         MOVF 10,W
+0004D8 C00E F00A      01953         MOVFF 14,10
+0004DC 6E0E           01954         MOVWF 14
+0004DE 500B           01955         MOVF 11,W
+0004E0 C00F F00B      01956         MOVFF 15,11
+0004E4 6E0F           01957         MOVWF 15
+0004E6 500C           01958         MOVF 12,W
+0004E8 C010 F00C      01959         MOVFF 16,12
+0004EC 6E10           01960         MOVWF 16
+0004EE                01961 FL@ADD_1
+0004EE 0E1A           01962         MOVLW 26
+0004F0 602D           01963         CPFSLT 45
+0004F2 D078           01964         BRA FL@ADD_RET
+0004F4 520D           01965         MOVF 13,F
+0004F6 E076           01966         BZ FL@ADD_RET
+0004F8 6A2C           01967         CLRF 44
+0004FA 500A           01968         MOVF 10,W
+0004FC 6E2F           01969         MOVWF 47
+0004FE 180E           01970         XORWF 14,W
+000500 6E32           01971         MOVWF 50
+000502 8E0A           01972         BSF 10,7
+000504 8E0E           01973         BSF 14,7
+000506                01974 FL@ADD_2
+000506 0E08           01975         MOVLW 8
+000508 5E2D           01976         SUBWF 45,F
+00050A E308           01977         BNC FL@ADD_3
+00050C C010 F02C      01978         MOVFF 16,44
+000510 C00F F010      01979         MOVFF 15,16
+000514 C00E F00F      01980         MOVFF 14,15
+000518 6A0E           01981         CLRF 14
+00051A D7F5           01982         BRA FL@ADD_2
+00051C                01983 FL@ADD_3
+00051C 262D           01984         ADDWF 45,F
+00051E E007           01985         BZ FL@ADD_5
+000520                01986 FL@ADD_4
+000520 90D8           01987         BCF 4056,0
+000522 320E           01988         RRCF 14,F
+000524 320F           01989         RRCF 15,F
+000526 3210           01990         RRCF 16,F
+000528 322C           01991         RRCF 44,F
+00052A 2E2D           01992         DECFSZ 45,F
+00052C D7F9           01993         BRA FL@ADD_4
+00052E                01994 FL@ADD_5
+00052E AE32           01995         BTFSS 50,7
+000530 D035           01996         BRA FL@ADD_11
+000532 5010           01997         MOVF 16,W
+000534 5E0C           01998         SUBWF 12,F
+000536 500F           01999         MOVF 15,W
+000538 5A0B           02000         SUBWFB 11,F
+00053A 500E           02001         MOVF 14,W
+00053C 5A0A           02002         SUBWFB 10,F
+00053E E207           02003         BC FL@ADD_6
+000540 80D8           02004         BSF 4056,0
+000542 0E00           02005         MOVLW 0
+000544 560C           02006         SUBFWB 12,F
+000546 560B           02007         SUBFWB 11,F
+000548 560A           02008         SUBFWB 10,F
+00054A 0E80           02009         MOVLW 128
+00054C 1A2F           02010         XORWF 47,F
+00054E                02011 FL@ADD_6
+00054E 6C2C           02012         NEGF 44
+000550 E004           02013         BZ FL@ADD_7
+000552 060C           02014         DECF 12,F
+000554 0E00           02015         MOVLW 0
+000556 5A0B           02016         SUBWFB 11,F
+000558 5A0A           02017         SUBWFB 10,F
+00055A                02018 FL@ADD_7
+00055A 0E04           02019         MOVLW 4
+00055C 6E2D           02020         MOVWF 45
+00055E                02021 FL@ADD_8
+00055E 660A           02022         TSTFSZ 10
+000560 D00D           02023         BRA FL@ADD_9
+000562 C00B F00A      02024         MOVFF 11,10
+000566 C00C F00B      02025         MOVFF 12,11
+00056A C02C F00C      02026         MOVFF 44,12
+00056E 6A2C           02027         CLRF 44
+000570 0E08           02028         MOVLW 8
+000572 5E09           02029         SUBWF 9,F
+000574 E32D           02030         BNC FL@ADD_RES0
+000576 2E2D           02031         DECFSZ 45,F
+000578 D7F2           02032         BRA FL@ADD_8
+00057A D02A           02033         BRA FL@ADD_RES0
+00057C                02034 FL@ADD_9
+00057C BE0A           02035         BTFSC 10,7
+00057E D008           02036         BRA FL@ADD_10
+000580 90D8           02037         BCF 4056,0
+000582 362C           02038         RLCF 44,F
+000584 360C           02039         RLCF 12,F
+000586 360B           02040         RLCF 11,F
+000588 360A           02041         RLCF 10,F
+00058A 2E09           02042         DECFSZ 9,F
+00058C D7F7           02043         BRA FL@ADD_9
+00058E D020           02044         BRA FL@ADD_RES0
+000590                02045 FL@ADD_10
+000590 AC2E           02046         BTFSS 46,6
+000592 D026           02047         BRA FL@ADD_SET_SIGN
+000594 AE2C           02048         BTFSS 44,7
+000596 D024           02049         BRA FL@ADD_SET_SIGN
+000598 6A2C           02050         CLRF 44
+00059A D011           02051         BRA FL@ADD_INCREMENT
+00059C                02052 FL@ADD_11
+00059C 5010           02053         MOVF 16,W
+00059E 260C           02054         ADDWF 12,F
+0005A0 500F           02055         MOVF 15,W
+0005A2 220B           02056         ADDWFC 11,F
+0005A4 500E           02057         MOVF 14,W
+0005A6 220A           02058         ADDWFC 10,F
+0005A8 E306           02059         BNC FL@ADD_13
+0005AA                02060 FL@ADD_ADJUST_RIGHT
+0005AA 320A           02061         RRCF 10,F
+0005AC 320B           02062         RRCF 11,F
+0005AE 320C           02063         RRCF 12,F
+0005B0 322C           02064         RRCF 44,F
+0005B2 4A09           02065         INFSNZ 9,F
+0005B4 D00F           02066         BRA FL@ADD_OVERFLOW
+0005B6                02067 FL@ADD_13
+0005B6 AC2E           02068         BTFSS 46,6
+0005B8 D013           02069         BRA FL@ADD_SET_SIGN
+0005BA AE2C           02070         BTFSS 44,7
+0005BC D011           02071         BRA FL@ADD_SET_SIGN
+0005BE                02072 FL@ADD_INCREMENT
+0005BE 3E0C           02073         INCFSZ 12,F
+0005C0 D00F           02074         BRA FL@ADD_SET_SIGN
+0005C2 3E0B           02075         INCFSZ 11,F
+0005C4 D00D           02076         BRA FL@ADD_SET_SIGN
+0005C6 3E0A           02077         INCFSZ 10,F
+0005C8 D00B           02078         BRA FL@ADD_SET_SIGN
+0005CA 80D8           02079         BSF 4056,0
+0005CC 900C           02080         BCF 12,0
+0005CE D7ED           02081         BRA FL@ADD_ADJUST_RIGHT
+0005D0                02082 FL@ADD_RES0
+0005D0 6A09           02083         CLRF 9
+0005D2 D002           02084         BRA FL@ADD_MANTISSA
+0005D4                02085 FL@ADD_OVERFLOW
+0005D4 822E           02086         BSF 46,1
+0005D6 6809           02087         SETF 9
+0005D8                02088 FL@ADD_MANTISSA
+0005D8 6A0C           02089         CLRF 12
+0005DA 6A0B           02090         CLRF 11
+0005DC 0E80           02091         MOVLW 128
+0005DE 6E0A           02092         MOVWF 10
+0005E0                02093 FL@ADD_SET_SIGN
+0005E0 AE2F           02094         BTFSS 47,7
+0005E2 9E0A           02095         BCF 10,7
+0005E4                02096 FL@ADD_RET
+0005E4 500C           02097         MOVF 12,W
+0005E6 0012           02098         RETURN
+0005E8                02099 FPD@32
+0005E8 500A           02100         MOVF 10,W
+0005EA 6E2A           02101         MOVWF 42
+0005EC 180E           02102         XORWF 14,W
+0005EE 6E32           02103         MOVWF 50
+0005F0 500D           02104         MOVF 13,W
+0005F2 E053           02105         BZ FL@DIV_DIV0
+0005F4 5209           02106         MOVF 9,F
+0005F6 E054           02107         BZ FL@DIV_RES0
+0005F8 5E09           02108         SUBWF 9,F
+0005FA 0E7F           02109         MOVLW 127
+0005FC E203           02110         BC FL@DIV_1
+0005FE 2609           02111         ADDWF 9,F
+000600 E203           02112         BC FL@DIV_2
+000602 D04D           02113         BRA FL@DIV_UNDERFLOW
+000604                02114 FL@DIV_1
+000604 2609           02115         ADDWF 9,F
+000606 E24E           02116         BC FL@DIV_OVERFLOW1
+000608                02117 FL@DIV_2
+000608 C00C F028      02118         MOVFF 12,40
+00060C C00B F029      02119         MOVFF 11,41
+000610 8E2A           02120         BSF 42,7
+000612 8E0E           02121         BSF 14,7
+000614 0E18           02122         MOVLW 24
+000616 6E2F           02123         MOVWF 47
+000618 6A0C           02124         CLRF 12
+00061A 6A0B           02125         CLRF 11
+00061C 6A0A           02126         CLRF 10
+00061E D00B           02127         BRA FP@DIV_START
+000620                02128 FL@DIV_TEST_ZERO_L
+000620 5010           02129         MOVF 16,W
+000622 5C28           02130         SUBWF 40,W
+000624 500F           02131         MOVF 15,W
+000626 5829           02132         SUBWFB 41,W
+000628 E311           02133         BNC FL@DIV_SHIFT_IN_C
+00062A 6E29           02134         MOVWF 41
+00062C 6A2A           02135         CLRF 42
+00062E 5010           02136         MOVF 16,W
+000630 5E28           02137         SUBWF 40,F
+000632 D00B           02138         BRA FL@DIV_SET_AND_SHIFT_IN_C
+000634                02139 FL@DIV_LOOP
+000634 E204           02140         BC FL@DIV_6
+000636                02141 FP@DIV_START
+000636 500E           02142         MOVF 14,W
+000638 5C2A           02143         SUBWF 42,W
+00063A E0F2           02144         BZ FL@DIV_TEST_ZERO_L
+00063C E307           02145         BNC FL@DIV_SHIFT_IN_C
+00063E                02146 FL@DIV_6
+00063E 5010           02147         MOVF 16,W
+000640 5E28           02148         SUBWF 40,F
+000642 500F           02149         MOVF 15,W
+000644 5A29           02150         SUBWFB 41,F
+000646 500E           02151         MOVF 14,W
+000648 5A2A           02152         SUBWFB 42,F
+00064A                02153 FL@DIV_SET_AND_SHIFT_IN_C
+00064A 80D8           02154         BSF 4056,0
+00064C                02155 FL@DIV_SHIFT_IN_C
+00064C 360C           02156         RLCF 12,F
+00064E 360B           02157         RLCF 11,F
+000650 360A           02158         RLCF 10,F
+000652 3628           02159         RLCF 40,F
+000654 3629           02160         RLCF 41,F
+000656 362A           02161         RLCF 42,F
+000658 2E2F           02162         DECFSZ 47,F
+00065A D7EC           02163         BRA FL@DIV_LOOP
+00065C BE0A           02164         BTFSC 10,7
+00065E D007           02165         BRA FL@DIV_9
+000660 5209           02166         MOVF 9,F
+000662 E01D           02167         BZ FL@DIV_UNDERFLOW
+000664 3232           02168         RRCF 50,F
+000666 0609           02169         DECF 9,F
+000668 2A2F           02170         INCF 47,F
+00066A 3632           02171         RLCF 50,F
+00066C D7E3           02172         BRA FL@DIV_LOOP
+00066E                02173 FL@DIV_9
+00066E AC2E           02174         BTFSS 46,6
+000670 D01F           02175         BRA FL@DIV_SET_SIGN
+000672 E207           02176         BC FL@DIV_10
+000674 5010           02177         MOVF 16,W
+000676 5E28           02178         SUBWF 40,F
+000678 500F           02179         MOVF 15,W
+00067A 5A29           02180         SUBWFB 41,F
+00067C 500E           02181         MOVF 14,W
+00067E 5A2A           02182         SUBWFB 42,F
+000680 E317           02183         BNC FL@DIV_SET_SIGN
+000682                02184 FL@DIV_10
+000682 3E0C           02185         INCFSZ 12,F
+000684 D015           02186         BRA FL@DIV_SET_SIGN
+000686 3E0B           02187         INCFSZ 11,F
+000688 D013           02188         BRA FL@DIV_SET_SIGN
+00068A 3E0A           02189         INCFSZ 10,F
+00068C D011           02190         BRA FL@DIV_SET_SIGN
+00068E 320A           02191         RRCF 10,F
+000690 320B           02192         RRCF 11,F
+000692 320C           02193         RRCF 12,F
+000694 3E09           02194         INCFSZ 9,F
+000696 D00C           02195         BRA FL@DIV_SET_SIGN
+000698 D005           02196         BRA FL@DIV_OVERFLOW1
+00069A                02197 FL@DIV_DIV0
+00069A 862E           02198         BSF 46,3
+00069C D004           02199         BRA FL@DIV_SATURATE
+00069E                02200 FL@DIV_UNDERFLOW
+00069E 842E           02201         BSF 46,2
+0006A0                02202 FL@DIV_RES0
+0006A0 6A09           02203         CLRF 9
+0006A2 D002           02204         BRA FL@DIV_MANTISSA
+0006A4                02205 FL@DIV_OVERFLOW1
+0006A4 822E           02206         BSF 46,1
+0006A6                02207 FL@DIV_SATURATE
+0006A6 6809           02208         SETF 9
+0006A8                02209 FL@DIV_MANTISSA
+0006A8 6A0C           02210         CLRF 12
+0006AA 6A0B           02211         CLRF 11
+0006AC 0E80           02212         MOVLW 128
+0006AE 6E0A           02213         MOVWF 10
+0006B0                02214 FL@DIV_SET_SIGN
+0006B0 AE32           02215         BTFSS 50,7
+0006B2 9E0A           02216         BCF 10,7
+0006B4 500C           02217         MOVF 12,W
+0006B6 0012           02218         RETURN
+0006B8                02219 FPM@32
+0006B8 500A           02220         MOVF 10,W
+0006BA 6E2A           02221         MOVWF 42
+0006BC 180E           02222         XORWF 14,W
+0006BE 6E32           02223         MOVWF 50
+0006C0 5009           02224         MOVF 9,W
+0006C2 A4D8           02225         BTFSS 4056,2
+0006C4 500D           02226         MOVF 13,W
+0006C6 E03C           02227         BZ FP@MUL_RES0
+0006C8 2609           02228         ADDWF 9,F
+0006CA 0E7E           02229         MOVLW 126
+0006CC E303           02230         BNC FP@MUL_1
+0006CE 5E09           02231         SUBWF 9,F
+0006D0 E303           02232         BNC FP@MUL_2
+0006D2 D038           02233         BRA FP@MUL_OVERFLOW
+0006D4                02234 FP@MUL_1
+0006D4 5E09           02235         SUBWF 9,F
+0006D6 E333           02236         BNC FP@MUL_UNDERFLOW
+0006D8                02237 FP@MUL_2
+0006D8 C00C F028      02238         MOVFF 12,40
+0006DC C00B F029      02239         MOVFF 11,41
+0006E0 8E2A           02240         BSF 42,7
+0006E2 8E0E           02241         BSF 14,7
+0006E4 6A0C           02242         CLRF 12
+0006E6 6A0B           02243         CLRF 11
+0006E8 6A0A           02244         CLRF 10
+0006EA 0E18           02245         MOVLW 24
+0006EC 6E2F           02246         MOVWF 47
+0006EE                02247 FP@MUL_3
+0006EE 322A           02248         RRCF 42,F
+0006F0 3229           02249         RRCF 41,F
+0006F2 3228           02250         RRCF 40,F
+0006F4 E306           02251         BNC FP@MUL_4
+0006F6 5010           02252         MOVF 16,W
+0006F8 260C           02253         ADDWF 12,F
+0006FA 500F           02254         MOVF 15,W
+0006FC 220B           02255         ADDWFC 11,F
+0006FE 500E           02256         MOVF 14,W
+000700 220A           02257         ADDWFC 10,F
+000702                02258 FP@MUL_4
+000702 320A           02259         RRCF 10,F
+000704 320B           02260         RRCF 11,F
+000706 320C           02261         RRCF 12,F
+000708 2E2F           02262         DECFSZ 47,F
+00070A D7F1           02263         BRA FP@MUL_3
+00070C BE0A           02264         BTFSC 10,7
+00070E D007           02265         BRA FP@MUL_5
+000710 360C           02266         RLCF 12,F
+000712 360B           02267         RLCF 11,F
+000714 360A           02268         RLCF 10,F
+000716 5209           02269         MOVF 9,F
+000718 E012           02270         BZ FP@MUL_UNDERFLOW
+00071A 0609           02271         DECF 9,F
+00071C 342A           02272         RLCF 42,W
+00071E                02273 FP@MUL_5
+00071E AC2E           02274         BTFSS 46,6
+000720 D017           02275         BRA FP@MUL_SET_SIGN
+000722 E316           02276         BNC FP@MUL_SET_SIGN
+000724 3E0C           02277         INCFSZ 12,F
+000726 D014           02278         BRA FP@MUL_SET_SIGN
+000728 3E0B           02279         INCFSZ 11,F
+00072A D012           02280         BRA FP@MUL_SET_SIGN
+00072C 3E0A           02281         INCFSZ 10,F
+00072E D010           02282         BRA FP@MUL_SET_SIGN
+000730 80D8           02283         BSF 4056,0
+000732 320A           02284         RRCF 10,F
+000734 320B           02285         RRCF 11,F
+000736 320C           02286         RRCF 12,F
+000738 3E09           02287         INCFSZ 9,F
+00073A D00A           02288         BRA FP@MUL_SET_SIGN
+00073C D003           02289         BRA FP@MUL_OVERFLOW
+00073E                02290 FP@MUL_UNDERFLOW
+00073E 842E           02291         BSF 46,2
+000740                02292 FP@MUL_RES0
+000740 6A09           02293         CLRF 9
+000742 D002           02294         BRA FP@MUL_MANTISSA
+000744                02295 FP@MUL_OVERFLOW
+000744 822E           02296         BSF 46,1
+000746 6809           02297         SETF 9
+000748                02298 FP@MUL_MANTISSA
+000748 6A0C           02299         CLRF 12
+00074A 6A0B           02300         CLRF 11
+00074C 0E80           02301         MOVLW 128
+00074E 6E0A           02302         MOVWF 10
+000750                02303 FP@MUL_SET_SIGN
+000750 AE32           02304         BTFSS 50,7
+000752 9E0A           02305         BCF 10,7
+000754 500C           02306         MOVF 12,W
+000756 0012           02307         RETURN
+000758                02308 FLO@3232S
+000758 5009           02309         MOVF 9,W
+00075A C00C F009      02310         MOVFF 12,9
+00075E 6E0C           02311         MOVWF 12
+000760 500B           02312         MOVF 11,W
+000762 C00A F00B      02313         MOVFF 10,11
+000766 6E0A           02314         MOVWF 10
+000768                02315 INT32@TOFLOAT32
+000768 0E96           02316         MOVLW 150
+00076A 6E2F           02317         MOVWF 47
+00076C 6A32           02318         CLRF 50
+00076E AE09           02319         BTFSS 9,7
+000770 D007           02320         BRA ITO@F_1
+000772 80D8           02321         BSF 4056,0
+000774 0E00           02322         MOVLW 0
+000776 560C           02323         SUBFWB 12,F
+000778 560B           02324         SUBFWB 11,F
+00077A 560A           02325         SUBFWB 10,F
+00077C 5609           02326         SUBFWB 9,F
+00077E 8E32           02327         BSF 50,7
+000780                02328 ITO@F_1
+000780 5209           02329         MOVF 9,F
+000782 E018           02330         BZ ITO@F_3
+000784 AC2E           02331         BTFSS 46,6
+000786 D00D           02332         BRA ITO@F_2
+000788 AE0C           02333         BTFSS 12,7
+00078A D00B           02334         BRA ITO@F_2
+00078C 3E0B           02335         INCFSZ 11,F
+00078E D009           02336         BRA ITO@F_2
+000790 3E0A           02337         INCFSZ 10,F
+000792 D007           02338         BRA ITO@F_2
+000794 3E09           02339         INCFSZ 9,F
+000796 D005           02340         BRA ITO@F_2
+000798 80D8           02341         BSF 4056,0
+00079A 3209           02342         RRCF 9,F
+00079C 320A           02343         RRCF 10,F
+00079E 320B           02344         RRCF 11,F
+0007A0 2A2F           02345         INCF 47,F
+0007A2                02346 ITO@F_2
+0007A2 0E08           02347         MOVLW 8
+0007A4 262F           02348         ADDWF 47,F
+0007A6 C00B F00C      02349         MOVFF 11,12
+0007AA C00A F00B      02350         MOVFF 10,11
+0007AE C009 F00A      02351         MOVFF 9,10
+0007B2 D015           02352         BRA ITO@F_6
+0007B4                02353 ITO@F_3
+0007B4 660A           02354         TSTFSZ 10
+0007B6 D013           02355         BRA ITO@F_6
+0007B8 0E08           02356         MOVLW 8
+0007BA 5E2F           02357         SUBWF 47,F
+0007BC 500B           02358         MOVF 11,W
+0007BE E105           02359         BNZ ITO@F_4
+0007C0 0E08           02360         MOVLW 8
+0007C2 5E2F           02361         SUBWF 47,F
+0007C4 500C           02362         MOVF 12,W
+0007C6 E011           02363         BZ ITO@F_7
+0007C8 6A0C           02364         CLRF 12
+0007CA                02365 ITO@F_4
+0007CA 6E0A           02366         MOVWF 10
+0007CC C00C F00B      02367         MOVFF 12,11
+0007D0 6A0C           02368         CLRF 12
+0007D2 D005           02369         BRA ITO@F_6
+0007D4                02370 ITO@F_5
+0007D4 90D8           02371         BCF 4056,0
+0007D6 360C           02372         RLCF 12,F
+0007D8 360B           02373         RLCF 11,F
+0007DA 360A           02374         RLCF 10,F
+0007DC 062F           02375         DECF 47,F
+0007DE                02376 ITO@F_6
+0007DE AE0A           02377         BTFSS 10,7
+0007E0 D7F9           02378         BRA ITO@F_5
+0007E2 C02F F009      02379         MOVFF 47,9
+0007E6 AE32           02380         BTFSS 50,7
+0007E8 9E0A           02381         BCF 10,7
+0007EA                02382 ITO@F_7
+0007EA 500C           02383         MOVF 12,W
+0007EC 0012           02384         RETURN
+0007EE                02385 STR@LB1
+0007EE 5020 3154 3030 02386         DB 32,80,84,49,48,48,32,80,114,101,99,105,115,105,111,110,32,0
+       5020 6572 6963 
+       6973 6E6F 0020 
+000800                02387 STR@LB2
+000800 6554 706D 7265 02388         DB 84,101,109,112,101,114,97,116,117,114,101,32,77,101,116,101,114,0
+       7461 7275 2065 
+       654D 6574 0072 
+000812                02389 STR@LB3
+000812 6554 706D 3A20 02390         DB 84,101,109,112,32,58,32,0
+       0020 
+00081A                02391 STR@LB4
+00081A 7452 2064 3A52 02392         DB 82,116,100,32,82,58,32,0
+       0020 
+000822                02393 STR@LB5
+000822 3020 302E 3030 02394         DB 32,48,46,48,48,48,0
+       0000 
+00082A                02395 STR@LB6
+00082A 4F20 6D68 2073 02396         DB 32,79,104,109,115,32,0
+       0000 
+000832                02397 STR@LB7
+000832 4F20 6D68 2073 02398         DB 32,79,104,109,115,32,0
+       0000 
+00083A                02399 PROTON#MAIN#START
+00083A 6AF8           02400         CLRF 4088
+00083C 0E40           02401         MOVLW 64
+00083E 6E2E           02402         MOVWF 46
+000840 6A00           02403         CLRF 0
+000842 6AAB           02404         CLRF 4011
+000844 0E28           02405         MOVLW 40
+000846 6EC6           02406         MOVWF 4038
+000848 0E09           02407         MOVLW 9
+00084A 6EC8           02408         MOVWF 4040
+00084C 0E80           02409         MOVLW 128
+00084E 6EC7           02410         MOVWF 4039
+  00000850            02412 F2_SOF EQU $ ; PDS_TEST.PRP
+  00000850            02413 F2_EOF EQU $ ; PDS_TEST.PRP
+  00000850            02414 F1_SOF EQU $ ; PDS_TEST.BAS
+  00000850            02415 F1_000035 EQU $ ; IN [PDS_TEST.BAS] ALL_DIGITAL = TRUE
+000850 0E07           02416         MOVLW 7
+000852 6EC1           02417         MOVWF ADCON1,0
+  00000854            02418 F1_000064 EQU $ ; IN [PDS_TEST.BAS] DEVADDR  = %11010000
+000854 0ED0           02419         MOVLW 208
+000856 6E33           02420         MOVWF DEVADDR,0
+  00000858            02421 F1_000066 EQU $ ; IN [PDS_TEST.BAS] GAIN     = 4.0
+000858 6A4B           02422         CLRF GAINHHH,0
+00085A 6A4A           02423         CLRF GAINHH,0
+00085C 6A49           02424         CLRF GAINH,0
+00085E 0E81           02425         MOVLW 129
+000860 6E48           02426         MOVWF GAIN,0
+  00000862            02427 F1_000067 EQU $ ; IN [PDS_TEST.BAS] R0       = 100.00
+000862 6A4F           02428         CLRF R0HHH,0
+000864 6A4E           02429         CLRF R0HH,0
+000866 0E48           02430         MOVLW 72
+000868 6E4D           02431         MOVWF R0H,0
+00086A 0E85           02432         MOVLW 133
+00086C 6E4C           02433         MOVWF R0,0
+  0000086E            02434 F1_000068 EQU $ ; IN [PDS_TEST.BAS] COEFFA   = 3.9083 / 1000.0
+00086E 0E32           02435         MOVLW 50
+000870 6E53           02436         MOVWF COEFFAHHH,0
+000872 0E11           02437         MOVLW 17
+000874 6E52           02438         MOVWF COEFFAHH,0
+000876 6A51           02439         CLRF COEFFAH,0
+000878 0E77           02440         MOVLW 119
+00087A 6E50           02441         MOVWF COEFFA,0
+  0000087C            02442 F1_000069 EQU $ ; IN [PDS_TEST.BAS] COEFFB   = -5.775 / 10000000.0
+00087C 0E80           02443         MOVLW 128
+00087E 6E57           02444         MOVWF COEFFBHHH,0
+000880 0E05           02445         MOVLW 5
+000882 6E56           02446         MOVWF COEFFBHH,0
+000884 0E9B           02447         MOVLW 155
+000886 6E55           02448         MOVWF COEFFBH,0
+000888 0E6A           02449         MOVLW 106
+00088A 6E54           02450         MOVWF COEFFB,0
+  0000088C            02451 F1_000071 EQU $ ; IN [PDS_TEST.BAS] DELAYMS 100
+00088C 0E64           02452         MOVLW 100
+                      02453         F@CALL DL@MS
+  00000892            02454 F1_000072 EQU $ ; IN [PDS_TEST.BAS] CLS
+                      02455         F@CALL GLCD@CLS
+  00000896            02456 F1_000073 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 0,2,  " PT100 PRECISION "
+000896 6A03           02457         CLRF GEN,0
+000898 0E02           02458         MOVLW 2
+                      02459         F@CALL GLCD@CUR
+00089E 0E07           02460         MOVLW HIGH (STR@LB1)
+0008A0 6E07           02461         MOVWF GEN4H,0
+0008A2 0EEE           02462         MOVLW LOW (STR@LB1)
+0008A4 6E06           02463         MOVWF GEN4,0
+                      02464         F@CALL PRINT@MSTR
+  000008AA            02465 F1_000074 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 1,2,  "TEMPERATURE METER"
+0008AA 0E01           02466         MOVLW 1
+0008AC 6E03           02467         MOVWF GEN,0
+0008AE 0E02           02468         MOVLW 2
+                      02469         F@CALL GLCD@CUR
+0008B4 0E08           02470         MOVLW HIGH (STR@LB2)
+0008B6 6E07           02471         MOVWF GEN4H,0
+0008B8 0E00           02472         MOVLW LOW (STR@LB2)
+0008BA 6E06           02473         MOVWF GEN4,0
+                      02474         F@CALL PRINT@MSTR
+  000008C0            02475 F1_000075 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 12,1, "TEMP : "
+0008C0 0E0C           02476         MOVLW 12
+0008C2 6E03           02477         MOVWF GEN,0
+0008C4 0E01           02478         MOVLW 1
+                      02479         F@CALL GLCD@CUR
+0008CA 0E08           02480         MOVLW HIGH (STR@LB3)
+0008CC 6E07           02481         MOVWF GEN4H,0
+0008CE 0E12           02482         MOVLW LOW (STR@LB3)
+0008D0 6E06           02483         MOVWF GEN4,0
+                      02484         F@CALL PRINT@MSTR
+  000008D6            02485 F1_000076 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 30,1, "RTD R: "
+0008D6 0E1E           02486         MOVLW 30
+0008D8 6E03           02487         MOVWF GEN,0
+0008DA 0E01           02488         MOVLW 1
+                      02489         F@CALL GLCD@CUR
+0008E0 0E08           02490         MOVLW HIGH (STR@LB4)
+0008E2 6E07           02491         MOVWF GEN4H,0
+0008E4 0E1A           02492         MOVLW LOW (STR@LB4)
+0008E6 6E06           02493         MOVWF GEN4,0
+                      02494         F@CALL PRINT@MSTR
+  000008EC            02495 F1_000077 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 12,72, " 0.00" , " "
+0008EC 0E0C           02496         MOVLW 12
+0008EE 6E03           02497         MOVWF GEN,0
+0008F0 0E48           02498         MOVLW 72
+                      02499         F@CALL GLCD@CUR
+0008F6 0E20           02500         MOVLW 32
+                      02501         F@CALL PRINT
+0008FC 0E30           02502         MOVLW 48
+                      02503         F@CALL PRINT
+000902 0E2E           02504         MOVLW 46
+                      02505         F@CALL PRINT
+000908 0E30           02506         MOVLW 48
+                      02507         F@CALL PRINT
+                      02508         F@CALL PRINT
+000912 0E20           02509         MOVLW 32
+                      02510         F@CALL PRINT
+  00000918            02511 F1_000078 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 12,80, "DEGC"
+000918 0E0C           02512         MOVLW 12
+00091A 6E03           02513         MOVWF GEN,0
+00091C 0E50           02514         MOVLW 80
+                      02515         F@CALL GLCD@CUR
+000922 0E64           02516         MOVLW 100
+                      02517         F@CALL PRINT
+000928 0E65           02518         MOVLW 101
+                      02519         F@CALL PRINT
+00092E 0E67           02520         MOVLW 103
+                      02521         F@CALL PRINT
+000934 0E43           02522         MOVLW 67
+                      02523         F@CALL PRINT
+  0000093A            02524 F1_000079 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 30,72, " 0.000", " OHMS "
+00093A 0E1E           02525         MOVLW 30
+00093C 6E03           02526         MOVWF GEN,0
+00093E 0E48           02527         MOVLW 72
+                      02528         F@CALL GLCD@CUR
+000944 0E08           02529         MOVLW HIGH (STR@LB5)
+000946 6E07           02530         MOVWF GEN4H,0
+000948 0E22           02531         MOVLW LOW (STR@LB5)
+00094A 6E06           02532         MOVWF GEN4,0
+                      02533         F@CALL PRINT@MSTR
+000950 0E08           02534         MOVLW HIGH (STR@LB6)
+000952 6E07           02535         MOVWF GEN4H,0
+000954 0E2A           02536         MOVLW LOW (STR@LB6)
+000956 6E06           02537         MOVWF GEN4,0
+                      02538         F@CALL PRINT@MSTR
+  0000095C            02539 F1_000082 EQU $ ; IN [PDS_TEST.BAS] CONFREG = %10011110
+00095C 0E9E           02540         MOVLW 158
+00095E 6E37           02541         MOVWF CONFREG,0
+  00000960            02542 F1_000083 EQU $ ; IN [PDS_TEST.BAS] GOSUB WRITEI2C
+                      02543         F@CALL WRITEI2C
+  00000964            02544 F1_000084 EQU $ ; IN [PDS_TEST.BAS] DELAYMS 50
+000964 0E32           02545         MOVLW 50
+                      02546         F@CALL DL@MS
+  0000096A            02547 F1_000087 EQU $ ; IN [PDS_TEST.BAS] WHILE 1=1
+00096A                02548 BC@LL1
+  0000096A            02549 F1_000089 EQU $ ; IN [PDS_TEST.BAS] GOSUB READI2C
+                      02550         F@CALL READI2C
+  0000096E            02551 F1_000091 EQU $ ; IN [PDS_TEST.BAS] GOSUB MEASURERES
+                      02552         F@CALL MEASURERES
+  00000972            02553 F1_000093 EQU $ ; IN [PDS_TEST.BAS] GOSUB COMPUTETEMP
+                      02554         F@CALL COMPUTETEMP
+  00000976            02555 F1_000096 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 12,72, DEC2 TEMPERATURE, " "
+000976 0E0C           02556         MOVLW 12
+000978 6E03           02557         MOVWF GEN,0
+00097A 0E48           02558         MOVLW 72
+                      02559         F@CALL GLCD@CUR
+000980 0E80           02560         MOVLW 128
+000982 6E01           02561         MOVWF BPFH,0
+000984 C047 F027      02562         MOVFF TEMPERATUREHHH,PP7HHH
+000988 C046 F026      02563         MOVFF TEMPERATUREHH,PP7HH
+00098C C045 F025      02564         MOVFF TEMPERATUREH,PP7H
+000990 C044 F024      02565         MOVFF TEMPERATURE,PP7
+000994 0E02           02566         MOVLW 2
+                      02567         F@CALL OUT@FLOAT
+00099A 0E20           02568         MOVLW 32
+                      02569         F@CALL PRINT
+  000009A0            02570 F1_000097 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 12,80, "DEGC"
+0009A0 0E0C           02571         MOVLW 12
+0009A2 6E03           02572         MOVWF GEN,0
+0009A4 0E50           02573         MOVLW 80
+                      02574         F@CALL GLCD@CUR
+0009AA 0E64           02575         MOVLW 100
+                      02576         F@CALL PRINT
+0009B0 0E65           02577         MOVLW 101
+                      02578         F@CALL PRINT
+0009B6 0E67           02579         MOVLW 103
+                      02580         F@CALL PRINT
+0009BC 0E43           02581         MOVLW 67
+                      02582         F@CALL PRINT
+  000009C2            02583 F1_000098 EQU $ ; IN [PDS_TEST.BAS] PRINT AT 30,72, DEC3 RESISTANCE,  " OHMS "
+0009C2 0E1E           02584         MOVLW 30
+0009C4 6E03           02585         MOVWF GEN,0
+0009C6 0E48           02586         MOVLW 72
+                      02587         F@CALL GLCD@CUR
+0009CC 0E80           02588         MOVLW 128
+0009CE 6E01           02589         MOVWF BPFH,0
+0009D0 C043 F027      02590         MOVFF RESISTANCEHHH,PP7HHH
+0009D4 C042 F026      02591         MOVFF RESISTANCEHH,PP7HH
+0009D8 C041 F025      02592         MOVFF RESISTANCEH,PP7H
+0009DC C040 F024      02593         MOVFF RESISTANCE,PP7
+0009E0 0E03           02594         MOVLW 3
+                      02595         F@CALL OUT@FLOAT
+0009E6 0E08           02596         MOVLW HIGH (STR@LB7)
+0009E8 6E07           02597         MOVWF GEN4H,0
+0009EA 0E32           02598         MOVLW LOW (STR@LB7)
+0009EC 6E06           02599         MOVWF GEN4,0
+                      02600         F@CALL PRINT@MSTR
+  000009F2            02601 F1_000099 EQU $ ; IN [PDS_TEST.BAS] WEND
+                      02602         F@JUMP BC@LL1
+0009F4                02603 BC@LL2
+0009F4                02604 MEASURERES
+  000009F4            02605 F1_000111 EQU $ ; IN [PDS_TEST.BAS] RAWMEASURE = VALUE_3RD
+0009F4 6A3B           02606         CLRF RAWMEASUREHHH,0
+0009F6 6A3A           02607         CLRF RAWMEASUREHH,0
+0009F8 6A39           02608         CLRF RAWMEASUREH,0
+0009FA C036 F038      02609         MOVFF VALUE_3RD,RAWMEASURE
+  000009FE            02610 F1_000112 EQU $ ; IN [PDS_TEST.BAS] RAWMEASURE = RAWMEASURE + (VALUE_2ND << 8)
+0009FE 6A27           02611         CLRF PP7HHH,0
+000A00 6A26           02612         CLRF PP7HH,0
+000A02 C035 F025      02613         MOVFF VALUE_2ND,PP7H
+000A06 6A24           02614         CLRF PP7,0
+000A08 5024           02615         MOVF PP7,W,0
+000A0A 2638           02616         ADDWF RAWMEASURE,F,0
+000A0C 5025           02617         MOVF PP7H,W,0
+000A0E 2239           02618         ADDWFC RAWMEASUREH,F,0
+000A10 5026           02619         MOVF PP7HH,W,0
+000A12 223A           02620         ADDWFC RAWMEASUREHH,F,0
+000A14 5027           02621         MOVF PP7HHH,W,0
+000A16 223B           02622         ADDWFC RAWMEASUREHHH,F,0
+  00000A18            02623 F1_000113 EQU $ ; IN [PDS_TEST.BAS] RAWMEASURE = RAWMEASURE + (VALUE_1ST << 16)
+000A18 6A27           02624         CLRF PP7HHH,0
+000A1A C034 F026      02625         MOVFF VALUE_1ST,PP7HH
+000A1E 6A25           02626         CLRF PP7H,0
+000A20 6A24           02627         CLRF PP7,0
+000A22 5024           02628         MOVF PP7,W,0
+000A24 2638           02629         ADDWF RAWMEASURE,F,0
+000A26 5025           02630         MOVF PP7H,W,0
+000A28 2239           02631         ADDWFC RAWMEASUREH,F,0
+000A2A 5026           02632         MOVF PP7HH,W,0
+000A2C 223A           02633         ADDWFC RAWMEASUREHH,F,0
+000A2E 5027           02634         MOVF PP7HHH,W,0
+000A30 223B           02635         ADDWFC RAWMEASUREHHH,F,0
+  00000A32            02636 F1_000114 EQU $ ; IN [PDS_TEST.BAS] INPMEASURE = RAWMEASURE / 131071.0  ' 131071=2^18-1
+000A32 0E80           02637         MOVLW 128
+000A34 6E10           02638         MOVWF PBP_BARGHHH,0
+000A36 680F           02639         SETF PBP_BARGHH,0
+000A38 0E7F           02640         MOVLW 127
+000A3A 6E0E           02641         MOVWF PBP_BARGH,0
+000A3C 0E8F           02642         MOVLW 143
+000A3E 6E0D           02643         MOVWF PBP_BARG,0
+000A40 C038 F009      02644         MOVFF RAWMEASURE,PBP_AARG
+000A44 C039 F00A      02645         MOVFF RAWMEASUREH,PBP_AARGH
+000A48 C03A F00B      02646         MOVFF RAWMEASUREHH,PBP_AARGHH
+000A4C C03B F00C      02647         MOVFF RAWMEASUREHHH,PBP_AARGHHH
+                      02648         F@CALL FLO@3232S
+                      02649         F@CALL FPD@32
+000A56 C00C F03F      02650         MOVFF PBP_AARGHHH,INPMEASUREHHH
+000A5A C00B F03E      02651         MOVFF PBP_AARGHH,INPMEASUREHH
+000A5E C00A F03D      02652         MOVFF PBP_AARGH,INPMEASUREH
+000A62 C009 F03C      02653         MOVFF PBP_AARG,INPMEASURE
+  00000A66            02654 F1_000115 EQU $ ; IN [PDS_TEST.BAS] INPMEASURE = INPMEASURE * 2048.0    ' 2048=VREF/IEXC=2.048V/1.0MA
+000A66 0E0B           02655         MOVLW 11
+000A68 243C           02656         ADDWF INPMEASURE,W,0
+000A6A E302           02657         BNC E@LB7
+000A6C 822E           02658         BSF _FP_FLAGS,1,0
+000A6E 0EFF           02659         MOVLW 255
+000A70                02660 E@LB7
+000A70 6E3C           02661         MOVWF INPMEASURE,0
+  00000A72            02662 F1_000116 EQU $ ; IN [PDS_TEST.BAS] RESISTANCE = INPMEASURE / GAIN
+000A72 C03F F00C      02663         MOVFF INPMEASUREHHH,PBP_AARGHHH
+000A76 C03E F00B      02664         MOVFF INPMEASUREHH,PBP_AARGHH
+000A7A C03D F00A      02665         MOVFF INPMEASUREH,PBP_AARGH
+000A7E C03C F009      02666         MOVFF INPMEASURE,PBP_AARG
+000A82 C04B F010      02667         MOVFF GAINHHH,PBP_BARGHHH
+000A86 C04A F00F      02668         MOVFF GAINHH,PBP_BARGHH
+000A8A C049 F00E      02669         MOVFF GAINH,PBP_BARGH
+000A8E C048 F00D      02670         MOVFF GAIN,PBP_BARG
+                      02671         F@CALL FPD@32
+000A96 C00C F043      02672         MOVFF PBP_AARGHHH,RESISTANCEHHH
+000A9A C00B F042      02673         MOVFF PBP_AARGHH,RESISTANCEHH
+000A9E C00A F041      02674         MOVFF PBP_AARGH,RESISTANCEH
+000AA2 C009 F040      02675         MOVFF PBP_AARG,RESISTANCE
+  00000AA6            02676 F1_000117 EQU $ ; IN [PDS_TEST.BAS] RETURN
+000AA6 0012           02677         RETURN 0
+000AA8                02678 COMPUTETEMP
+  00000AA8            02679 F1_000130 EQU $ ; IN [PDS_TEST.BAS] TEMPHIGH = 850.0
+000AA8 6A67           02680         CLRF TEMPHIGHHHH,0
+000AAA 0E80           02681         MOVLW 128
+000AAC 6E66           02682         MOVWF TEMPHIGHHH,0
+000AAE 0E54           02683         MOVLW 84
+000AB0 6E65           02684         MOVWF TEMPHIGHH,0
+000AB2 0E88           02685         MOVLW 136
+000AB4 6E64           02686         MOVWF TEMPHIGH,0
+  00000AB6            02687 F1_000131 EQU $ ; IN [PDS_TEST.BAS] TEMPLOW  = -200.0
+000AB6 6A6B           02688         CLRF TEMPLOWHHH,0
+000AB8 6A6A           02689         CLRF TEMPLOWHH,0
+000ABA 0EC8           02690         MOVLW 200
+000ABC 6E69           02691         MOVWF TEMPLOWH,0
+000ABE 0E86           02692         MOVLW 134
+000AC0 6E68           02693         MOVWF TEMPLOW,0
+000AC2                02694 TRIALVALUE
+  00000AC2            02695 F1_000135 EQU $ ; IN [PDS_TEST.BAS] TEMPERATURE = (TEMPLOW + TEMPHIGH) * 0.5
+000AC2 C06B F00C      02696         MOVFF TEMPLOWHHH,PBP_AARGHHH
+000AC6 C06A F00B      02697         MOVFF TEMPLOWHH,PBP_AARGHH
+000ACA C069 F00A      02698         MOVFF TEMPLOWH,PBP_AARGH
+000ACE C068 F009      02699         MOVFF TEMPLOW,PBP_AARG
+000AD2 C067 F010      02700         MOVFF TEMPHIGHHHH,PBP_BARGHHH
+000AD6 C066 F00F      02701         MOVFF TEMPHIGHHH,PBP_BARGHH
+000ADA C065 F00E      02702         MOVFF TEMPHIGHH,PBP_BARGH
+000ADE C064 F00D      02703         MOVFF TEMPHIGH,PBP_BARG
+                      02704         F@CALL FPA@32
+000AE6 C00C F027      02705         MOVFF PBP_AARGHHH,PP7HHH
+000AEA C00B F026      02706         MOVFF PBP_AARGHH,PP7HH
+000AEE C00A F025      02707         MOVFF PBP_AARGH,PP7H
+000AF2 C009 F024      02708         MOVFF PBP_AARG,PP7
+000AF6 C027 F047      02709         MOVFF PP7HHH,TEMPERATUREHHH
+000AFA C026 F046      02710         MOVFF PP7HH,TEMPERATUREHH
+000AFE C025 F045      02711         MOVFF PP7H,TEMPERATUREH
+000B02 5024           02712         MOVF PP7,W,0
+000B04 B4D8           02713         BTFSC STATUS,2,0
+000B06 842E           02714         BSF _FP_FLAGS,2,0
+000B08 A4D8           02715         BTFSS STATUS,2,0
+000B0A 0424           02716         DECF PP7,W,0
+000B0C 6E44           02717         MOVWF TEMPERATURE,0
+  00000B0E            02718 F1_000138 EQU $ ; IN [PDS_TEST.BAS] TRIALRES = TEMPERATURE * COEFFB + COEFFA
+000B0E C047 F00C      02719         MOVFF TEMPERATUREHHH,PBP_AARGHHH
+000B12 C046 F00B      02720         MOVFF TEMPERATUREHH,PBP_AARGHH
+000B16 C045 F00A      02721         MOVFF TEMPERATUREH,PBP_AARGH
+000B1A C044 F009      02722         MOVFF TEMPERATURE,PBP_AARG
+000B1E C057 F010      02723         MOVFF COEFFBHHH,PBP_BARGHHH
+000B22 C056 F00F      02724         MOVFF COEFFBHH,PBP_BARGHH
+000B26 C055 F00E      02725         MOVFF COEFFBH,PBP_BARGH
+000B2A C054 F00D      02726         MOVFF COEFFB,PBP_BARG
+                      02727         F@CALL FPM@32
+000B32 C00C F027      02728         MOVFF PBP_AARGHHH,PP7HHH
+000B36 C00B F026      02729         MOVFF PBP_AARGHH,PP7HH
+000B3A C00A F025      02730         MOVFF PBP_AARGH,PP7H
+000B3E C009 F024      02731         MOVFF PBP_AARG,PP7
+000B42 C027 F00C      02732         MOVFF PP7HHH,PBP_AARGHHH
+000B46 C026 F00B      02733         MOVFF PP7HH,PBP_AARGHH
+000B4A C025 F00A      02734         MOVFF PP7H,PBP_AARGH
+000B4E C024 F009      02735         MOVFF PP7,PBP_AARG
+000B52 C053 F010      02736         MOVFF COEFFAHHH,PBP_BARGHHH
+000B56 C052 F00F      02737         MOVFF COEFFAHH,PBP_BARGHH
+000B5A C051 F00E      02738         MOVFF COEFFAH,PBP_BARGH
+000B5E C050 F00D      02739         MOVFF COEFFA,PBP_BARG
+                      02740         F@CALL FPA@32
+000B66 C00C F05B      02741         MOVFF PBP_AARGHHH,TRIALRESHHH
+000B6A C00B F05A      02742         MOVFF PBP_AARGHH,TRIALRESHH
+000B6E C00A F059      02743         MOVFF PBP_AARGH,TRIALRESH
+000B72 C009 F058      02744         MOVFF PBP_AARG,TRIALRES
+  00000B76            02745 F1_000139 EQU $ ; IN [PDS_TEST.BAS] TRIALRES = TRIALRES * TEMPERATURE + 1.0
+000B76 C05B F00C      02746         MOVFF TRIALRESHHH,PBP_AARGHHH
+000B7A C05A F00B      02747         MOVFF TRIALRESHH,PBP_AARGHH
+000B7E C059 F00A      02748         MOVFF TRIALRESH,PBP_AARGH
+000B82 C058 F009      02749         MOVFF TRIALRES,PBP_AARG
+000B86 C047 F010      02750         MOVFF TEMPERATUREHHH,PBP_BARGHHH
+000B8A C046 F00F      02751         MOVFF TEMPERATUREHH,PBP_BARGHH
+000B8E C045 F00E      02752         MOVFF TEMPERATUREH,PBP_BARGH
+000B92 C044 F00D      02753         MOVFF TEMPERATURE,PBP_BARG
+                      02754         F@CALL FPM@32
+000B9A C00C F027      02755         MOVFF PBP_AARGHHH,PP7HHH
+000B9E C00B F026      02756         MOVFF PBP_AARGHH,PP7HH
+000BA2 C00A F025      02757         MOVFF PBP_AARGH,PP7H
+000BA6 C009 F024      02758         MOVFF PBP_AARG,PP7
+000BAA 6A0C           02759         CLRF PBP_AARGHHH,0
+000BAC 6A0B           02760         CLRF PBP_AARGHH,0
+000BAE 6A0A           02761         CLRF PBP_AARGH,0
+000BB0 0E7F           02762         MOVLW 127
+000BB2 6E09           02763         MOVWF PBP_AARG,0
+000BB4 C027 F010      02764         MOVFF PP7HHH,PBP_BARGHHH
+000BB8 C026 F00F      02765         MOVFF PP7HH,PBP_BARGHH
+000BBC C025 F00E      02766         MOVFF PP7H,PBP_BARGH
+000BC0 C024 F00D      02767         MOVFF PP7,PBP_BARG
+                      02768         F@CALL FPA@32
+000BC8 C00C F05B      02769         MOVFF PBP_AARGHHH,TRIALRESHHH
+000BCC C00B F05A      02770         MOVFF PBP_AARGHH,TRIALRESHH
+000BD0 C00A F059      02771         MOVFF PBP_AARGH,TRIALRESH
+000BD4 C009 F058      02772         MOVFF PBP_AARG,TRIALRES
+  00000BD8            02773 F1_000140 EQU $ ; IN [PDS_TEST.BAS] TRIALRES = TRIALRES * R0
+000BD8 C05B F00C      02774         MOVFF TRIALRESHHH,PBP_AARGHHH
+000BDC C05A F00B      02775         MOVFF TRIALRESHH,PBP_AARGHH
+000BE0 C059 F00A      02776         MOVFF TRIALRESH,PBP_AARGH
+000BE4 C058 F009      02777         MOVFF TRIALRES,PBP_AARG
+000BE8 C04F F010      02778         MOVFF R0HHH,PBP_BARGHHH
+000BEC C04E F00F      02779         MOVFF R0HH,PBP_BARGHH
+000BF0 C04D F00E      02780         MOVFF R0H,PBP_BARGH
+000BF4 C04C F00D      02781         MOVFF R0,PBP_BARG
+                      02782         F@CALL FPM@32
+000BFC C00C F05B      02783         MOVFF PBP_AARGHHH,TRIALRESHHH
+000C00 C00B F05A      02784         MOVFF PBP_AARGHH,TRIALRESHH
+000C04 C00A F059      02785         MOVFF PBP_AARGH,TRIALRESH
+000C08 C009 F058      02786         MOVFF PBP_AARG,TRIALRES
+  00000C0C            02787 F1_000143 EQU $ ; IN [PDS_TEST.BAS] ERR = RESISTANCE - TRIALRES
+000C0C C043 F00C      02788         MOVFF RESISTANCEHHH,PBP_AARGHHH
+000C10 C042 F00B      02789         MOVFF RESISTANCEHH,PBP_AARGHH
+000C14 C041 F00A      02790         MOVFF RESISTANCEH,PBP_AARGH
+000C18 C040 F009      02791         MOVFF RESISTANCE,PBP_AARG
+000C1C C05B F010      02792         MOVFF TRIALRESHHH,PBP_BARGHHH
+000C20 C05A F00F      02793         MOVFF TRIALRESHH,PBP_BARGHH
+000C24 C059 F00E      02794         MOVFF TRIALRESH,PBP_BARGH
+000C28 C058 F00D      02795         MOVFF TRIALRES,PBP_BARG
+                      02796         F@CALL FPS@32
+000C30 C00C F05F      02797         MOVFF PBP_AARGHHH,ERRHHH
+000C34 C00B F05E      02798         MOVFF PBP_AARGHH,ERRHH
+000C38 C00A F05D      02799         MOVFF PBP_AARGH,ERRH
+000C3C C009 F05C      02800         MOVFF PBP_AARG,ERR
+  00000C40            02801 F1_000144 EQU $ ; IN [PDS_TEST.BAS] IF ERR > 0.0 THEN
+000C40 6A0C           02802         CLRF PBP_AARGHHH,0
+000C42 6A0B           02803         CLRF PBP_AARGHH,0
+000C44 6A0A           02804         CLRF PBP_AARGH,0
+000C46 6A09           02805         CLRF PBP_AARG,0
+000C48 C05F F010      02806         MOVFF ERRHHH,PBP_BARGHHH
+000C4C C05E F00F      02807         MOVFF ERRHH,PBP_BARGHH
+000C50 C05D F00E      02808         MOVFF ERRH,PBP_BARGH
+000C54 C05C F00D      02809         MOVFF ERR,PBP_BARG
+                      02810         F@CALL TAGEB@32
+000C5C 0801           02811         SUBLW 1
+000C5E B4D8           02812         BTFSC STATUS,2,0
+                      02813         GO@TO BC@LL4
+  00000C64            02814 F1_000145 EQU $ ; IN [PDS_TEST.BAS] TEMPLOW = TEMPERATURE
+000C64 C047 F06B      02815         MOVFF TEMPERATUREHHH,TEMPLOWHHH
+000C68 C046 F06A      02816         MOVFF TEMPERATUREHH,TEMPLOWHH
+000C6C C045 F069      02817         MOVFF TEMPERATUREH,TEMPLOWH
+000C70 C044 F068      02818         MOVFF TEMPERATURE,TEMPLOW
+                      02819         F@JUMP BC@LL5
+000C78                02820 BC@LL4
+  00000C78            02821 F1_000146 EQU $ ; IN [PDS_TEST.BAS] ELSE
+  00000C78            02822 F1_000147 EQU $ ; IN [PDS_TEST.BAS] TEMPHIGH = TEMPERATURE
+000C78 C047 F067      02823         MOVFF TEMPERATUREHHH,TEMPHIGHHHH
+000C7C C046 F066      02824         MOVFF TEMPERATUREHH,TEMPHIGHHH
+000C80 C045 F065      02825         MOVFF TEMPERATUREH,TEMPHIGHH
+000C84 C044 F064      02826         MOVFF TEMPERATURE,TEMPHIGH
+  00000C88            02827 F1_000148 EQU $ ; IN [PDS_TEST.BAS] END IF
+000C88                02828 BC@LL5
+  00000C88            02829 F1_000150 EQU $ ; IN [PDS_TEST.BAS] ABSERROR = ABS ERR
+000C88 C05F F063      02830         MOVFF ERRHHH,ABSERRORHHH
+000C8C C05E F062      02831         MOVFF ERRHH,ABSERRORHH
+000C90 C05D F061      02832         MOVFF ERRH,ABSERRORH
+000C94 9E61           02833         BCF ABSERRORH,7,0
+000C96 C05C F060      02834         MOVFF ERR,ABSERROR
+  00000C9A            02835 F1_000152 EQU $ ; IN [PDS_TEST.BAS] IF ABSERROR > 0.001 THEN TRIALVALUE
+000C9A 0E6F           02836         MOVLW 111
+000C9C 6E0C           02837         MOVWF PBP_AARGHHH,0
+000C9E 0E12           02838         MOVLW 18
+000CA0 6E0B           02839         MOVWF PBP_AARGHH,0
+000CA2 0E03           02840         MOVLW 3
+000CA4 6E0A           02841         MOVWF PBP_AARGH,0
+000CA6 0E75           02842         MOVLW 117
+000CA8 6E09           02843         MOVWF PBP_AARG,0
+000CAA C063 F010      02844         MOVFF ABSERRORHHH,PBP_BARGHHH
+000CAE C062 F00F      02845         MOVFF ABSERRORHH,PBP_BARGHH
+000CB2 C061 F00E      02846         MOVFF ABSERRORH,PBP_BARGH
+000CB6 C060 F00D      02847         MOVFF ABSERROR,PBP_BARG
+                      02848         F@CALL TAGEB@32
+000CBE 0801           02849         SUBLW 1
+000CC0 B4D8           02850         BTFSC STATUS,2,0
+                      02851         GO@TO BC@LL7
+                      02852         F@JUMP TRIALVALUE
+000CC8                02853 BC@LL7
+  00000CC8            02854 F1_000156 EQU $ ; IN [PDS_TEST.BAS] RETURN
+000CC8 0012           02855         RETURN 0
+000CCA                02856 WRITEI2C
+  00000CCA            02857 F1_000163 EQU $ ; IN [PDS_TEST.BAS] HBUSOUT  DEVADDR, [CONFREG]
+000CCA 5033           02858         MOVF DEVADDR,W,0
+                      02859         F@CALL HBUSOUT
+000CD0 5037           02860         MOVF CONFREG,W,0
+                      02861         F@CALL HBUSOUT2
+  00000CD6            02862 F1_000164 EQU $ ; IN [PDS_TEST.BAS] RETURN
+000CD6 0012           02863         RETURN 0
+000CD8                02864 READI2C
+  00000CD8            02865 F1_000171 EQU $ ; IN [PDS_TEST.BAS] HBSTART
+                      02866         F@CALL HBUS@STRT
+  00000CDC            02867 F1_000172 EQU $ ; IN [PDS_TEST.BAS] HBUSOUT DEVADDR+1
+000CDC 2833           02868         INCF DEVADDR,W,0
+                      02869         F@CALL HBUSOUTB
+  00000CE2            02870 F1_000173 EQU $ ; IN [PDS_TEST.BAS] HBUSIN  VALUE_1ST
+                      02871         F@CALL HBUSINB
+000CE6 6E34           02872         MOVWF VALUE_1ST,0
+  00000CE8            02873 F1_000174 EQU $ ; IN [PDS_TEST.BAS] HBUSACK
+                      02874         F@CALL HBUS@ACK
+  00000CEC            02875 F1_000175 EQU $ ; IN [PDS_TEST.BAS] HBUSIN  VALUE_2ND
+                      02876         F@CALL HBUSINB
+000CF0 6E35           02877         MOVWF VALUE_2ND,0
+  00000CF2            02878 F1_000176 EQU $ ; IN [PDS_TEST.BAS] HBUSACK
+                      02879         F@CALL HBUS@ACK
+  00000CF6            02880 F1_000177 EQU $ ; IN [PDS_TEST.BAS] HBUSIN  VALUE_3RD
+                      02881         F@CALL HBUSINB
+000CFA 6E36           02882         MOVWF VALUE_3RD,0
+  00000CFC            02883 F1_000178 EQU $ ; IN [PDS_TEST.BAS] HBUSACK
+                      02884         F@CALL HBUS@ACK
+  00000D00            02885 F1_000179 EQU $ ; IN [PDS_TEST.BAS] HBUSIN  CONFREG
+                      02886         F@CALL HBUSINB
+000D04 6E37           02887         MOVWF CONFREG,0
+  00000D06            02888 F1_000181 EQU $ ; IN [PDS_TEST.BAS] WHILE  CONFREG AND $80
+000D06                02889 BC@LL8
+000D06 0E81           02890         MOVLW 129
+000D08 5C37           02891         SUBWF CONFREG,W,0
+000D0A A0D8           02892         BTFSS STATUS,0,0
+                      02893         GO@TO BC@LL9
+  00000D10            02894 F1_000182 EQU $ ; IN [PDS_TEST.BAS] HBUSACK
+                      02895         F@CALL HBUS@ACK
+  00000D14            02896 F1_000183 EQU $ ; IN [PDS_TEST.BAS] HBUSIN  CONFREG
+                      02897         F@CALL HBUSINB
+000D18 6E37           02898         MOVWF CONFREG,0
+  00000D1A            02899 F1_000184 EQU $ ; IN [PDS_TEST.BAS] DELAYMS 10
+000D1A 0E0A           02900         MOVLW 10
+                      02901         F@CALL DL@MS
+  00000D20            02902 F1_000185 EQU $ ; IN [PDS_TEST.BAS] WEND
+                      02903         F@JUMP BC@LL8
+000D22                02904 BC@LL9
+  00000D22            02905 F1_000186 EQU $ ; IN [PDS_TEST.BAS] HBUSOUT 0XFF    ' SEND A NAK
+000D22 0EFF           02906         MOVLW 255
+                      02907         F@CALL HBUSOUTB
+  00000D28            02908 F1_000187 EQU $ ; IN [PDS_TEST.BAS] HBSTOP
+                      02909         F@CALL HBUS@STP
+  00000D2C            02910 F1_000188 EQU $ ; IN [PDS_TEST.BAS] RETURN
+000D2C 0012           02911         RETURN 0
+  00000D2E            02912 F3_SOF EQU $ ; FONT.INC
+000D2E                02913 FONT
+000D2E 0000 0000 0000 02914         DB 0,0,0,0,0,0
+000D34 FFFF FFFF FFFF 02915         DB 255,255,255,255,255,255
+000D3A 0707 0007 0000 02916         DB 7,7,7,0,0,0
+000D40 0000 0700 0707 02917         DB 0,0,0,7,7,7
+000D46 E0E0 00E0 0000 02918         DB 224,224,224,0,0,0
+000D4C 0000 E000 E0E0 02919         DB 0,0,0,224,224,224
+000D52 FFFF 00FF 0000 02920         DB 255,255,255,0,0,0
+000D58 0000 FF00 FFFF 02921         DB 0,0,0,255,255,255
+000D5E 0707 0707 0707 02922         DB 7,7,7,7,7,7
+000D64 E0E0 E0E0 E0E0 02923         DB 224,224,224,224,224,224
+000D6A E0E0 07E0 0707 02924         DB 224,224,224,7,7,7
+000D70 0707 E007 E0E0 02925         DB 7,7,7,224,224,224
+000D76 FFFF E0FF E0E0 02926         DB 255,255,255,224,224,224
+000D7C E0E0 FFE0 FFFF 02927         DB 224,224,224,255,255,255
+000D82 0707 FF07 FFFF 02928         DB 7,7,7,255,255,255
+000D88 FFFF 07FF 0707 02929         DB 255,255,255,7,7,7
+000D8E AA55 AA55 AA55 02930         DB 85,170,85,170,85,170
+000D94 55AA 55AA 55AA 02931         DB 170,85,170,85,170,85
+000D9A 0101 0101 0101 02932         DB 1,1,1,1,1,1
+000DA0 8080 8080 8080 02933         DB 128,128,128,128,128,128
+000DA6 00FF 0000 0000 02934         DB 255,0,0,0,0,0
+000DAC 0000 0000 FF00 02935         DB 0,0,0,0,0,255
+000DB2 01FF 0101 0101 02936         DB 255,1,1,1,1,1
+000DB8 0101 0101 FF01 02937         DB 1,1,1,1,1,255
+000DBE 80FF 8080 8080 02938         DB 255,128,128,128,128,128
+000DC4 8080 8080 FF80 02939         DB 128,128,128,128,128,255
+000DCA 0000 0000 F0F0 02940         DB 0,0,0,0,240,240
+000DD0 0000 0000 0F0F 02941         DB 0,0,0,0,15,15
+000DD6 0000 0000 0000 02942         DB 0,0,0,0,0,0
+000DDC 0000 0000 0000 02943         DB 0,0,0,0,0,0
+000DE2 0000 0000 0000 02944         DB 0,0,0,0,0,0
+000DE8 0000 0000 0000 02945         DB 0,0,0,0,0,0
+000DEE 0000 0000 0000 02946         DB 0,0,0,0,0,0
+000DF4 0000 004F 0000 02947         DB 0,0,79,0,0,0
+000DFA 0700 0700 0000 02948         DB 0,7,0,7,0,0
+000E00 7F14 7F14 0014 02949         DB 20,127,20,127,20,0
+000E06 2A24 2A7F 0012 02950         DB 36,42,127,42,18,0
+000E0C 1323 6408 0062 02951         DB 35,19,8,100,98,0
+000E12 4936 2255 0050 02952         DB 54,73,85,34,80,0
+000E18 0500 0003 0000 02953         DB 0,5,3,0,0,0
+000E1E 221C 0041 0000 02954         DB 28,34,65,0,0,0
+000E24 0000 2241 001C 02955         DB 0,0,65,34,28,0
+000E2A 0814 083E 0014 02956         DB 20,8,62,8,20,0
+000E30 0808 083E 0008 02957         DB 8,8,62,8,8,0
+000E36 5000 0030 0000 02958         DB 0,80,48,0,0,0
+000E3C 0808 0808 0008 02959         DB 8,8,8,8,8,0
+000E42 6000 0060 0000 02960         DB 0,96,96,0,0,0
+000E48 1020 0408 0002 02961         DB 32,16,8,4,2,0
+000E4E 513E 4549 003E 02962         DB 62,81,73,69,62,0
+000E54 4200 407F 0000 02963         DB 0,66,127,64,0,0
+000E5A 6142 4951 0046 02964         DB 66,97,81,73,70,0
+000E60 4121 4B45 0031 02965         DB 33,65,69,75,49,0
+000E66 1418 7F12 0010 02966         DB 24,20,18,127,16,0
+000E6C 4527 4545 0039 02967         DB 39,69,69,69,57,0
+000E72 4A3C 4949 0030 02968         DB 60,74,73,73,48,0
+000E78 7101 0509 0003 02969         DB 1,113,9,5,3,0
+000E7E 4936 4949 0036 02970         DB 54,73,73,73,54,0
+000E84 4906 4949 003E 02971         DB 6,73,73,73,62,0
+000E8A 3600 0036 0000 02972         DB 0,54,54,0,0,0
+000E90 5600 0036 0000 02973         DB 0,86,54,0,0,0
+000E96 1408 4122 0000 02974         DB 8,20,34,65,0,0
+000E9C 1414 1414 0014 02975         DB 20,20,20,20,20,0
+000EA2 4100 1422 0008 02976         DB 0,65,34,20,8,0
+000EA8 0102 0951 0006 02977         DB 2,1,81,9,6,0
+000EAE 4932 4179 003E 02978         DB 50,73,121,65,62,0
+000EB4 117E 1111 007E 02979         DB 126,17,17,17,126,0
+000EBA 497F 4949 0036 02980         DB 127,73,73,73,54,0
+000EC0 413E 4141 0022 02981         DB 62,65,65,65,34,0
+000EC6 417F 2241 001C 02982         DB 127,65,65,34,28,0
+000ECC 497F 4949 0041 02983         DB 127,73,73,73,65,0
+000ED2 097F 0909 0001 02984         DB 127,9,9,9,1,0
+000ED8 413E 4949 007A 02985         DB 62,65,73,73,122,0
+000EDE 087F 0808 007F 02986         DB 127,8,8,8,127,0
+000EE4 4100 417F 0000 02987         DB 0,65,127,65,0,0
+000EEA 4020 3F41 0001 02988         DB 32,64,65,63,1,0
+000EF0 087F 2214 0041 02989         DB 127,8,20,34,65,0
+000EF6 407F 4040 0040 02990         DB 127,64,64,64,64,0
+000EFC 027F 020C 007F 02991         DB 127,2,12,2,127,0
+000F02 047F 1008 007F 02992         DB 127,4,8,16,127,0
+000F08 413E 4141 003E 02993         DB 62,65,65,65,62,0
+000F0E 097F 0909 0006 02994         DB 127,9,9,9,6,0
+000F14 413E 2151 005E 02995         DB 62,65,81,33,94,0
+000F1A 097F 2919 0046 02996         DB 127,9,25,41,70,0
+000F20 4946 4949 0031 02997         DB 70,73,73,73,49,0
+000F26 0101 017F 0001 02998         DB 1,1,127,1,1,0
+000F2C 403F 4040 003F 02999         DB 63,64,64,64,63,0
+000F32 201F 2040 001F 03000         DB 31,32,64,32,31,0
+000F38 403F 4038 003F 03001         DB 63,64,56,64,63,0
+000F3E 1463 1408 0063 03002         DB 99,20,8,20,99,0
+000F44 0807 0870 0007 03003         DB 7,8,112,8,7,0
+000F4A 5161 4549 0043 03004         DB 97,81,73,69,67,0
+000F50 417F 0041 0000 03005         DB 127,65,65,0,0,0
+000F56 0402 1008 0020 03006         DB 2,4,8,16,32,0
+000F5C 0000 4141 007F 03007         DB 0,0,65,65,127,0
+000F62 0204 0201 0004 03008         DB 4,2,1,2,4,0
+000F68 4040 4040 0040 03009         DB 64,64,64,64,64,0
+000F6E 0100 0402 0000 03010         DB 0,1,2,4,0,0
+000F74 5420 5454 0078 03011         DB 32,84,84,84,120,0
+000F7A 487F 4444 0038 03012         DB 127,72,68,68,56,0
+000F80 4438 4444 0020 03013         DB 56,68,68,68,32,0
+000F86 4438 4844 007F 03014         DB 56,68,68,72,127,0
+000F8C 5438 5454 0018 03015         DB 56,84,84,84,24,0
+000F92 7E08 0109 0002 03016         DB 8,126,9,1,2,0
+000F98 520C 5252 003E 03017         DB 12,82,82,82,62,0
+000F9E 087F 0404 0078 03018         DB 127,8,4,4,120,0
+000FA4 4400 407D 0000 03019         DB 0,68,125,64,0,0
+000FAA 2000 4440 003D 03020         DB 0,32,64,68,61,0
+000FB0 107F 4428 0000 03021         DB 127,16,40,68,0,0
+000FB6 4100 407F 0000 03022         DB 0,65,127,64,0,0
+000FBC 047C 0418 0078 03023         DB 124,4,24,4,120,0
+000FC2 087C 0404 0078 03024         DB 124,8,4,4,120,0
+000FC8 4438 4444 0038 03025         DB 56,68,68,68,56,0
+000FCE 147C 1414 0008 03026         DB 124,20,20,20,8,0
+000FD4 1408 1814 007C 03027         DB 8,20,20,24,124,0
+000FDA 087C 0404 0008 03028         DB 124,8,4,4,8,0
+000FE0 5448 5454 0020 03029         DB 72,84,84,84,32,0
+000FE6 3F04 4044 0020 03030         DB 4,63,68,64,32,0
+000FEC 403C 2040 007C 03031         DB 60,64,64,32,124,0
+000FF2 201C 2040 001C 03032         DB 28,32,64,32,28,0
+000FF8 403C 4030 003C 03033         DB 60,64,48,64,60,0
+000FFE 2844 2810 0044 03034         DB 68,40,16,40,68,0
+001004 500C 5050 003C 03035         DB 12,80,80,80,60,0
+00100A 6444 4C54 0044 03036         DB 68,100,84,76,68,0
+001010 3608 0041 0000 03037         DB 8,54,65,0,0,0
+001016 0000 007F 0000 03038         DB 0,0,127,0,0,0
+00101C 0000 3641 0008 03039         DB 0,0,65,54,8,0
+001022 0800 0804 0004 03040         DB 0,8,4,8,4,0
+  00001028            03041 F3_EOF EQU $ ; FONT.INC
+  00001028            03042 F1_000192 EQU $ ; IN [PDS_TEST.BAS] END
+001028                03043 PB@LB11
+001028 0003           03044         SLEEP
+00102A D7FE           03045         BRA PB@LB11
+  0000102C            03046 F1_EOF EQU $ ; PDS_TEST.BAS
+00102C                03047 PB@LB12
+00102C D7FF           03048         BRA PB@LB12
+00102E                03050 __EOF
+23 0F 0E 01 85 0F C0 003051 CONFIG OSC = RC
+       F E0 0F 40 
+                      03052 CONFIG BORV = 25
+                      03053 CONFIG WDT = OFF
+                      03054         END
+MPASM  5.20                               A.S   1-29-2009  9:53:01         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ABSERROR                          00000060
+ABSERRORH                         00000061
+ABSERRORHH                        00000062
+ABSERRORHHH                       00000063
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            00000FC2
+ADCON1                            00000FC1
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADIP                              00000006
+ADON                              00000000
+ADRESH                            00000FC4
+ADRESL                            00000FC3
+ADRESLH                           00000FC4
+AN0                               00000000
+AN1                               00000001
+AN2                               00000002
+AN3                               00000003
+AN4                               00000005
+AN5                               00000000
+AN6                               00000001
+AN7                               00000002
+BANK0_END                         255
+BANK0_START                       128
+BANK1_END                         511
+BANK1_START                       256
+BANK2_END                         767
+BANK2_START                       512
+BANK3_END                         1023
+BANK3_START                       768
+BANK4_END                         1279
+BANK4_START                       1024
+BANK5_END                         1535
+BANK5_START                       1280
+BANKA_END                         127
+BANKA_START                       0
+BC@LL1                            0000096A
+BC@LL2                            000009F4
+BC@LL4                            00000C78
+BC@LL5                            00000C88
+BC@LL7                            00000CC8
+BC@LL8                            00000D06
+BC@LL9                            00000D22
+BCLIE                             00000003
+BCLIF                             00000003
+BCLIP                             00000003
+BF                                00000000
+BIT_BIT                           
+BIT_BYTE                          
+BIT_DWORD                         
+BIT_FLOAT                         
+BIT_WORD                          
+BIT_WREG                          
+BOR                               00000000
+BORV_20_2                         000000FF
+BORV_27_2                         000000FB
+BORV_42_2                         000000F7
+BORV_45_2                         000000F3
+BOR_OFF_2                         000000FD
+BOR_ON_2                          000000FF
+BPF                               00000000
+BPFH                              00000001
+BRGH                              00000002
+BSR                               00000FE0
+BYTE_BIT                          
+BYTE_BYTE                         
+BYTE_DWORD                        
+BYTE_FLOAT                        
+BYTE_WORD                         
+BYTE_WREG                         
+C                                 00000000
+CCP1                              00000002
+CCP1CON                           00000FBD
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1IP                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2                              00000001
+CCP2A                             00000003
+CCP2CON                           00000FBA
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2IP                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2MX_OFF_3                      000000FE
+CCP2MX_ON_3                       000000FF
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000FBF
+CCPR1L                            00000FBE
+CCPR1LH                           00000FBF
+CCPR2H                            00000FBC
+CCPR2L                            00000FBB
+CCPR2LH                           00000FBC
+CFGS                              00000006
+CH@SND                            0000027E
+CHECK@PAGE                        000001D2
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CK                                00000006
+CKE                               00000006
+CKP                               00000004
+CLKO                              00000006
+CLRC                              BCF STATUS,0
+CLRW                              CLRF WREG
+CLRZ                              BCF STATUS,2
+COEFFA                            00000050
+COEFFAH                           00000051
+COEFFAHH                          00000052
+COEFFAHHH                         00000053
+COEFFB                            00000054
+COEFFBH                           00000055
+COEFFBHH                          00000056
+COEFFBHHH                         00000057
+COMPUTETEMP                       00000AA8
+CONFIG1H                          00300001
+CONFIG1L                          00300000
+CONFIG2H                          00300003
+CONFIG2L                          00300002
+CONFIG3H                          00300005
+CONFIG3L                          00300004
+CONFIG4H                          00300007
+CONFIG4L                          00300006
+CONFIG5H                          00300009
+CONFIG5L                          00300008
+CONFIG6H                          0030000B
+CONFIG6L                          0030000A
+CONFIG7H                          0030000D
+CONFIG7L                          0030000C
+CONFIG_REQ                        1
+CONFREG                           00000037
+CP0_OFF_5                         000000FF
+CP0_ON_5                          000000FE
+CP1_OFF_5                         000000FF
+CP1_ON_5                          000000FD
+CP2_OFF_5                         000000FF
+CP2_ON_5                          000000FB
+CP3_OFF_5                         000000FF
+CP3_ON_5                          000000F7
+CPB_OFF_5                         000000FF
+CPB_ON_5                          000000BF
+CPD_OFF_5                         000000FF
+CPD_ON_5                          0000007F
+CREN                              00000004
+CS                                00000002
+CSRC                              00000007
+CSTR#CT                           00000002
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DEBUG_OFF_4                       000000FF
+DEBUG_ON_4                        0000007F
+DEVADDR                           00000033
+DEVID1                            003FFFFE
+DEVID2                            003FFFFF
+DIVS@32X32EXIT                    0000042E
+DIVS@32X32LOOP                    000003DC
+DIVS@32X32SKIP1                   000003AE
+DIVS@32X32SKIP2                   000003BE
+DIVS@32X32SKIP4                   00000412
+DIVS@32X32SKIP5                   0000041E
+DL@MS                             00000354
+DL@US                             0000036E
+DLUS@W                            00000370
+DLY@P                             00000358
+DLY@W                             00000356
+DONE                              00000002
+DWORD_BIT                         
+DWORD_BYTE                        
+DWORD_DWORD                       
+DWORD_FLOAT                       
+DWORD_WORD                        
+DWORD_WREG                        
+D_A                               00000005
+E@LB7                             00000A70
+EBTR0_OFF_7                       000000FF
+EBTR0_ON_7                        000000FE
+EBTR1_OFF_7                       000000FF
+EBTR1_ON_7                        000000FD
+EBTR2_OFF_7                       000000FF
+EBTR2_ON_7                        000000FB
+EBTR3_OFF_7                       000000FF
+EBTR3_ON_7                        000000F7
+EBTRB_OFF_7                       000000FF
+EBTRB_ON_7                        000000BF
+ECIO_OSC_1                        000000FD
+EC_OSC_1                          000000FC
+EEADR                             00000FA9
+EECON1                            00000FA6
+EECON2                            00000FA7
+EEDATA                            00000FA8
+EEDATL                            00000FA8
+EEIE                              00000004
+EEIF                              00000004
+EEIP                              00000004
+EEPGD                             00000007
+EN@RIGHT                          000001DE
+ERR                               0000005C
+ERRH                              0000005D
+ERRHH                             0000005E
+ERRHHH                            0000005F
+F1_000035                         00000850
+F1_000064                         00000854
+F1_000066                         00000858
+F1_000067                         00000862
+F1_000068                         0000086E
+F1_000069                         0000087C
+F1_000071                         0000088C
+F1_000072                         00000892
+F1_000073                         00000896
+F1_000074                         000008AA
+F1_000075                         000008C0
+F1_000076                         000008D6
+F1_000077                         000008EC
+F1_000078                         00000918
+F1_000079                         0000093A
+F1_000082                         0000095C
+F1_000083                         00000960
+F1_000084                         00000964
+F1_000087                         0000096A
+F1_000089                         0000096A
+F1_000091                         0000096E
+F1_000093                         00000972
+F1_000096                         00000976
+F1_000097                         000009A0
+F1_000098                         000009C2
+F1_000099                         000009F2
+F1_000111                         000009F4
+F1_000112                         000009FE
+F1_000113                         00000A18
+F1_000114                         00000A32
+F1_000115                         00000A66
+F1_000116                         00000A72
+F1_000117                         00000AA6
+F1_000130                         00000AA8
+F1_000131                         00000AB6
+F1_000135                         00000AC2
+F1_000138                         00000B0E
+F1_000139                         00000B76
+F1_000140                         00000BD8
+F1_000143                         00000C0C
+F1_000144                         00000C40
+F1_000145                         00000C64
+F1_000146                         00000C78
+F1_000147                         00000C78
+F1_000148                         00000C88
+F1_000150                         00000C88
+F1_000152                         00000C9A
+F1_000156                         00000CC8
+F1_000163                         00000CCA
+F1_000164                         00000CD6
+F1_000171                         00000CD8
+F1_000172                         00000CDC
+F1_000173                         00000CE2
+F1_000174                         00000CE8
+F1_000175                         00000CEC
+F1_000176                         00000CF2
+F1_000177                         00000CF6
+F1_000178                         00000CFC
+F1_000179                         00000D00
+F1_000181                         00000D06
+F1_000182                         00000D10
+F1_000183                         00000D14
+F1_000184                         00000D1A
+F1_000185                         00000D20
+F1_000186                         00000D22
+F1_000187                         00000D28
+F1_000188                         00000D2C
+F1_000192                         00001028
+F1_EOF                            0000102C
+F1_SOF                            00000850
+F2_EOF                            00000850
+F2_SOF                            00000850
+F3_EOF                            00001028
+F3_SOF                            00000D2E
+F@CALL                            
+F@JUMP                            
+FERR                              00000002
+FL@ADD_1                          000004EE
+FL@ADD_10                         00000590
+FL@ADD_11                         0000059C
+FL@ADD_13                         000005B6
+FL@ADD_2                          00000506
+FL@ADD_3                          0000051C
+FL@ADD_4                          00000520
+FL@ADD_5                          0000052E
+FL@ADD_6                          0000054E
+FL@ADD_7                          0000055A
+FL@ADD_8                          0000055E
+FL@ADD_9                          0000057C
+FL@ADD_ADJUST_RIGHT               000005AA
+FL@ADD_INCREMENT                  000005BE
+FL@ADD_MANTISSA                   000005D8
+FL@ADD_OVERFLOW                   000005D4
+FL@ADD_RES0                       000005D0
+FL@ADD_RET                        000005E4
+FL@ADD_SET_SIGN                   000005E0
+FL@DIV_1                          00000604
+FL@DIV_10                         00000682
+FL@DIV_2                          00000608
+FL@DIV_6                          0000063E
+FL@DIV_9                          0000066E
+FL@DIV_DIV0                       0000069A
+FL@DIV_LOOP                       00000634
+FL@DIV_MANTISSA                   000006A8
+FL@DIV_OVERFLOW1                  000006A4
+FL@DIV_RES0                       000006A0
+FL@DIV_SATURATE                   000006A6
+FL@DIV_SET_AND_SHIFT_IN_C         0000064A
+FL@DIV_SET_SIGN                   000006B0
+FL@DIV_SHIFT_IN_C                 0000064C
+FL@DIV_TEST_ZERO_L                00000620
+FL@DIV_UNDERFLOW                  0000069E
+FL@OUT                            00000050
+FLO@3232S                         00000758
+FLOAT_BIT                         
+FLOAT_BYTE                        
+FLOAT_DWORD                       
+FLOAT_FLOAT                       
+FLOAT_WORD                        
+FLOAT_WREG                        
+FONT                              00000D2E
+FP@DIV_START                      00000636
+FP@MUL_1                          000006D4
+FP@MUL_2                          000006D8
+FP@MUL_3                          000006EE
+FP@MUL_4                          00000702
+FP@MUL_5                          0000071E
+FP@MUL_MANTISSA                   00000748
+FP@MUL_OVERFLOW                   00000744
+FP@MUL_RES0                       00000740
+FP@MUL_SET_SIGN                   00000750
+FP@MUL_UNDERFLOW                  0000073E
+FPA@32                            000004C4
+FPD@32                            000005E8
+FPM@32                            000006B8
+FPS@32                            000004C0
+FREE                              00000004
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR0LH                            00000FEA
+FSR1H                             00000FE2
+FSR1L                             00000FE1
+FSR1LH                            00000FE2
+FSR2H                             00000FDA
+FSR2L                             00000FD9
+FSR2LH                            00000FDA
+G@OTO                             
+GAIN                              00000048
+GAINH                             00000049
+GAINHH                            0000004A
+GAINHHH                           0000004B
+GCEN                              00000007
+GEN                               00000003
+GEN3                              00000004
+GEN3H                             00000005
+GEN4                              00000006
+GEN4H                             00000007
+GIE                               00000007
+GIEH                              00000007
+GIEL                              00000006
+GLCD@CLS                          00000238
+GLCD@CUR                          0000020E
+GLCD@FLP                          00000136
+GLCD@L2                           00000256
+GLCD_L@2                          0000015C
+GLD@L1                            0000024A
+GO                                00000002
+GO@TO                             
+GO_DONE                           00000002
+GPR                               00000008
+HBUS@ACK                          000002BC
+HBUS@ARR                          000002AA
+HBUS@ARW                          000002E8
+HBUS@INA                          000002AE
+HBUS@LP1                          00000340
+HBUS@RESTRT                       00000332
+HBUS@RST                          00000316
+HBUS@SKA                          000002C4
+HBUS@SSC                          000002F8
+HBUS@ST                           0000031A
+HBUS@STP                          00000300
+HBUS@STRT                         00000326
+HBUS@WAIT_FOR_IDLE                0000033E
+HBUS@WAIT_FOR_IDLE_WITH_WRITE     0000033A
+HBUS@WRC                          00000322
+HBUSIN                            0000029E
+HBUSIN2                           0000029A
+HBUSINB                           0000028E
+HBUSOUT                           000002D8
+HBUSOUT2                          000002D4
+HBUSOUT@STM1                      0000028E
+HBUSOUTB                          000002CC
+HI2C@EX                           000002C6
+HI2C@FIN                          0000030E
+HLVDCON                           00000FD2
+HSPLL_OSC_1                       000000FE
+HS_OSC_1                          000000FA
+I2C_DAT                           00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+IDLOC0                            00200000
+IDLOC1                            00200001
+IDLOC2                            00200002
+IDLOC3                            00200003
+IDLOC4                            00200004
+IDLOC5                            00200005
+IDLOC6                            00200006
+IDLOC7                            00200007
+INDF0                             00000FEF
+INDF1                             00000FE7
+INDF2                             00000FDF
+INPMEASURE                        0000003C
+INPMEASUREH                       0000003D
+INPMEASUREHH                      0000003E
+INPMEASUREHHH                     0000003F
+INT0                              00000000
+INT0E                             00000004
+INT0F                             00000001
+INT0IE                            00000004
+INT0IF                            00000001
+INT1                              00000001
+INT1IE                            00000003
+INT1IF                            00000000
+INT1IP                            00000006
+INT2                              00000002
+INT2IE                            00000004
+INT2IF                            00000001
+INT2IP                            00000007
+INT32@TOFLOAT32                   00000768
+INTCON                            00000FF2
+INTCON1                           00000FF2
+INTCON2                           00000FF1
+INTCON3                           00000FF0
+INTEDG0                           00000006
+INTEDG1                           00000005
+INTEDG2                           00000004
+INTERNAL#FONT                     1
+IPEN                              00000007
+IPR1                              00000F9F
+IPR2                              00000FA2
+IRVST                             00000005
+ITO@F_1                           00000780
+ITO@F_2                           000007A2
+ITO@F_3                           000007B4
+ITO@F_4                           000007CA
+ITO@F_5                           000007D4
+ITO@F_6                           000007DE
+ITO@F_7                           000007EA
+JUMP                              
+L@DIV                             00000396
+L@MOD                             00000396
+LABEL_WORD                        
+LATA                              00000F89
+LATB                              00000F8A
+LATC                              00000F8B
+LATD                              00000F8C
+LATE                              00000F8D
+LCD#CS1PIN                        3
+LCD#CS1PORT                       PORTB
+LCD#CS2PIN                        4
+LCD#CS2PORT                       PORTB
+LCD#DTPIN                         4
+LCD#DTPORT                        PORTD
+LCD#ENPIN                         1
+LCD#ENPORT                        PORTB
+LCD#IS#SETUP                      1
+LCD#RSPIN                         0
+LCD#RSPORT                        PORTB
+LCD#RWPIN                         2
+LCD#RWPORT                        PORTB
+LCD#TYPE                          1
+LCD@DONE                          00000172
+LCDWRITE                          00000176
+LCDWRITE@WREG                     00000178
+LP_OSC_1                          000000F8
+LVDCON                            00000FD2
+LVDEN                             00000004
+LVDIE                             00000002
+LVDIF                             00000002
+LVDIN                             00000005
+LVDIP                             00000002
+LVDL0                             00000000
+LVDL1                             00000001
+LVDL2                             00000002
+LVDL3                             00000003
+LVP_OFF_4                         000000FB
+LVP_ON_4                          000000FF
+MEASURERES                        000009F4
+MOVFW                             
+N                                 00000004
+NEGW                              NEGF WREG
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000002
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_RI                            00000004
+NOT_T1SYNC                        00000002
+NOT_T3SYNC                        00000002
+NOT_TO                            00000003
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+NUM_BIT                           
+NUM_BYTE                          
+NUM_DWORD                         
+NUM_FLOAT                         
+NUM_FSR0                          
+NUM_FSR1                          
+NUM_FSR2                          
+NUM_WORD                          
+NUM_WREG                          
+O@D32L1                           000000CA
+O@D32L2                           000000DC
+O@D32L3                           0000010A
+O@D32SKP                          00000102
+OBF                               00000006
+OERR                              00000001
+OSC2                              00000006
+OSCCON                            00000FD3
+OSCS_OFF_1                        000000FF
+OSCS_ON_1                         000000DF
+OUT@DEC32                         000000BE
+OUT@FLOAT                         00000008
+OUT@FLOATSK1                      00000014
+OUT@FLOATSK2                      00000022
+OV                                00000003
+P                                 00000004
+PB@LB11                           00001028
+PB@LB12                           0000102C
+PBP_AARG                          00000009
+PBP_AARGH                         0000000A
+PBP_AARGHH                        0000000B
+PBP_AARGHHH                       0000000C
+PBP_BARG                          0000000D
+PBP_BARGH                         0000000E
+PBP_BARGHH                        0000000F
+PBP_BARGHHH                       00000010
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PD                                00000002
+PEIE                              00000006
+PEN                               00000002
+PIE1                              00000F9D
+PIE2                              00000FA0
+PIR1                              00000F9E
+PIR2                              00000FA1
+PLUSW0                            00000FEB
+PLUSW1                            00000FE3
+PLUSW2                            00000FDB
+POR                               00000001
+PORTA                             00000F80
+PORTB                             00000F81
+PORTC                             00000F82
+PORTD                             00000F83
+PORTE                             00000F84
+POSTDEC0                          00000FED
+POSTDEC1                          00000FE5
+POSTDEC2                          00000FDD
+POSTINC0                          00000FEE
+POSTINC1                          00000FE6
+POSTINC2                          00000FDE
+PP0                               00000011
+PP0H                              00000012
+PP0HH                             00000013
+PP0HHH                            00000014
+PP1                               00000015
+PP1H                              00000016
+PP1HH                             00000017
+PP1HHH                            00000018
+PP2                               00000019
+PP2H                              0000001A
+PP2HH                             0000001B
+PP2HHH                            0000001C
+PP3                               0000001D
+PP3H                              0000001E
+PP4                               0000001F
+PP5                               00000020
+PP5H                              00000021
+PP6                               00000022
+PP6H                              00000023
+PP7                               00000024
+PP7H                              00000025
+PP7HH                             00000026
+PP7HHH                            00000027
+PPZ                               00000028
+PPZH                              00000029
+PPZHH                             0000002A
+PPZHHH                            0000002B
+PP_ACKEN                          00000004
+PP_ADON                           00000000
+PP_CREN                           00000004
+PP_EEPGD                          00000007
+PP_GO_DONE                        00000002
+PP_OERR                           00000001
+PP_PEN                            00000002
+PP_RCEN                           00000003
+PP_RCIF                           00000005
+PP_RD                             00000000
+PP_RSEN                           00000001
+PP_R_W                            00000002
+PP_SEN                            00000000
+PP_T2CKPS0                        00000000
+PP_T2CKPS1                        00000001
+PP_TMR2ON                         00000002
+PP_TXIF                           00000004
+PP_WR                             00000001
+PP_WREN                           00000002
+PR2                               00000FCB
+PREINC0                           00000FEC
+PREINC1                           00000FE4
+PREINC2                           00000FDC
+PRINT                             00000130
+PRINT@MSTR                        00000110
+PRINT@MSTRL                       00000110
+PRODH                             00000FF4
+PRODL                             00000FF3
+PRODLH                            00000FF4
+PROTON#CODE#START                 00000000
+PROTON#MAIN#START                 0000083A
+PRT@MTEXT                         0000012E
+PRT@MTL2                          00000114
+PRT@MTL3                          00000116
+PSA                               00000003
+PSP0                              00000000
+PSP1                              00000001
+PSP2                              00000002
+PSP3                              00000003
+PSP4                              00000004
+PSP5                              00000005
+PSP6                              00000006
+PSP7                              00000007
+PSPIE                             00000007
+PSPIF                             00000007
+PSPIP                             00000007
+PSPMODE                           00000004
+PWRT_OFF_2                        000000FF
+PWRT_ON_2                         000000FE
+R                                 00000002
+R0                                0000004C
+R0H                               0000004D
+R0HH                              0000004E
+R0HHH                             0000004F
+R@B                               
+R@SLP1                            000001F6
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RAM_BANK                          00000000
+RAM_BANKS                         6
+RAWMEASURE                        00000038
+RAWMEASUREH                       00000039
+RAWMEASUREHH                      0000003A
+RAWMEASUREHHH                     0000003B
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RBIP                              00000000
+RBPU                              00000007
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCIO_OSC_1                        000000FF
+RCIP                              00000005
+RCON                              00000FD0
+RCREG                             00000FAE
+RCSTA                             00000FAB
+RC_OSC_1                          000000FB
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD16                              00000007
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ@STATUS                       000001F0
+READI2C                           00000CD8
+READ_WRITE                        00000002
+RESISTANCE                        00000040
+RESISTANCEH                       00000041
+RESISTANCEHH                      00000042
+RESISTANCEHHH                     00000043
+RI                                00000004
+RLF                               
+RRF                               
+RSEN                              00000001
+RX                                00000007
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+S@B                               
+SCK                               00000003
+SCL                               00000003
+SCS                               00000000
+SDA                               00000004
+SDI                               00000004
+SDO                               00000005
+SEN                               00000000
+SETC                              BSF STATUS,0
+SETUP@LCD                         00000198
+SETZ                              BSF STATUS,2
+SKP@GCSIN                         000001CE
+SKPC                              BTFSS STATUS,0
+SKPNC                             BTFSC STATUS,0
+SKPNZ                             BTFSC STATUS,2
+SKPZ                              BTFSS STATUS,2
+SMP                               00000007
+SPBRG                             00000FAF
+SPEN                              00000007
+SREN                              00000005
+SS                                00000005
+SSPADD                            00000FC8
+SSPBUF                            00000FC9
+SSPCON1                           00000FC6
+SSPCON2                           00000FC5
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPIP                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000FC7
+STATUS                            00000FD8
+STKFUL                            00000007
+STKPTR                            00000FFC
+STKUNF                            00000006
+STR@LB1                           000007EE
+STR@LB2                           00000800
+STR@LB3                           00000812
+STR@LB4                           0000081A
+STR@LB5                           00000822
+STR@LB6                           0000082A
+STR@LB7                           00000832
+STVR_OFF_4                        000000FE
+STVR_ON_4                         000000FF
+SWDTE                             00000000
+SWDTEN                            00000000
+SYNC                              00000004
+T08BIT                            00000006
+T0CKI                             00000004
+T0CON                             00000FD5
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0IP                              00000002
+T0PS0                             00000000
+T0PS1                             00000001
+T0PS2                             00000002
+T0SE                              00000004
+T1CKI                             00000000
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000FCD
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1OSI                             00000001
+T1OSO                             00000000
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000FCA
+T3CCP1                            00000003
+T3CCP2                            00000006
+T3CKPS0                           00000004
+T3CKPS1                           00000005
+T3CON                             00000FB1
+T3INSYNC                          00000002
+T3SYNC                            00000002
+TABLAT                            00000FF5
+TAGEB@32                          00000450
+TAGEB@32N                         0000048C
+TAGEB@32O                         000004BA
+TAGEB@32P                         0000045E
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRLH                          00000FF7
+TBLPTRLHH                         00000FF8
+TBLPTRU                           00000FF8
+TEMPERATURE                       00000044
+TEMPERATUREH                      00000045
+TEMPERATUREHH                     00000046
+TEMPERATUREHHH                    00000047
+TEMPHIGH                          00000064
+TEMPHIGHH                         00000065
+TEMPHIGHHH                        00000066
+TEMPHIGHHHH                       00000067
+TEMPLOW                           00000068
+TEMPLOWH                          00000069
+TEMPLOWHH                         0000006A
+TEMPLOWHHH                        0000006B
+TG@L                              000001E6
+TMR0H                             00000FD7
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR0IP                            00000002
+TMR0L                             00000FD6
+TMR0LH                            00000FD7
+TMR0ON                            00000007
+TMR1CS                            00000001
+TMR1H                             00000FCF
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1IP                            00000000
+TMR1L                             00000FCE
+TMR1LH                            00000FCF
+TMR1ON                            00000000
+TMR2                              00000FCC
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2IP                            00000001
+TMR2ON                            00000002
+TMR3CS                            00000001
+TMR3H                             00000FB3
+TMR3IE                            00000001
+TMR3IF                            00000001
+TMR3IP                            00000001
+TMR3L                             00000FB2
+TMR3LH                            00000FB3
+TMR3ON                            00000000
+TO                                00000003
+TOSH                              00000FFE
+TOSL                              00000FFD
+TOSLH                             00000FFE
+TOSU                              00000FFF
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRIALRES                          00000058
+TRIALRESH                         00000059
+TRIALRESHH                        0000005A
+TRIALRESHHH                       0000005B
+TRIALVALUE                        00000AC2
+TRISA                             00000F92
+TRISB                             00000F93
+TRISC                             00000F94
+TRISD                             00000F95
+TRISE                             00000F96
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX                                00000006
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXIP                              00000004
+TXREG                             00000FAD
+TXSTA                             00000FAC
+UA                                00000001
+VALUE_1ST                         00000034
+VALUE_2ND                         00000035
+VALUE_3RD                         00000036
+VREFM                             00000002
+VREFP                             00000003
+WCOL                              00000007
+WDTCON                            00000FD1
+WDTPS_128_2                       000000FF
+WDTPS_16_2                        000000F9
+WDTPS_1_2                         000000F1
+WDTPS_2_2                         000000F3
+WDTPS_32_2                        000000FB
+WDTPS_4_2                         000000F5
+WDTPS_64_2                        000000FD
+WDTPS_8_2                         000000F7
+WDT_OFF_2                         000000FE
+WDT_ON_2                          000000FF
+WORD_BIT                          
+WORD_BYTE                         
+WORD_DWORD                        
+WORD_FLOAT                        
+WORD_WORD                         
+WORD_WREG                         
+WR                                00000001
+WREG                              00000FE8
+WREG_BIT                          
+WREG_BYTE                         
+WREG_DWORD                        
+WREG_FLOAT                        
+WREG_WORD                         
+WREN                              00000002
+WRERR                             00000003
+WRITEI2C                          00000CCA
+WRT0_OFF_6                        000000FF
+WRT0_ON_6                         000000FE
+WRT1_OFF_6                        000000FF
+WRT1_ON_6                         000000FD
+WRT2_OFF_6                        000000FF
+WRT2_ON_6                         000000FB
+WRT3_OFF_6                        000000FF
+WRT3_ON_6                         000000F7
+WRTB_OFF_6                        000000FF
+WRTB_ON_6                         000000BF
+WRTC_OFF_6                        000000FF
+WRTC_ON_6                         000000DF
+WRTD_OFF_6                        000000FF
+WRTD_ON_6                         0000007F
+XTAL                              4
+XT_OSC_1                          000000F9
+Z                                 00000002
+_ADC                              8
+_ADC_RES                          10
+_AEXP                             0000002C
+_BEXP                             0000002D
+_CORE                             16
+_CWRITE_BLOCK                     8
+_EEPROM                           256
+_FLASH                            1
+_FP_FLAGS                         0000002E
+_FP_TEMP                          0000002F
+_FP_TEMPB0                        00000030
+_GLCD_XPOS                        00000031
+_I2C_SCL_PIN                      00000003
+_I2C_SCL_PORT                     00000F94
+_I2C_SDA_PIN                      00000004
+_I2C_SDA_PORT                     00000F94
+_MAXMEM                           32768
+_MAXRAM                           1536
+_RAM_END                          1536
+_SIGN                             00000032
+_SYSTEM_VARIABLE_COUNT            51
+_USART                            1
+_USB                              0
+__18F452                          1
+__EOF                             0000102E
+__IDLOC0                          00200000
+__IDLOC1                          00200001
+__IDLOC2                          00200002
+__IDLOC3                          00200003
+__IDLOC4                          00200004
+__IDLOC5                          00200005
+__IDLOC6                          00200006
+__IDLOC7                          00200007
+__INTERNAL_FONT                   1
+__LCD_CS1PIN                      3
+__LCD_CS1PORT                     PORTB
+__LCD_CS2PIN                      4
+__LCD_CS2PORT                     PORTB
+__LCD_DTPORT                      PORTD
+__LCD_ENPIN                       1
+__LCD_ENPORT                      PORTB
+__LCD_RSPIN                       0
+__LCD_RSPORT                      PORTB
+__LCD_RWPIN                       2
+__LCD_RWPORT                      PORTB
+__LCD_TYPE                        1
+__SCL_PIN                         3
+__SCL_PORT                        PORTC
+__SDA_PIN                         4
+__SDA_PORT                        PORTC
+__XTAL                            4
+
+
+MEMORY USAGE MAP ('X' = USED,  '-' = UNUSED)
+
+0000 : XXXX----XXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0100 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0140 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0180 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+01C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0200 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0240 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0280 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+02C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0300 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0340 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0380 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+03C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0400 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0440 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0480 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+04C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0500 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0540 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0580 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+05C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0600 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0640 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0680 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+06C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0700 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0740 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0780 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+07C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0800 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0840 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0880 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+08C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0900 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0940 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0980 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+09C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0A00 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0A40 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0A80 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0AC0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0B00 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0B40 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0B80 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0BC0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0C00 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0C40 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0C80 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0CC0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0D00 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0D40 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0D80 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0DC0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0E00 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0E40 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0E80 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0EC0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0F00 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0F40 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0F80 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0FC0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+1000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXX-- ----------------
+0000 : -XXX-XX-XXXXXX-- ---------------- ---------------- ----------------
+
+ALL OTHER MEMORY BLOCKS UNUSED.
+
+PROGRAM MEMORY BYTES USED:  4149
+PROGRAM MEMORY BYTES FREE: 28619
+
+
+ERRORS   :     0
+WARNINGS :     0 REPORTED,   464 SUPPRESSED
+MESSAGES :     1 REPORTED,     1 SUPPRESSED
+
+

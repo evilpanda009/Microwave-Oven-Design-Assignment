@@ -1,0 +1,44 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex04 - Ping Pong.BS2
+' Purpose... Ping-Pong LED Display
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' "Ping-Pongs" an LED (one of eight).
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+LEDs VAR OutL ' LEDs on Pins 0 - 7
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+DelayTime CON 100 ' delay time in milliseconds
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111111 ' make all pins outputs
+LEDs = %00000001 ' start with one LED on (pin 0)
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Go_Forward:
+PAUSE DelayTime ' show the LED
+LEDs = LEDs << 1 ' shift lit LED to the left
+IF (LEDs = %10000000) THEN Go_Reverse ' test for final position
+GOTO Go_Forward ' continue in this direction
+Go_Reverse:
+PAUSE DelayTime ' show the LED
+LEDs = LEDs >> 1 ' shift lit LED to the right
+IF (LEDs = %00000001) THEN Go_Forward ' test for final position
+GOTO Go_Reverse ' continue in this direction
+END

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Application Note AN957: Sensored BLDC Motor Control using dsPIC33">
+ <KEYWORDS>
+  <KEYWORD NAME="Application Note"/>
+  <KEYWORD NAME="Motor Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE TYPE="Design" NAME="AN957.DSN"/>
+  <FILE TYPE="Source" NAME="Init.c"/>
+  <FILE TYPE="Source" NAME="Interrupts.c"/>
+  <FILE TYPE="Header" NAME="p33FJ12MC202.h"/>
+  <FILE TYPE="Source" NAME="SensoredBLDC.c"/>
+  <FILE TYPE="Header" NAME="SensoredBLDC.h"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPLAB C30" NAME="Debug">
+  <CONTROLLER FAMILY="dsPIC33" CLOCK="4MHz" TYPE="DSPIC33FJ12MC202"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <FILE TOOL="CC" NAME="Init.obj">
+    <FILE NAME="Init.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Interrupts.obj">
+    <FILE NAME="Interrupts.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="SensoredBLDC.obj">
+    <FILE NAME="SensoredBLDC.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="AN957.DSN"/>
+  <FILE NAME="p33FJ12MC202.h"/>
+  <FILE NAME="SensoredBLDC.h"/>
+  <OPTION TOOL="CC" NAME="-g"/>
+  <OPTION TOOL="CC" NAME="--debug"/>
+  <OPTION TOOL="CC" NAME="-mcpu=" VALUE="33FJ12MC202"/>
+  <OPTION TOOL="LD" NAME="-g"/>
+  <OPTION TOOL="LD" NAME="--debug"/>
+  <OPTION TOOL="LD" NAME="-mcpu=" VALUE="33FJ12MC202"/>
+  <OPTION TOOL="LD" NAME="-Xlinker --script=&quot;p33FJ12MC202.gld&quot;"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="MPLAB C30" NAME="Release">
+  <CONTROLLER FAMILY="dsPIC33" CLOCK="4MHz" TYPE="DSPIC33FJ32MC202"/>
+  <FILE TOOL="BIN2HEX">
+   <FILE TOOL="LD">
+    <FILE TOOL="CC">
+     <FILE NAME="Init.c"/>
+    </FILE>
+   </FILE>
+  </FILE>
+  <FILE NAME="AN957.DSN"/>
+  <FILE NAME="Interrupts.c"/>
+  <FILE NAME="p33FJ12MC202.h"/>
+  <FILE NAME="SensoredBLDC.c"/>
+  <FILE NAME="SensoredBLDC.h"/>
+  <OPTION TOOL="CC" NAME="-mcpu=" VALUE="33FJ32MC202"/>
+  <OPTION TOOL="LD" NAME="-mcpu=" VALUE="33FJ32MC202"/>
+  <OPTION TOOL="LD" NAME="-Xlinker --script=&quot;p33FJ32MC202.gld&quot;"/>
+ </CONFIGURATION>
+</PROJECT>

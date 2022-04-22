@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Application Note AN972: PIC10F202 and MCP23x08 Demo.">
+ <KEYWORDS>
+  <KEYWORD NAME="I2C Comms"/>
+  <KEYWORD NAME="SPI Comms"/>
+  <KEYWORD NAME="Application Note"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source" NAME="00010R1.asm"/>
+  <FILE GROUP="Linker Script" NAME="00010R1.lkr"/>
+  <FILE GROUP="Design" NAME="PIC10_Demo.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="PIC10" CLOCK="4MHz" TYPE="PIC10F202"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="10f202_g.lkr"/>
+   <FILE TOOL="ASM" NAME="00010R1.o">
+    <FILE NAME="00010R1.asm"/>
+   </FILE>
+   <FILE NAME="00010R1.lkr"/>
+  </FILE>
+  <FILE NAME="PIC10_Demo.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="10f202"/>
+ </CONFIGURATION>
+</PROJECT>

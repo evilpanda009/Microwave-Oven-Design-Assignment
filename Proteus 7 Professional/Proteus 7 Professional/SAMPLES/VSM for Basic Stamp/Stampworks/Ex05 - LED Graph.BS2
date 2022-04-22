@@ -1,0 +1,76 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex05 - LED Graph.BS2
+' Purpose... LED Bar Graph
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated...
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' Displays a linear (bar) or dot graph using 8 LEDs
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+LEDs VAR OutL ' LED outputs
+PotPin CON 15 ' pot wiper connects to pin 15
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+DotGraf CON 0 ' define graph types
+BarGraf CON 1
+GraphMode CON BarGraf ' define current graph mode
+On CON 1
+Off CON 0
+Scale CON $005F ' scale value to make 0 .. 255
+' Scale CON $0028 ' scale for BS2sx
+' Scale CON $0027 ' sclae for BS2p
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+rawValue VAR Word ' raw value from pot
+grafValue VAR Byte ' graph value
+bits VAR Byte ' highest lighted bit
+newBar VAR Byte ' workspace for bar graph
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111111 ' make low pints outputs
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+HIGH PotPin ' discharge cap
+PAUSE 1 ' for 1 millisecond
+RCTIME PotPin, 1, rawValue ' read the Pot
+grafValue = rawValue */ Scale ' scale grafVal (0 - 255)
+GOSUB Show_Graph ' show it
+PAUSE 50
+GOTO Main ' do it again
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Show_Graph:
+IF (GraphMode = BarGraf) THEN Show_Bar ' jump to graph mode code
+Show_Dot:
+LEDs = DCD (grafValue / 32) ' show dot value
+RETURN
+Show_Bar:
+bits = DCD (grafValue / 32) ' get highest bit
+newBar = 0
+Build_Bar:
+IF (bits = 0) THEN Bar_Done ' all bar LEDs lit?
+newBar = newBar << 1 ' no - shift left
+newBar.Bit0 = On ' light low end
+bits = bits >> 1 ' mark bit lit
+GOTO Build_Bar ' continue
+Bar_Done:
+LEDs = newBar ' output new level
+RETURN

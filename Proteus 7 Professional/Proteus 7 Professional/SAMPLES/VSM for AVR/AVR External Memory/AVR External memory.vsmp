@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Sample showing the use of external memory">
+ <KEYWORDS/>
+ <FILES>
+  <FILE GROUP="Header" NAME="8515def.inc"/>
+  <FILE GROUP="Design" NAME="extram.DSN"/>
+  <FILE GROUP="Source" NAME="extram1.asm"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="AVRASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="AVR" CLOCK="1MHz" TYPE="AT90S8515"/>
+  <FILE TOOL="ASM" NAME="Debug/Debug.hex">
+   <FILE NAME="extram1.asm"/>
+  </FILE>
+  <FILE NAME="8515def.inc"/>
+  <FILE NAME="extram.DSN"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\appnotes\8515def.inc&quot;"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-f" VALUE="I"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="AVRASM (Proteus)" NAME="Release">
+  <CONTROLLER FAMILY="AVR" CLOCK="1MHz" TYPE="AT90S8515"/>
+  <FILE TOOL="ASM" NAME="Release/Release.hex">
+   <FILE NAME="extram1.asm"/>
+  </FILE>
+  <FILE NAME="8515def.inc"/>
+  <FILE NAME="extram.DSN"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-f" VALUE="I"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\appnotes\8515def.inc&quot;"/>
+ </CONFIGURATION>
+</PROJECT>

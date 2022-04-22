@@ -1,0 +1,122 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex12 - LCD Characters.BS2
+' Purpose... Custom LCD Characters
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates custom character creation and animation on a
+' character LCD.
+'
+' The connections for this program conform to the BS2p LCDIN and LCDOUT
+' commands. Use this program for the BS2, BS2e or BS2sx. There is a separate
+' program for the BS2p.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+E CON 0 ' LCD Enable pin (1 = enabled)
+RS CON 3 ' Register Select (1 = char)
+LCDbus VAR OutB ' 4-bit LCD data bus
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+ClrLCD CON $01 ' clear the LCD
+CrsrHm CON $02 ' move cursor to home position
+CrsrLf CON $10 ' move cursor left
+CrsrRt CON $14 ' move cursor right
+DispLf CON $18 ' shift displayed chars left
+DispRt CON $1C ' shift displayed chars right
+DDRam CON $80 ' Display Data RAM control
+CGRam CON $40 ' Custom character RAM
+Line1 CON $80 ' DDRAM address of line 1
+Line2 CON $C0 ' DDRAM address of line 2
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+char VAR Byte ' character sent to LCD
+newChar VAR Byte ' new character for animation
+index1 VAR Byte ' loop counter
+index2 VAR Byte ' loop counter
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+Msg1 DATA "THE BASIC STAMP " ' preload EEPROM with messages
+Msg2 DATA " IS VERY COOL! ", 3
+CC0 DATA $0E, $1F, $1C, $18, $1C, $1F, $0E, $00 ' character 0
+CC1 DATA $0E, $1F, $1F, $18, $1F, $1F, $0E, $00 ' character 1
+CC2 DATA $0E, $1F, $1F, $1F, $1F, $1F, $0E, $00 ' character 2
+Smiley DATA $00, $0A, $0A, $00, $11, $0E, $06, $00 ' smiley face
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111101 ' setup pins for LCD
+LCD_Init:
+PAUSE 500 ' let the LCD settle
+LCDbus = %0011 ' 8-bit mode
+PULSOUT E, 1
+PAUSE 5
+PULSOUT E, 1
+PULSOUT E, 1
+LCDbus = %0010 ' 4-bit mode
+PULSOUT E, 1
+char = %00101000 ' multi-line mode
+GOSUB LCD_Command
+char = %00001100 ' disp on, crsr off, blink off
+GOSUB LCD_Command
+char = %00000110 ' inc crsr, no disp shift
+GOSUB LCD_Command
+Download_Chars: ' download custom chars to LCD
+char = CGRam ' point to CG RAM
+GOSUB LCD_Command ' prepare to write CG data
+FOR index1 = CC0 TO (Smiley + 7) ' build 4 custom chars
+READ index1, char ' get byte from EEPROM
+GOSUB LCD_Write ' put into LCD CG RAM
+NEXT
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+char = ClrLCD ' clear the LCD
+GOSUB LCD_Command
+PAUSE 250
+FOR index1 = 0 TO 15 ' get message from EEPROM
+READ (Msg1 + index1),char ' read a character
+GOSUB LCD_Write ' write it
+NEXT
+PAUSE 2000 ' wait 2 seconds
+Animation:
+FOR index1 = 0 TO 15 ' cover 16 characters
+READ (Msg2 + index1), newChar ' get new char from 2nd message
+FOR index2 = 0 TO 4 ' 5 characters in animation cycle
+char = Line2 + index1 ' set new DDRAM address
+GOSUB LCD_Command
+LOOKUP index2, [0, 1, 2, 1, newChar], char
+GOSUB LCD_Write ' write animation character
+PAUSE 50 ' delay between animation chars
+NEXT
+NEXT
+PAUSE 1000
+GOTO Main
+' do it all over
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+LCD_Command:
+LOW RS ' enter command mode
+LCD_Write:
+LCDbus = char.HighNib ' output high nibble
+PULSOUT E, 1 ' strobe the Enable line
+LCDbus = char.LowNib ' output low nibble
+PULSOUT E, 1
+HIGH RS ' return to character mode
+RETURN

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="ATmega128 based low cost LCD driver">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+  <KEYWORD NAME="Application Note"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Design" NAME="LCD Driver.DSN"/>
+  <FILE GROUP="Source" NAME="LCD_drive.c"/>
+  <FILE GROUP="Header" NAME="LCD_drive.h"/>
+  <FILE GROUP="Source" NAME="LCD_main.c"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="WinAVR" NAME="Debug">
+  <CONTROLLER FAMILY="AVR" CLOCK="1MHz" TYPE="ATmega128"/>
+  <FILE TOOL="LD" NAME="Debug.elf">
+   <FILE TOOL="CC" NAME="LCD_drive.o">
+    <FILE NAME="LCD_drive.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="LCD_main.o">
+    <FILE NAME="LCD_main.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="LCD Driver.DSN"/>
+  <FILE NAME="LCD_drive.h"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mmcu=" VALUE="atmega128"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-W" VALUE="all"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-g" VALUE="dwarf-2"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-f" VALUE="signed-char"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MD"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MP"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-D" VALUE="F_CPU=%CLOCK%"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-O" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mmcu=" VALUE="atmega128"/>
+ </CONFIGURATION>
+</PROJECT>

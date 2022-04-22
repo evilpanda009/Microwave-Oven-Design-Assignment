@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="An ARM7 LPC2138 based music synthesizer">
+ <KEYWORDS/>
+ <FILES>
+  <FILE GROUP="Linker Script Files" NAME="Config/Chip.icf"/>
+  <FILE GROUP="Linker Script Files" NAME="Config/Flash.icf"/>
+  <FILE GROUP="Linker Script Files" NAME="Config/RAM.icf"/>
+  <FILE GROUP="Header Files" NAME="SRC/Config.h"/>
+  <FILE GROUP="Header Files" NAME="SRC/music.h"/>
+  <FILE GROUP="Source Files" NAME="SRC/Target.c"/>
+  <FILE GROUP="Header Files" NAME="SRC/Target.h"/>
+  <FILE GROUP="Source Files" NAME="USR/PWM_Music.C"/>
+  <FILE GROUP="Design Files" NAME="LPC2138 Playing Music.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="IAR for ARM" NAME="Debug">
+  <CONTROLLER FAMILY="ARM7" CLOCK="5MHz" TYPE="LPC2138"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.elf">
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="--config " VALUE="&quot;%COMPILER_DIR%/../PowerPac/BoardSupport/NXP/LPC2138/Setup/LPC2138_FLASH.icf&quot;"/>
+   <FILE NAME="Config/Chip.icf"/>
+   <FILE NAME="Config/Flash.icf"/>
+   <FILE NAME="Config/RAM.icf"/>
+   <FILE TOOL="CC" NAME="Debug/Target.o">
+    <FILE NAME="SRC/Target.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/PWM_Music.o">
+    <FILE NAME="USR/PWM_Music.C"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="SRC/Config.h"/>
+  <FILE NAME="SRC/music.h"/>
+  <FILE NAME="SRC/Target.h"/>
+  <FILE NAME="LPC2138 Playing Music.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--entry " VALUE="__iar_program_start"/>
+  <OPTION TOOL="LD" NAME="--silent"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../inc&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--endian=" VALUE="little"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--fpu=" VALUE="none"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_cse"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_unroll"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_inline"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_code_motion"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_tbaa"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_clustering"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_scheduling"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-e"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--interwork"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--cpu_mode=" VALUE="arm"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--dlib_config " VALUE="DLib_Config_Normal.h"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-O" VALUE="l"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../inc/NXP&quot;"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="IAR for ARM" NAME="Release">
+  <CONTROLLER FAMILY="ARM7" CLOCK="5MHz" TYPE="LPC2138"/>
+  <FILE TOOL="LD" NAME="Release/Release.hex">
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="--config " VALUE="&quot;%COMPILER_DIR%/../PowerPac/BoardSupport/NXP/LPC2138/Setup/LPC2138_FLASH.icf&quot;"/>
+   <FILE NAME="Config/Chip.icf"/>
+   <FILE NAME="Config/Flash.icf"/>
+   <FILE NAME="Config/RAM.icf"/>
+   <FILE TOOL="CC" NAME="Release/Target.o">
+    <FILE NAME="SRC/Target.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Release/PWM_Music.o">
+    <FILE NAME="USR/PWM_Music.C"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="SRC/Config.h"/>
+  <FILE NAME="SRC/music.h"/>
+  <FILE NAME="SRC/Target.h"/>
+  <FILE NAME="LPC2138 Playing Music.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--entry " VALUE="__iar_program_start"/>
+  <OPTION TOOL="LD" NAME="--silent"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+  <OPTION TOOL="CC" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../inc&quot;"/>
+  <OPTION TOOL="CC" NAME="--endian=" VALUE="little"/>
+  <OPTION TOOL="CC" NAME="--fpu=" VALUE="none"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_cse"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_unroll"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_inline"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_code_motion"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_tbaa"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_clustering"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_scheduling"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-e"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--interwork"/>
+  <OPTION TOOL="CC" NAME="--cpu_mode=" VALUE="arm"/>
+  <OPTION TOOL="CC" NAME="--dlib_config " VALUE="DLib_Config_Normal.h"/>
+  <OPTION TOOL="CC" NAME="-O" VALUE="l"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../inc/NXP&quot;"/>
+ </CONFIGURATION>
+</PROJECT>

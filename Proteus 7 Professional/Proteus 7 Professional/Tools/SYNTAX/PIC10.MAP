@@ -1,0 +1,8 @@
+#Syntax Highlight Extension Mappings for PIC10
+SDI=PIC10.SYN
+ASM=PIC10.SYN
+INC=PIC10.SYN
+AS=PIC10.SYN
+BAS=PROTON.SYN
+H=C.SYN
+C=C.SYN

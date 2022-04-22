@@ -1,0 +1,7 @@
+#Syntax Highlight Extension Mappings for 8086
+SDI=8086.SYN
+ASM=8086.SYN
+H=C.SYN
+C=C.SYN
+CPP=CPP.SYN
+HPP=CPP.SYN

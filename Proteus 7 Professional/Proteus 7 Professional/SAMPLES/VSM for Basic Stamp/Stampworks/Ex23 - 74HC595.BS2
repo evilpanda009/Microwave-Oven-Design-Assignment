@@ -1,0 +1,59 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex23 - 74HC595.BS2
+' Purpose... Expanded outputs with 74HC595
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demostrates a simple method of turning three Stamp lines into
+' eight outputs with a 74HC595 shift register.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+Clock CON 0 ' shift clock (74HC595.11)
+DataOut CON 1 ' serial data out (74HC595.14)
+Latch CON 2 ' output latch (74HC595.12)
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+DelayTime CON 100
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+pattern VAR Byte ' output pattern
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+LOW Latch ' make output and keep low
+pattern = %00000001
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Go_Forward:
+GOSUB Out_595
+PAUSE DelayTime ' put pattern on 74x595
+pattern = pattern << 1 ' shift pattern to the left
+IF (pattern = %10000000) THEN Go_Reverse ' test for final position
+GOTO Go_Forward ' continue in this direction
+Go_Reverse:
+GOSUB Out_595
+PAUSE DelayTime
+pattern = pattern >> 1
+IF (pattern = %00000001) THEN Go_Forward
+GOTO Go_Reverse
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Out_595:
+SHIFTOUT DataOut, Clock, MSBFirst, [pattern] ' send pattern to 74x595
+PULSOUT Latch, 5 ' latch outputs
+RETURN

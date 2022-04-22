@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="dsPIC33 Data Recorder for temperature and pressure.">
+ <KEYWORDS>
+  <KEYWORD NAME="I2C Comms"/>
+  <KEYWORD NAME="RS232 Comms"/>
+  <KEYWORD NAME="Temperature Sensing"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source" NAME="analog.c"/>
+  <FILE GROUP="Header" NAME="analog.h"/>
+  <FILE GROUP="Source" NAME="command_proc.c"/>
+  <FILE GROUP="Header" NAME="command_proc.h"/>
+  <FILE GROUP="Header" NAME="common.h"/>
+  <FILE GROUP="Design" NAME="dsPIC33_REC.DSN"/>
+  <FILE GROUP="Source" NAME="i2c_eeprom.c"/>
+  <FILE GROUP="Header" NAME="i2c_eeprom.h"/>
+  <FILE GROUP="Source" NAME="main.c"/>
+  <FILE GROUP="Header" NAME="p33FJ12GP201.h"/>
+  <FILE GROUP="Source" NAME="serial.c"/>
+  <FILE GROUP="Header" NAME="serial.h"/>
+  <FILE GROUP="Source" NAME="SHTxx_drivers.c"/>
+  <FILE GROUP="Header" NAME="SHTxx_drivers.h"/>
+  <FILE GROUP="Source" NAME="timer.c"/>
+  <FILE GROUP="Header" NAME="timer.h"/>
+  <FILE GROUP="Source" NAME="utilities.c"/>
+  <FILE GROUP="Header" NAME="utilities.h"/>
+  <FILE GROUP="Linker Script" NAME="p33FJ12GP201.gld"/>
+  <FILE GROUP="Header" NAME="i2c.h"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPLAB C30" NAME="Debug">
+  <CONTROLLER FAMILY="dsPIC33" CLOCK="4MHz" TYPE="dsPIC33FJ12GP201"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="GLD" NAME="-Xlinker --script=" VALUE="&quot;p33FJ12GP201.gld&quot;"/>
+   <FILE NAME="p33FJ12GP201.gld"/>
+   <FILE TOOL="CC" NAME="analog.obj">
+    <FILE NAME="analog.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="command_proc.obj">
+    <FILE NAME="command_proc.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="i2c_eeprom.obj">
+    <FILE NAME="i2c_eeprom.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="main.obj">
+    <FILE NAME="main.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="serial.obj">
+    <FILE NAME="serial.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="SHTxx_drivers.obj">
+    <FILE NAME="SHTxx_drivers.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="timer.obj">
+    <FILE NAME="timer.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="utilities.obj">
+    <FILE NAME="utilities.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="analog.h"/>
+  <FILE NAME="command_proc.h"/>
+  <FILE NAME="common.h"/>
+  <FILE NAME="dsPIC33_REC.DSN"/>
+  <FILE NAME="i2c_eeprom.h"/>
+  <FILE NAME="p33FJ12GP201.h"/>
+  <FILE NAME="serial.h"/>
+  <FILE NAME="SHTxx_drivers.h"/>
+  <FILE NAME="timer.h"/>
+  <FILE NAME="utilities.h"/>
+  <FILE NAME="i2c.h"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-g"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mcpu=" VALUE="33FJ12GP201"/>
+  <OPTION TOOL="LD" NAME="-l" VALUE="p33FJ12GP201"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-g"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mcpu=" VALUE="33FJ12GP201"/>
+ </CONFIGURATION>
+</PROJECT>

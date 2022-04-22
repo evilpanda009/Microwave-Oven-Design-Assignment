@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="8051 based timer with an LCD">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="Main.c"/>
+  <FILE GROUP="Source Files" NAME="TaskProc.c"/>
+  <FILE GROUP="Source Files" NAME="Timer.c"/>
+  <FILE GROUP="Design Files" NAME="8051 Timer.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="Keil for 8051" NAME="Debug">
+  <CONTROLLER FAMILY="8051" CLOCK="12MHz" TYPE="AT89C51RD2"/>
+  <FILE TOOL="LD" NAME="Debug.OMF">
+   <FILE TOOL="CC" NAME="Main.OBJ">
+    <FILE NAME="Main.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="TaskProc.OBJ">
+    <FILE NAME="TaskProc.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Timer.OBJ">
+    <FILE NAME="Timer.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="8051 Timer.DSN"/>
+  <OPTION TOOL="CC" NAME="ROM(" VALUE="LARGE)"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="BROWSE"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="DEBUG"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="CODE"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="OBJECTEXTEND"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="PREPRINT"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="Keil for 8051" NAME="Release">
+  <CONTROLLER FAMILY="8051" CLOCK="12MHz" TYPE="AT89C51RD2"/>
+  <FILE TOOL="LD">
+   <FILE TOOL="CC">
+    <FILE NAME="Main.c"/>
+   </FILE>
+   <FILE TOOL="CC">
+    <FILE NAME="TaskProc.c"/>
+   </FILE>
+   <FILE TOOL="CC">
+    <FILE NAME="Timer.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="8051 Timer.DSN"/>
+  <OPTION TOOL="CC" NAME="ROM(" VALUE="LARGE)"/>
+ </CONFIGURATION>
+</PROJECT>

@@ -1,0 +1,50 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex25 - Servo.BS2
+' Purpose... Hobby Servo Control
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program shows how to control a standard servo with the BASIC Stamp.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+PotCW CON 0 ' clockwise pot input
+PotCCW CON 1 ' counter-clockwise pot input
+Servo CON 2 ' servo control pin
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Scale CON $0068 ' scale RCTIME to 0 - 250, BS2
+' Scale CON $002C ' BS2sx
+' Scale CON $002A ' BS2p
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+rcRt VAR Word ' rc reading - right
+rcLf VAR Word ' rc reading - left
+diff VAR Word ' difference between readings
+sPos VAR Word ' servo position
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+HIGH PotCW ' discharge caps
+HIGH PotCCW
+PAUSE 1
+RCTIME PotCW, 1, rcRt ' read clockwise
+RCTIME PotCCW, 1, rcLf ' read counter-clockwise
+rcRt = (rcRt */ Scale) MAX 250 ' scale RCTIME to 0-250
+rcLf = (rcLf */ Scale) MAX 250
+sPos = rcRt - rcLf ' calculate position (-250 to 250)
+PULSOUT Servo, (750 + sPos) ' move the servo
+PAUSE 20
+GOTO Main

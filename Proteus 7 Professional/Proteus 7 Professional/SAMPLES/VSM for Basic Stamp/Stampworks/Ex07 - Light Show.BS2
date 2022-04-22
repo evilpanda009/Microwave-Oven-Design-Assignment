@@ -1,0 +1,92 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex07 - Light Show.BS2
+' Purpose... Simple lighting controller
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' Mini light show controller with variable speed and multiple patterns.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+Select CON 7 ' pattern select input
+PotPin CON 6 ' speed control Pot input
+Lights VAR OutL ' light control outputs
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Scale CON $018A ' convert pot input to 0 - 1000
+' Scale CON $00A0 ' scale for BS2sx
+' Scale CON $009E ' scale for BS2p
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+delay VAR Word ' pause time between patterns
+btnVar VAR Byte ' workspace for BUTTON
+mode VAR Byte ' selected mode
+offset VAR Byte ' offset into light patterns
+randW VAR Word ' workspace for RANDOM
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+SeqA DATA %000001, %000010, %000100, %001000, %010000, %100000
+SeqB DATA %100000, %010000, %001000, %000100, %000010
+DATA %000001, %000010, %000100, %001000, %010000
+SeqC DATA %000000, %001100, %010010, %100001
+SeqD DATA %100100, %010010, %001001
+SeqE DATA %0
+AMax CON SeqB - SeqA ' calculate length of sequence
+BMax CON SeqC - SeqB
+CMax CON SeqD - SeqC
+DMax CON SeqE - SeqD
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %00111111 ' LED control lines are outputs
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+HIGH PotPin ' discharge cap
+PAUSE 1
+RCTIME PotPin, 1, delay ' read speed pot
+delay = (delay */ Scale) MIN 50 ' calculate delay (50 ms ~ 1 sec)
+PAUSE delay ' wait between patterns
+Switch_Check:
+BUTTON Select, 0, 255, 0, btnVar, 0, Show ' new mode?
+mode = mode + 1 // 5 ' yes, update mode var
+Show:
+BRANCH mode, [ModeA, ModeB, ModeC, ModeD, ModeE]
+GOTO Main
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+ModeA:
+offset = offset + 1 // AMax ' update offset (0 - 5)
+READ (SeqA + offset), Lights ' output new light pattern
+GOTO Main ' repeat
+ModeB:
+offset = offset + 1 // BMax
+READ (SeqB + offset), Lights
+GOTO Main
+ModeC:
+offset = offset + 1 // CMax
+READ (SeqC + offset), Lights
+GOTO Main
+ModeD:
+offset = offset + 1 // DMax
+READ (SeqD + offset), Lights
+GOTO Main
+ModeE:
+RANDOM randW ' get random number
+Lights = randW & %00111111 ' light random channels
+GOTO Main

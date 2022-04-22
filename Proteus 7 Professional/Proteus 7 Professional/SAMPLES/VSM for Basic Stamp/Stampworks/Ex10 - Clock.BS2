@@ -1,0 +1,94 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex10 - Clock.BS2
+' Purpose... Simple software clock
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program monitors a 1 Hz input signal and uses it as the timebase for
+' a software clock.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+Segs VAR OutL ' segments
+DigSel VAR OutC ' digit select
+Tic VAR In15 ' 1 Hz Pulse Generator input
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+DecPoint CON %10000000 ' decimal point bit
+Blank CON %00000000 ' all segments off
+Dig0 CON %1111 ' digit select control
+Dig1 CON %1110
+Dig2 CON %1101
+Dig3 CON %1011
+Dig4 CON %0111
+IsLow CON 0 ' Tic input is low
+IsHigh CON 1 ' Tic input is high
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+secs VAR Word ' seconds
+time VAR Word ' formatted time
+digit VAR Nib ' current display digit
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+' .abcdefg
+' --------
+DecDig DATA %01111110 ' 0
+DATA %00110000 ' 1
+DATA %01101101 ' 2
+DATA %01111001 ' 3
+DATA %00110011 ' 4
+DATA %01011011 ' 5
+DATA %01011111 ' 6
+DATA %01110000 ' 7
+DATA %01111111 ' 8
+DATA %01111011 ' 9
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111111 ' make segments outputs
+DirC = %1111 ' make digit selects outputs
+DigSel = Dig0 ' all digits off
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Show_Time ' show current digit
+IF (Tic = IsHigh) THEN Inc_Sec ' new second?
+GOTO Main ' do it again
+Inc_Sec:
+secs = (secs + 1) // 3600 ' update seconds counter
+Waiting:
+GOSUB Show_Time ' show current digit
+IF (Tic = IsLow) THEN Main ' if last tic gone, go back
+' additional code could go here
+GOTO Waiting ' do tic check again
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Show_Time:
+time = (secs / 60) * 100 ' get minutes, put in hundreds
+time = time + (secs // 60) ' get seconds, put in 10s & 1s
+Segs = Blank ' clear display
+' enable digit
+LOOKUP digit, [Dig1, Dig2, Dig3, Dig4], digSel
+READ (DecDig + (time DIG digit)), Segs ' put segment pattern in digit
+IF (digit <> 2) THEN Skip_DP
+Segs = Segs + DecPoint ' illuminate decimal point
+Skip_DP:
+PAUSE 1 ' show it
+digit = (digit + 1) // 4 ' get next digit
+RETURN

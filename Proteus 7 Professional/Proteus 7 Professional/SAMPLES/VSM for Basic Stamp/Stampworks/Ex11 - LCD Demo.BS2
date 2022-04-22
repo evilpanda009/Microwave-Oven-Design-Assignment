@@ -1,0 +1,132 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex11 - LCD Demo.BS2
+' Purpose... Essential LCD control
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+' {$STAMP BS2}
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates essential character LCD control.
+'
+' The connections for this program conform to the BS2p LCDIN and LCDOUT
+' commands. Use this program for the BS2, BS2e or BS2sx. There is a separate
+' program for the BS2p.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+E CON 0 ' LCD Enable pin (1 = enabled)
+RS CON 3 ' Register Select (1 = char)
+LCDbus VAR OutB ' 4-bit LCD data bus
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+ClrLCD CON $01 ' clear the LCD
+CrsrHm CON $02 ' move cursor to home position
+CrsrLf CON $10 ' move cursor left
+CrsrRt CON $14 ' move cursor right
+DispLf CON $18 ' shift displayed chars left
+DispRt CON $1C ' shift displayed chars right
+DDRam CON $80 ' Display Data RAM control
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+char VAR Byte ' character sent to LCD
+index VAR Byte ' loop counter
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+Msg DATA "THE BASIC STAMP!", 0 ' preload EEPROM with message
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111101 ' setup pins for LCD
+LCD_Init:
+PAUSE 500 ' let the LCD settle
+LCDbus = %0011 ' 8-bit mode
+PULSOUT E, 1
+PAUSE 5
+PULSOUT E, 1
+PULSOUT E, 1
+LCDbus = %0010 ' 4-bit mode
+PULSOUT E, 1
+char = %00001100 ' disp on, crsr off, blink off
+GOSUB LCD_Command
+char = %00000110 ' inc crsr, no disp shift
+GOSUB LCD_Command
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+char = ClrLCD ' clear the LCD
+GOSUB LCD_Command
+PAUSE 500
+index = Msg ' get EE address of message
+Read_Char:
+READ index, char ' get character from EEPROM
+IF (char = 0) THEN Msg_Done ' if 0, message is complete
+GOSUB LCD_Write ' write the character
+index = index + 1 ' point to next character
+GOTO Read_Char ' go get it
+Msg_Done: ' the message is complete
+PAUSE 2000 ' wait 2 seconds
+char = CrsrHm ' move the cursor home
+GOSUB LCD_Command
+char = %00001110 ' turn the cursor on
+GOSUB LCD_Command
+PAUSE 500
+char = CrsrRt
+FOR index = 1 TO 15 ' move the cursor accross display
+GOSUB LCD_Command
+PAUSE 150
+NEXT
+FOR index = 14 TO 0 ' go backward by moving cursor
+char = DDRam + index ' to a specific address
+GOSUB LCD_Command
+PAUSE 150
+NEXT
+char = %00001101 ' cursor off, blink on
+GOSUB LCD_Command
+PAUSE 2000
+char = %00001100 ' blink off
+GOSUB LCD_Command
+FOR index = 1 TO 10 ' flash display
+char = char ^ %00000100 ' toggle display bit
+GOSUB LCD_Command
+PAUSE 250
+NEXT
+PAUSE 1000
+FOR index = 1 TO 16 ' shift display
+char = DispRt
+GOSUB LCD_Command
+PAUSE 100
+NEXT
+PAUSE 1000
+FOR index = 1 TO 16 ' shift display back
+char = DispLf
+GOSUB LCD_Command
+PAUSE 100
+NEXT
+PAUSE 1000
+GOTO Main ' do it all over
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+LCD_Command:
+LOW RS ' enter command mode
+LCD_Write:
+LCDbus = char.HighNib ' output high nibble
+PULSOUT E, 1 ' strobe the Enable line
+LCDbus = char.LowNib ' output low nibble
+PULSOUT E, 1
+HIGH RS ' return to character mode
+RETURN

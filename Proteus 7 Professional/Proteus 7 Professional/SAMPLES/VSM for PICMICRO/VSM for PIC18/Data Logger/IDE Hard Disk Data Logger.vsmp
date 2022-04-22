@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="ATA/IDE Hard Disk Drive Data Recorder Demo with PIC18F458">
+ <KEYWORDS>
+  <KEYWORD NAME="RS232 Comms"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source" NAME="DataLog.ASM"/>
+  <FILE GROUP="Design" NAME="DataLog.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="PIC18" CLOCK="20MHz" TYPE="PIC18F458"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="18f458_g.lkr"/>
+   <FILE TOOL="ASM" NAME="DataLog.o">
+    <FILE NAME="DataLog.ASM"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="DataLog.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="18f458"/>
+ </CONFIGURATION>
+</PROJECT>

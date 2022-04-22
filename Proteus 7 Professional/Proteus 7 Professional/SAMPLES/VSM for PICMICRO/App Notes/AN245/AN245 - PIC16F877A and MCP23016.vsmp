@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Application Note AN245: Interfacing the MCP23016 I/O Expander with PIC16F877A">
+ <KEYWORDS>
+  <KEYWORD NAME="Application Note"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Design" NAME="00245.DSN"/>
+  <FILE GROUP="Source" NAME="16chaser.c"/>
+  <FILE GROUP="Source" NAME="delay.c"/>
+  <FILE GROUP="Header" NAME="delay.h"/>
+  <FILE GROUP="Source" NAME="i2crxtx.c"/>
+  <FILE GROUP="Header" NAME="i2crxtx.h"/>
+  <FILE GROUP="Source" NAME="mcp23016.c"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="HI-TECH C for PIC10/12/16" NAME="Debug">
+  <CONTROLLER FAMILY="PIC16" CLOCK="20MHz" TYPE="PIC16F877A"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <FILE TOOL="CC" NAME="delay.p1">
+    <FILE NAME="delay.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="i2crxtx.p1">
+    <FILE NAME="i2crxtx.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="mcp23016.p1">
+    <FILE NAME="mcp23016.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="16chaser.p1">
+    <FILE NAME="16chaser.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="00245.DSN"/>
+  <FILE NAME="delay.h"/>
+  <FILE NAME="i2crxtx.h"/>
+  <FILE NAME="Debug.cof"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--output=" VALUE="mcof"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--errformat=" VALUE="&quot;Error at file %%%%f line %%%%l column %%%%c: (%%%%n) %%%%s&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--warnformat=" VALUE="&quot;Warning at file %%%%f line %%%%l column %%%%c: (%%%%n) %%%%s&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--msgformat=" VALUE="&quot;Message at file %%%%f line %%%%l column %%%%c: (%%%%n) %%%%s&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-G"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--chip=" VALUE="16F877A"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--pass1"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--errformat=" VALUE="&quot;Error at file %%%%f line %%%%l column %%%%c: (%%%%n) %%%%s&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--warnformat=" VALUE="&quot;Warning at file %%%%f line %%%%l column %%%%c: (%%%%n) %%%%s&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--msgformat=" VALUE="&quot;Message at file %%%%f line %%%%l column %%%%c: (%%%%n) %%%%s&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-G"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--chip=" VALUE="16F877A"/>
+ </CONFIGURATION>
+</PROJECT>

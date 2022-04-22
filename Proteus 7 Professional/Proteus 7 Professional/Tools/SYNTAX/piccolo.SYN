@@ -1,0 +1,31 @@
+#
+# Labcenter Electronics
+#
+# Piccolo syntax highlighter definition file.
+#
+line_comment=;.*$
+
+string='([^'\\]|\\.)*'
+string="([^"\\]|\\.)*"
+
+constant=(#|@)([0-9a-fA-F]+h|[0-9]+)\b
+constant=\b([0-9a-fA-F]+h|[0-9]+)\b
+
+keyword=\b(ADD(B|CL|CU|L|U|UL)?)\b 
+keyword=\b(C27(MAP|OBJ))\b 
+keyword=\b(C28(ADDR|MAP|OBJ))\b
+keyword=\b(CMP(64|B|L|R)?)\b 
+keyword=\b(MOV(A|AD|B|DL|H|L|P|S|U|W|X|Z)?)\b 
+keyword=\b(MPY(A|B|S|U|XU)?)\b 
+keyword=\b(SUB(B|BL|CU|CUL|L|R|RL|U|UL)?)\b 
+
+keyword=\b(ABORTI|ABS|ABSTC|ADRK|AND|ANDB|ASP|ASR|ASR64|ASRL|B|BANZ|BAR|BF|CLRC|CSB|DEC|DINT|DMAC|DMOV|EALLOW|EDIS|EINT|ESTOP0|ESTOP1)\b 
+keyword=\b(FFC|FLIP|IACK|IDLE|IMACL|IMPYAL|IMPYL|IMPYSL|IMPYXUL|IN|INC|INTR|IRET)\b 
+keyword=\b(LB|LC|LCR|LOOPNZ|LOOPZ|LPADDR|LRET|LRETE|LRETR|LSL|LSL64|LSLL|LSR|LSR64|LSRL|MAC|MAX|MAXCUL|MAXL|MIN|MINCUL|MINL|NASP|NEG|NEG64|NEGTC|NOP|NORM|NOT)\b 
+keyword=\b(OR|ORB|OUT|POP|PREAD|PUSH|PWRITE|QMACL|QMPYAL|QMPYL|QMPYSL|QMPYUL|QMPYXUL|ROL|ROR|RPT|SAT|SAT64|SB|SBBU|SBF|SBRK|SETC|SFR|SPM|SQRA|SQRS|SXTB)\b 
+keyword=\b(TBIT|TCLR|TEST|TRAP|TSET|UOUT|XB|XBANZ|XCALL|XMAC|XMACD|XOR|XORB|XPREAD|XPWRITE|XRET|XRETC|ZALR|ZAP|ZAPA)\b 
+
+macro=\b(text|se(t|ct)|ref|global|if|else|end(if)?)\b
+
+operator=(\+|-|<|>|/)
+operator=@|&

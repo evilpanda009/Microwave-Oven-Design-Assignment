@@ -1,0 +1,105 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex26 - Stepper.BS2
+' Purpose... Stepper Motor Control
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates unipolar stepper motor control. The pot allows the
+' program to control speed and direction of the motor.
+' ------------------------------------------------------------------------------
+' Revision History
+' ------------------------------------------------------------------------------
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+PotCW CON 0 ' clockwise pot input
+PotCCW CON 1 ' counter-clockwise pot input
+Coils VAR OutB ' output to stepper coils
+D Var Byte
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Scale CON $0100 ' scale for BS2 (1.0)
+' Scale CON $0080 ' scale for BS2sx, BS2p (0.5)
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+speed VAR Word ' delay between steps
+x VAR Byte ' loop counter
+sAddr VAR Byte ' EE address of step data
+rcRt VAR Word ' rc reading - right
+rcLf VAR Word ' rc reading - left
+diff VAR Word ' difference between readings
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+' __
+' ABAB
+' -----
+Step1 DATA %1100 ' A on B on A\ off B\ off
+Step2 DATA %0110 ' A off B on A\ on B\ off
+Step3 DATA %0011 ' A off B off A\ on B\ on
+Step4 DATA %1001 ' A on B off A\ off B\ on
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirB = %1111 ' make stepper pins outputs
+speed = 5 ' set starting speed
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+FOR x = 1 TO 100 ' 1 rev forward
+GOSUB Step_Fwd
+NEXT
+PAUSE 200
+FOR x = 1 TO 100 ' 1 rev back
+GOSUB Step_Rev
+NEXT
+PAUSE 200
+Step_Demo:
+HIGH PotCW
+HIGH PotCCW
+PAUSE 1
+RCTIME PotCW, 1, rcRt ' read clockwise
+RCTIME PotCCW, 1, rcLf ' read counter-clockwise
+rcRt = (rcRt */ Scale) MAX 600 ' set speed limits
+rcLf = (rcLf */ Scale) MAX 600
+diff = ABS(rcRt - rcLf) ' get difference between readings
+IF (diff < 25) THEN Step_Wait ' allow dead band
+IF (rcLf > rcRt) THEN Step_CCW
+Step_CW:
+speed = 60 - (rcRt / 10) ' calculate speed
+GOSUB Step_Fwd ' do a step
+GOTO Step_Demo
+Step_CCW:
+speed = 60 - (rcLf / 10)
+GOSUB Step_Rev
+GOTO Step_Demo
+Step_Wait
+PAUSE 100
+GOTO Step_Demo
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Step_Fwd:
+sAddr = sAddr + 1 // 4 ' point to next step
+READ (Step1 + sAddr), D ' output step data
+Coils = D
+PAUSE speed ' pause between steps
+RETURN
+Step_Rev:
+sAddr = sAddr + 3 // 4 ' point to previous step
+READ (Step1 + sAddr), Coils
+PAUSE speed
+RETURN

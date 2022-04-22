@@ -1,0 +1,47 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex18 - FreqIn2.BS2
+' Purpose... Frequency Input
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program monitors and displays the frequency of a signal on Pin 0.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+FreqPin CON 0 ' frequency input pin
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Convert CON $0200 ' input to uSeconds (BS2)
+' Convert CON $00CC ' BS2sx
+' Convert CON $00C0 ' BS2p
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+pHigh VAR Word ' high pulse width
+pLow VAR Word ' low pulse width
+period VAR Word ' cycle time (high + low)
+freq VAR Word ' frequency
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+PULSIN FreqPin, 0, pHigh ' get high portion of input
+PULSIN FreqPin, 1, pLow ' get low portion of input
+period = (pHigh + pLow) */ Convert ' calculate cycle width in uSecs
+freq = 50000 / period * 20 ' calculate frequency
+' display on DEBUG screen
+DEBUG Home
+DEBUG "Period...... ", DEC period, " uS ", CR
+DEBUG "Frequency... ", DEC freq, " Hz ", CR
+GOTO Main ' do it again
+END

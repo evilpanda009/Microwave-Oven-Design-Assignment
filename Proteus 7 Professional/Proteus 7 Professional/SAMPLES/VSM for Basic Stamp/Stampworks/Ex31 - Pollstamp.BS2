@@ -1,0 +1,169 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex31 - PollStamp.BS2
+' Purpose... Serial Communications
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates serial communications through Stamp I/O pins.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+LEDs VAR OutA ' LED outputs
+DQ CON 4 ' DS1620.1 (through 1K resistor)
+Clock CON 5 ' DS1620.2
+Reset CON 6 ' DS1620.3
+RxD CON 14 ' serial input - to INEX RxD
+TxD CON 15 ' serial output - to INEX TxD
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Baud96 CON 84 ' 9600-8-N-1, BS2/BS2e
+' Baud96 CON 240 ' BS2sx/BS2p
+CMenu CON $FF ' show command menu
+CID CON $F0 ' get string ID
+CSet CON $F1 ' set string ID
+CTmp CON $A0 ' get DS1620 - display raw count
+CTmpC CON $A1 ' get DS1620 - display in C
+CTmpF CON $A2 ' get DS1620 - display in F
+CStat CON $B0 ' get digital output status
+CLEDs CON $B1 ' set LED outputs
+RTmp CON $AA ' read temperature
+WTHi CON $01 ' write TH (high temp register)
+WTLo CON $02 ' write TL (low temp register)
+RTHi CON $A1 ' read TH
+RTLo CON $A2 ' read TL
+StartC CON $EE ' start conversion
+StopC CON $22 ' stop conversion
+WrCfg CON $0C ' write configuration register
+RdCfg CON $AC ' read configuration register
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+cmd VAR Byte ' command from PC/terminal
+eeAddr VAR Byte ' EE address pointer
+eeData VAR Byte ' EE data
+param VAR Word ' parameter from PC
+char VAR param.LowByte ' character from terminal
+tmpIn VAR Word ' raw data from DS1620
+halfBit VAR tmpIn.Bit0 ' 0.5 degree C indicator
+sign VAR tmpIn.Bit8 ' 1 = negative temperature
+tempC VAR Word ' degrees C in tenths
+tempF VAR Word ' degrees F in tenths
+potVal VAR Word ' reading from BSAC pot
+buttons VAR Nib ' input buttons
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+ID DATA "StampWorks 1.2", CR ' CR-terminated string
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirA = %1111 ' LED pins are outputs
+HIGH Reset ' alert the DS1620
+SHIFTOUT DQ, Clock, LSBFirst, [WrCfg, %10] ' use with CPU; free-run
+LOW Reset
+PAUSE 10
+HIGH Reset
+SHIFTOUT DQ, Clock, LSBFirst, [StartC] ' start conversions
+LOW Reset
+GOTO Show_Menu
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+cmd = 0
+SERIN RxD, Baud96, [WAIT ("?"), HEX cmd]
+' check for menu request
+IF (cmd = CMenu) THEN Show_Menu
+' convert command for branching
+LOOKDOWN cmd, [CID, CSet, CTmp, CTmpC, CTmpF, CStat, CLEDs], cmd
+' branch to requested routine
+BRANCH cmd, [Show_ID, Set_ID, Show_Temp, Show_Temp_C, Show_Temp_F]
+cmd = cmd - 5
+BRANCH cmd, [Show_Status, Set_LEDs]
+BadCommand:
+SEROUT TxD, Baud96, ["Invalid Command: ", HEX2 cmd, CR]
+GOTO Main
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Show_Menu:
+SEROUT TxD, Baud96, [CLS]
+SEROUT TxD, Baud96, ["========================", CR]
+SEROUT TxD, Baud96, [" StampWorks Monitor ", CR]
+SEROUT TxD, Baud96, ["========================", CR]
+SEROUT TxD, Baud96, ["?FF - Show Menu", CR]
+SEROUT TxD, Baud96, ["?F0 - Display ID", CR]
+SEROUT TxD, Baud96, ["?F1 - Set ID", CR]
+SEROUT TxD, Baud96, ["?A0 - DS1620 (Raw count)", CR]
+SEROUT TxD, Baud96, ["?A1 - Temperature (C)", CR]
+SEROUT TxD, Baud96, ["?A2 - Temperature (F)", CR]
+SEROUT TxD, Baud96, ["?B0 - Display LED Status", CR]
+SEROUT TxD, Baud96, ["?B1 - Set LEDs", CR, CR]
+SEROUT TxD, Baud96, ["Please enter a command.", CR, CR]
+GOTO Main
+Show_ID:
+SEROUT TxD, Baud96, ["ID="] ' label output
+eeAddr = ID ' point to first character of ID
+Get_EE:
+READ eeAddr, eeData ' read a character from EEPROM
+SEROUT TxD, Baud96, [eeData] ' print the character
+eeAddr = eeAddr + 1 ' point to next character
+IF (eeData <> CR) THEN Get_EE ' if not CR, read another
+GOTO Main
+Set_ID:
+eeAddr = ID ' point to ID location
+Get_Char:
+SERIN RxD, Baud96, [char] ' get character from PC
+WRITE eeAddr, char ' write character to EEPROM
+eeAddr = eeAddr + 1 ' point to next location
+IF (char <> CR) THEN Get_Char ' if not CR, wait for another
+GOTO Show_ID ' confirm new ID
+Show_Temp:
+GOSUB Get_Temp
+' send raw temp to PC
+SEROUT TxD, Baud96, ["DS1620=", DEC tmpIn, CR]
+GOTO Main
+Show_Temp_C:
+GOSUB Get_Temp
+IF (sign = 0) THEN No_Neg_C
+tmpIn = 0 ' only temps above freezing
+No_Neg_C:
+' convert raw count to 10ths C
+tempC = tmpIn * 5
+SEROUT TxD, Baud96, ["TempC=", DEC (tempC/10), ".", DEC (tempC // 10), CR]
+GOTO Main
+Show_Temp_F:
+GOSUB Get_Temp
+IF (sign = 0) THEN No_Neg_F
+tmpIn = 0
+No_Neg_F:
+tempF = (tmpIn * 9) + 320 ' convert raw count to 10ths F
+SEROUT TxD, Baud96, ["TempF=", DEC (tempF / 10), ".", DEC (tempF // 10), CR]
+GOTO Main
+Show_Status:
+SEROUT TxD, Baud96, ["Status=", BIN4 LEDs, CR]
+GOTO Main
+Set_LEDs:
+' wait for output bits
+' - as binary string
+'
+SERIN RxD, Baud96, [BIN param]
+LEDs = param.LowNib ' set the outputs
+GOTO Show_Status ' confirm new outputs
+Get_Temp:
+HIGH Reset ' alert the DS1620
+SHIFTOUT DQ, Clock, LSBFirst, [RTmp] ' read temperature
+SHIFTIN DQ, Clock, LSBPre, [tmpIn\9] ' get the temperature
+LOW Reset
+RETURN

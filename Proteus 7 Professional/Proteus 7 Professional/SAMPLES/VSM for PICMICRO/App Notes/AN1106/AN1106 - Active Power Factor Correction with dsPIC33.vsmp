@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Application Note AN1106 - Active Power Factor Correction with dsPIC33">
+ <KEYWORDS>
+  <KEYWORD NAME="Application Note"/>
+  <KEYWORD NAME="Power Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Design" NAME="PFC Project.DSN"/>
+  <FILE GROUP="Header" NAME="h/General.h"/>
+  <FILE GROUP="Header" NAME="h/p33FJ12MC202.h"/>
+  <FILE GROUP="Header" NAME="inc/General.inc"/>
+  <FILE GROUP="Header" NAME="inc/PI.inc"/>
+  <FILE GROUP="Source" NAME="src/InitPorts.c"/>
+  <FILE GROUP="Source" NAME="src/PFC Project.c"/>
+  <FILE GROUP="Source" NAME="src/PI.s"/>
+  <FILE GROUP="Source" NAME="src/PFC.s"/>
+  <FILE GROUP="Linker Script" NAME="p33FJ12MC202.gld"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPLAB C30" NAME="Debug">
+  <CONTROLLER FAMILY="dsPIC33" CLOCK="1MHz" TYPE="dsPIC33FJ12MC202"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="GLD" NAME="-Xlinker --script=" VALUE="&quot;p33FJ12MC202.gld&quot;"/>
+   <FILE TOOL="CC" NAME="Debug/InitPorts.obj">
+    <FILE NAME="src/InitPorts.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/PFC Project.obj">
+    <FILE NAME="src/PFC Project.c"/>
+   </FILE>
+   <FILE NAME="p33FJ12MC202.gld"/>
+   <FILE TOOL="ASM" NAME="Debug/PI.obj">
+    <FILE NAME="src/PI.s"/>
+   </FILE>
+   <FILE TOOL="ASM" NAME="Debug/PFC.obj">
+    <FILE NAME="src/PFC.s"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="PFC Project.DSN"/>
+  <FILE NAME="h/General.h"/>
+  <FILE NAME="h/p33FJ12MC202.h"/>
+  <FILE NAME="inc/General.inc"/>
+  <FILE NAME="inc/PI.inc"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-g"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mcpu=" VALUE="33FJ12MC202"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-g"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mcpu=" VALUE="33FJ12MC202"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-g"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-mcpu=" VALUE="33FJ12MC202"/>
+ </CONFIGURATION>
+</PROJECT>

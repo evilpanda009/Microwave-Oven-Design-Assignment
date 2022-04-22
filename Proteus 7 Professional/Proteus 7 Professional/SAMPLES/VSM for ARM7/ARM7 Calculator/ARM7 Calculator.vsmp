@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="An ARM7 based calculator using an LPC2104">
+ <KEYWORDS>
+  <KEYWORD NAME="Keypad Control"/>
+  <KEYWORD NAME="LCD Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="calc.c"/>
+  <FILE GROUP="Header Files" NAME="CALC.H"/>
+  <FILE GROUP="Source Files" NAME="kbdio.c"/>
+  <FILE GROUP="Source Files" NAME="lcdio.c"/>
+  <FILE GROUP="Design Files" NAME="ARM7 Calculator.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="IAR for ARM" NAME="Debug">
+  <CONTROLLER FAMILY="ARM7" CLOCK="1MHz" TYPE="LPC2104"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.elf">
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="--config " VALUE="&quot;%COMPILER_DIR%/../PowerPac/BoardSupport/NXP/LPC2106/Setup/LPC2106_FLASH.icf&quot;"/>
+   <FILE TOOL="CC" NAME="Debug/calc.o">
+    <FILE NAME="calc.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/kbdio.o">
+    <FILE NAME="kbdio.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/lcdio.o">
+    <FILE NAME="lcdio.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="CALC.H"/>
+  <FILE NAME="ARM7 Calculator.DSN"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--endian " VALUE="little"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--fpu " VALUE="none"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="-r"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--cpu " VALUE="ARM7TDMI-S"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--entry " VALUE="__iar_program_start"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--silent"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+  <OPTION TOOL="CC" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../inc&quot;"/>
+  <OPTION TOOL="CC" NAME="--endian=" VALUE="little"/>
+  <OPTION TOOL="CC" NAME="--fpu=" VALUE="none"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_cse"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_unroll"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_inline"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_code_motion"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_tbaa"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_clustering"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_scheduling"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-e"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--interwork"/>
+  <OPTION TOOL="CC" NAME="--cpu_mode=" VALUE="arm"/>
+  <OPTION TOOL="CC" NAME="--dlib_config " VALUE="DLib_Config_Normal.h"/>
+  <OPTION TOOL="CC" NAME="-O" VALUE="l"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="IAR for ARM" NAME="Release">
+  <CONTROLLER FAMILY="ARM7" CLOCK="1MHz" TYPE="LPC2104"/>
+  <FILE TOOL="LD">
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="--config " VALUE="&quot;%COMPILER_DIR%/../PowerPac/BoardSupport/NXP/LPC2106/Setup/LPC2106_FLASH.icf&quot;"/>
+   <FILE TOOL="CC">
+    <FILE NAME="calc.c"/>
+   </FILE>
+   <FILE TOOL="CC">
+    <FILE NAME="kbdio.c"/>
+   </FILE>
+   <FILE TOOL="CC">
+    <FILE NAME="lcdio.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="CALC.H"/>
+  <FILE NAME="ARM7 Calculator.DSN"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--endian " VALUE="little"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--fpu " VALUE="none"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="--cpu " VALUE="ARM7TDMI-S"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--entry " VALUE="__iar_program_start"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--silent"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--strip"/>
+  <OPTION TOOL="CC" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../inc&quot;"/>
+  <OPTION TOOL="CC" NAME="--endian=" VALUE="little"/>
+  <OPTION TOOL="CC" NAME="--fpu=" VALUE="none"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_cse"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_unroll"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_inline"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_code_motion"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_tbaa"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_clustering"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_scheduling"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-e"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--interwork"/>
+  <OPTION TOOL="CC" NAME="--cpu_mode=" VALUE="arm"/>
+  <OPTION TOOL="CC" NAME="--dlib_config " VALUE="DLib_Config_Normal.h"/>
+  <OPTION TOOL="CC" NAME="-O" VALUE="l"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--cpu=" VALUE="ARM7TDMI-S"/>
+ </CONFIGURATION>
+</PROJECT>

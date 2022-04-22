@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="">
+ <KEYWORDS/>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="demo.c"/>
+  <FILE GROUP="Header Files" NAME="fft.h"/>
+  <FILE GROUP="Source Files" NAME="gdi.c"/>
+  <FILE GROUP="Source Files" NAME="input.c"/>
+  <FILE GROUP="Source Files" NAME="SINTB360.ASM"/>
+  <FILE GROUP="Source Files" NAME="um_dbgexport.c"/>
+  <FILE GROUP="Design Files" NAME="spectrum_analyzer.DSN"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_CodeStartBranch.asm"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_GlobalVariableDefs.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_PieCtrl.c"/>
+  <FILE GROUP="Linker Script Files" NAME="c28x.cmd"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="CodeComposer for Piccolo" NAME="Debug">
+  <CONTROLLER FAMILY="PICCOLO" CLOCK="4MHz" TYPE="TMS320F28023DA"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.cof">
+   <FILE TOOL="CC" NAME="Debug/demo.obj">
+    <FILE NAME="demo.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/gdi.obj">
+    <FILE NAME="gdi.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/input.obj">
+    <FILE NAME="input.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/SINTB360.obj">
+    <FILE NAME="SINTB360.ASM"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/um_dbgexport.obj">
+    <FILE NAME="um_dbgexport.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_CodeStartBranch.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_CodeStartBranch.asm"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_GlobalVariableDefs.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_GlobalVariableDefs.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_PieCtrl.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_PieCtrl.c"/>
+   </FILE>
+   <FILE NAME="c28x.cmd"/>
+  </FILE>
+  <FILE NAME="fft.h"/>
+  <FILE NAME="spectrum_analyzer.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-z"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--rom_model"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--reread_libs"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--warn_sections"/>
+  <OPTION TOOL="LD" NAME="--stack_size=" VALUE="0x50"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\..\lib&quot;"/>
+  <OPTION TOOL="LD" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\..\include&quot;"/>
+  <OPTION TOOL="LD" NAME="-i" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\lib&quot;"/>
+  <OPTION TOOL="LD" NAME="" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\link\DSP2802x_Headers_nonBIOS.cmd&quot;"/>
+  <OPTION TOOL="LD" NAME="-l" VALUE="fft.lib"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-c"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-ml"/>
+  <OPTION TOOL="CC" NAME="--define=" VALUE="_DEBUG"/>
+  <OPTION TOOL="CC" NAME="--define=" VALUE="LARGE_MODEL"/>
+  <OPTION TOOL="CC" NAME="--symdebug:" VALUE="dwarf"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\include&quot;"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\..\..\..\C2000\include&quot;"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\inc&quot;"/>
+  <OPTION TOOL="CC" NAME="--fp_reassoc=" VALUE="off"/>
+  <OPTION TOOL="CC" NAME="--sat_reassoc=" VALUE="off"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--keep_unneeded_statics"/>
+  <OPTION TOOL="CC" NAME="--silicon_version=" VALUE="28"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--opt_for_space"/>
+ </CONFIGURATION>
+</PROJECT>

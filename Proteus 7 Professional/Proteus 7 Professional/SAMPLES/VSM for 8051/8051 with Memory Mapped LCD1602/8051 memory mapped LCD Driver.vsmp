@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="8051 based memory mapped LCD driver for LCD1602">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Design Files" NAME="LCD1602.DSN"/>
+  <FILE GROUP="Source Files" NAME="LCD1602.c"/>
+  <FILE GROUP="Linker Script Files" NAME="lnk51ew.xcl"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="IAR for 8051 (C)" NAME="Debug">
+  <CONTROLLER FAMILY="8051" CLOCK="12MHz" TYPE="AT89C51"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.ubf">
+   <FILE TOOL="CC" NAME="Debug/LCD1602.r51">
+    <FILE NAME="LCD1602.c"/>
+   </FILE>
+   <FILE NAME="lnk51ew.xcl"/>
+  </FILE>
+  <FILE NAME="LCD1602.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../CONFIG/&quot;"/>
+  <OPTION TOOL="LD" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../LIB/&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_NR_OF_VIRTUAL_REGISTERS=" VALUE="8"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-e_small_write=" VALUE="_formatted_write"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-e_medium_read=" VALUE="_formatted_read"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_NR_OF_BANKS=" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_CODEBANK_END=" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_CODEBANK_START=" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_IDATA_STACK_SIZE=" VALUE="0x40"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_EXTENDED_STACK_START=" VALUE="0x00"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_EXTENDED_STACK_SIZE=" VALUE="0x00"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_PDATA_STACK_SIZE=" VALUE="0x80"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_XDATA_STACK_SIZE=" VALUE="0xEFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_XDATA_HEAP_SIZE=" VALUE="0xFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_FAR_HEAP_SIZE=" VALUE="0xFFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_HUGE_HEAP_SIZE=" VALUE="0xFFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="" VALUE="&quot;%COMPILER_DIR%/../LIB/CLIB/cl-pli-nsid-1e16x01.r51&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-s " VALUE="__program_start"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-F" VALUE="ubrof8"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-e"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_cse"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_unroll"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_inline"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_code_motion"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_tbaa"/>
+  <OPTION TOOL="CC" NAME="--dptr=" VALUE="16,1"/>
+  <OPTION TOOL="CC" NAME="--data_model=" VALUE="small"/>
+  <OPTION TOOL="CC" NAME="--code_model=" VALUE="near"/>
+  <OPTION TOOL="CC" NAME="--calling_convention=" VALUE="idata_reentrant"/>
+  <OPTION TOOL="CC" NAME="--place_constants=" VALUE="data"/>
+  <OPTION TOOL="CC" NAME="--nr_virtual_regs " VALUE="8"/>
+  <OPTION TOOL="CC" NAME="-I " VALUE="&quot;%COMPILER_DIR%/../INC/&quot;"/>
+  <OPTION TOOL="CC" NAME="-I " VALUE="&quot;%COMPILER_DIR%/../INC/CLIB/&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-O" VALUE="n"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--core=" VALUE="plain"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="IAR for 8051 (C)" NAME="Release">
+  <CONTROLLER FAMILY="8051" CLOCK="12MHz" TYPE="AT89C51"/>
+  <FILE TOOL="LD" NAME="Release/Release.hex">
+   <FILE TOOL="CC" NAME="Release/LCD1602.r51">
+    <FILE NAME="LCD1602.c"/>
+   </FILE>
+   <FILE NAME="lnk51ew.xcl"/>
+  </FILE>
+  <FILE NAME="LCD1602.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-F" VALUE="intel-extended"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../CONFIG/&quot;"/>
+  <OPTION TOOL="LD" NAME="-I" VALUE="&quot;%COMPILER_DIR%/../LIB/&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_NR_OF_VIRTUAL_REGISTERS=" VALUE="8"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-e_small_write=" VALUE="_formatted_write"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-e_medium_read=" VALUE="_formatted_read"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_NR_OF_BANKS=" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_CODEBANK_END=" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_CODEBANK_START=" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_IDATA_STACK_SIZE=" VALUE="0x40"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_EXTENDED_STACK_START=" VALUE="0x00"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_EXTENDED_STACK_SIZE=" VALUE="0x00"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_PDATA_STACK_SIZE=" VALUE="0x80"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_XDATA_STACK_SIZE=" VALUE="0xEFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_XDATA_HEAP_SIZE=" VALUE="0xFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_FAR_HEAP_SIZE=" VALUE="0xFFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-D_HUGE_HEAP_SIZE=" VALUE="0xFFF"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="" VALUE="&quot;%COMPILER_DIR%/../LIB/CLIB/cl-pli-nsid-1e16x01.r51&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-s " VALUE="__program_start"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-e"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_cse"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_unroll"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_inline"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_code_motion"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--no_tbaa"/>
+  <OPTION TOOL="CC" NAME="--dptr=" VALUE="16,1"/>
+  <OPTION TOOL="CC" NAME="--data_model=" VALUE="small"/>
+  <OPTION TOOL="CC" NAME="--code_model=" VALUE="near"/>
+  <OPTION TOOL="CC" NAME="--calling_convention=" VALUE="idata_reentrant"/>
+  <OPTION TOOL="CC" NAME="--place_constants=" VALUE="data"/>
+  <OPTION TOOL="CC" NAME="--nr_virtual_regs " VALUE="8"/>
+  <OPTION TOOL="CC" NAME="-I " VALUE="&quot;%COMPILER_DIR%/../INC/&quot;"/>
+  <OPTION TOOL="CC" NAME="-I " VALUE="&quot;%COMPILER_DIR%/../INC/CLIB/&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-O" VALUE="l"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--core=" VALUE="plain"/>
+ </CONFIGURATION>
+</PROJECT>

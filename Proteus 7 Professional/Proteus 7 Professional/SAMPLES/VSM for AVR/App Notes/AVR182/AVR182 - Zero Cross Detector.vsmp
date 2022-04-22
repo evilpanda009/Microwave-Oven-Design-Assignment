@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="AtTiny based zero crossing detector">
+ <KEYWORDS>
+  <KEYWORD NAME="Application Note"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Design" NAME="Zero Cross Detector.DSN"/>
+  <FILE GROUP="Source" NAME="zero_cross_detector.c"/>
+  <FILE GROUP="Header" NAME="Zero_cross_detector.h"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="WinAVR" NAME="Debug">
+  <CONTROLLER FAMILY="AVR" CLOCK="8MHz" TYPE="ATtiny2313"/>
+  <FILE TOOL="LD" NAME="Debug.elf">
+   <FILE TOOL="CC" NAME="zero_cross_detector.o">
+    <FILE NAME="zero_cross_detector.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="Zero Cross Detector.DSN"/>
+  <FILE NAME="Zero_cross_detector.h"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mmcu=" VALUE="attiny2313"/>
+  <OPTION TOOL="CC" NAME="-W" VALUE="all"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-g"/>
+  <OPTION TOOL="CC" NAME="-f" VALUE="signed-char"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MD"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MP"/>
+  <OPTION TOOL="CC" NAME="-D" VALUE="F_CPU=%CLOCK%"/>
+  <OPTION TOOL="CC" NAME="-O" VALUE="0"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mmcu=" VALUE="attiny2313"/>
+  <OPTION TOOL="CC" NAME="-std=" VALUE="gnu99"/>
+ </CONFIGURATION>
+</PROJECT>

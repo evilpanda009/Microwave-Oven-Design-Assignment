@@ -1,0 +1,124 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex29 - Change Counter.BS2
+' Purpose... Controlling 7-segment displays with MAX7219
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program is a coin counter -- it will count pennies, nickels, dimes and
+' quarters using pushbutton inputs. The "bank" is displayed on four 7-segment
+' LED displays that are controlled with a MAX7219.
+' ------------------------------------------------------------------------------
+' Revision History
+' ------------------------------------------------------------------------------
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+DataPin CON 7 ' data pin (MAX7219.1)
+Clock CON 6 ' clock pin (MAX7219.13)
+Load CON 5 ' load pin (MAX7219.12)
+Coins VAR InL ' coin count inputs
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Decode CON $09 ' bcd decode register
+Brite CON $0A ' intensity register
+Scan CON $0B ' scan limit register
+ShutDn CON $0C ' shutdown register (1 = on)
+Test CON $0F ' display test mode
+DecPnt CON %10000000
+Blank CON %1111 ' blank a digit
+Yes CON 1
+No CON 0
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+money VAR Word ' current money count
+deposit VAR Byte ' coins deposited
+penny VAR deposit.Bit0 ' bit values of deposit
+nickel VAR deposit.Bit1
+dime VAR deposit.Bit2
+quarter VAR deposit.Bit3
+dollar VAR deposit.Bit4
+digit VAR Nib ' display digit
+d7219 VAR Byte ' data for MAX7219
+index VAR Nib ' loop counter
+idxOdd VAR index.Bit0 ' is index odd? (1 = yes)
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+' Segments .abcdefg
+' --------
+Full DATA %01000111 ' F
+DATA %00111110 ' U
+DATA %00001110 ' L
+DATA %00001110 ' L
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11100000 ' data, clock and load as outs
+' coins as inputs
+FOR index = 0 TO 7
+LOOKUP index, [Scan, 3, Brite, 5, Decode, $0F, ShutDn, 1], d7219
+SHIFTOUT DataPin, Clock, MSBFirst, [d7219]
+IF (idxOdd = No) THEN No_Load
+PULSOUT Load, 5 ' load parameter
+No_Load:
+NEXT
+GOSUB Show_The_Money
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Get_Coins
+IF (deposit = 0) THEN Main ' wait for coins
+money = money + (penny * 1) ' add coins
+money = money + (nickel * 5)
+money = money + (dime * 10)
+money = money + (quarter * 25)
+money = money + (dollar * 100)
+GOSUB Show_The_Money ' update the display
+PAUSE 100
+GOTO Main
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Get_Coins:
+deposit = %00011111 ' enable all coin inputs
+FOR index = 1 TO 10
+deposit = deposit & ~Coins ' test inputs
+PAUSE 5 ' delay between tests
+NEXT
+RETURN
+Show_The_Money:
+IF (money >= 9999) THEN Show_Full
+FOR index = 4 TO 1
+d7219 = Blank
+IF ((index = 4) AND (money < 1000)) THEN Put_Digit
+d7219 = money DIG (index - 1)
+IF (index <> 3) THEN Put_Digit
+d7219 = d7219 | DecPnt ' decimal point on DIGIT 3
+Put_Digit:
+SHIFTOUT DataPin, Clock, MSBFirst, [index, d7219]
+PULSOUT Load, 5
+NEXT
+RETURN
+Show_Full:
+' turn BCD decoding off
+SHIFTOUT DataPin, Clock, MSBFirst, [Decode, 0]
+PULSOUT Load, 5
+FOR index = 4 TO 1
+READ (4 - index + Full), d7219 ' read and send letter
+SHIFTOUT DataPin, Clock, MSBFirst, [index, d7219]
+PULSOUT Load, 5
+NEXT
+END

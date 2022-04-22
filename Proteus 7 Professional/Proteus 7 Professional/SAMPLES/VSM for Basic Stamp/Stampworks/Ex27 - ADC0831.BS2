@@ -1,0 +1,53 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex27 - ADC0831.BS2
+' Purpose... Analog to Digital conversion
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program deomstrates reading a variable voltage with an ADC0831 analog-
+' to-digital convertor chip.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+A2Ddata CON 0 ' A/D data line
+A2Dclock CON 1 ' A/D clock
+A2Dcs CON 2 ' A/D chip select (low true)
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+result VAR Byte ' result of conversion
+mVolts VAR Word ' convert to millivolts
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+HIGH A2Dcs
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Read_0831
+mVolts = result */ $139C ' x 19.6 (mv / unit)
+DEBUG Home
+DEBUG "ADC..... ", DEC result, " "
+DEBUG "volts... ", DEC mVolts DIG 3, ".", DEC3 mVolts, CR
+PAUSE 100 ' delay between readings
+GOTO Main ' do it again
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Read_0831:
+LOW A2Dclock
+LOW A2Dcs
+SHIFTIN A2Ddata, A2Dclock, MSBPost, [result\9]
+HIGH A2Dcs
+RETURN

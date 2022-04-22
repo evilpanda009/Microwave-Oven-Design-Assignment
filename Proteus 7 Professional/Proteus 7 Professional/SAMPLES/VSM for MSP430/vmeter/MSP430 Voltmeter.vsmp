@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Voltmeter using a MSP430F1101 with LCD display">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="main.cpp"/>
+  <FILE GROUP="Design Files" NAME="vmeter.DSN"/>
+  <FILE GROUP="Linker Script Files" NAME="lnk_msp430f1101.cmd"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="CodeComposer for MSP430" NAME="Debug">
+  <CONTROLLER FAMILY="MSP430" CLOCK="4MHz" TYPE="MSP430F1101"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <FILE TOOL="CC" NAME="main.obj">
+    <FILE NAME="main.cpp"/>
+   </FILE>
+   <FILE NAME="lnk_msp430f1101.cmd"/>
+  </FILE>
+  <FILE NAME="vmeter.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-z"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--reread_libs"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--rom_model"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--warn_sections"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--search_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\lib&quot;"/>
+  <OPTION TOOL="LD" NAME="--stack_size=" VALUE="50"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-c"/>
+  <OPTION TOOL="CC" NAME="--symdebug:" VALUE="dwarf"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\include&quot;"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\..\..\..\msp430\include&quot;"/>
+  <OPTION TOOL="CC" NAME="--fp_reassoc=" VALUE="off"/>
+  <OPTION TOOL="CC" NAME="--sat_reassoc=" VALUE="off"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--keep_unneeded_statics"/>
+  <OPTION TOOL="CC" NAME="--plain_char=" VALUE="unsigned"/>
+  <OPTION TOOL="CC" NAME="--silicon_version=" VALUE="msp"/>
+ </CONFIGURATION>
+</PROJECT>

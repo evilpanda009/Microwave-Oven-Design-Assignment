@@ -1,0 +1,24 @@
+#
+# Labcenter Electronics
+#
+# CM3 syntax highlighter definition file.
+#
+line_comment=(?i);.*$
+operator=@|&
+string='([^'\\]|\\.)*'
+operator=(+|-|<|>|/)?
+
+constant=#([0-9a-fA-F]*h|[0-9]*)
+
+extensions=\b(r[0-9]*|acc|epsr|apsr|msp|psp)
+extensions=\b(R[0-9]*|ACC|EPSR|APSR|MSP|PSP)
+
+keyword=\b(ad(c|d|r)|and|asr|b[f(i|c)|ic|l[x]|x|kpt]|cb(z|nz)cl(rex|z)|cm(n|p)|cps|d(m|s)b|eor|isb|it|ld(m[db]|r[b|d|ex|h|s(b|h)])|ls(l|r))
+keyword=\b(ml(a|s)|mov[t]|mrs|msr|mul|mvn|nop|or(n|r)|pop|push|rbit|rev[sh]|ror|rrx|rsb|sb(c|fx)|sdiv|sev|sm(lal|ul)|ssat|stm[db]|str[b|d|ex[b|h]|h]|sub)
+keyword=\b(svc|sxt(b|h)|tb(b|h)|teq|tst|ubfx|udiv|umlal|umull|usat|uxt[b|h]|wf(e|i))
+
+keyword=\b(AD(C|D|R)|AND|ASR|B[F(I|C)|IC|L[X]|X|KPT]|CB(Z|NZ)CL(REX|Z)|CM(N|P)|CPS|D(M|S)B|EOR|ISB|IT|LD(M[DB]|R[B|D|EX|H|S(B|H)])|LS(L|R))
+keyword=\b(ML(A|S)|MOV[T]|MRS|MSR|MUL|MVN|NOP|OR(N|R)|POP|PUSH|RBIT|REV[SH]|ROR|RRX|RSB|SB(C|FX)|SDIV|SEV|SM(LAL|UL)|SSAT|STM[DB]|STR[B|D|EX[B|H]|H]|SUB)
+keyword=\b(SVC|SXT(B|H)|TB(B|H)|TEQ|TST|UBFX|UDIV|UMLAL|UMULL|USAT|UXT[B|H]|WF(E|I))
+
+macro=\b(text|se[t|ct]|ref|global|if|else|end[if])

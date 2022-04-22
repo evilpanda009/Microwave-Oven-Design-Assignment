@@ -1,0 +1,86 @@
+// LCD MAP for PICDEM LCD 2 Plus 914/917 PIM
+
+#define X8 SEG16COM0
+#define	X6 SEG16COM1
+#define	X5 SEG16COM2
+#define	X7 SEG16COM3
+
+#define	X1 SEG17COM0
+#define	X3 SEG17COM1
+#define	X4 SEG17COM2
+#define	X2 SEG17COM3
+
+#define	F2 SEG18COM1
+#define	F1 SEG18COM2
+#define	F3 SEG18COM3
+
+#define	D1A	SEG19COM0
+#define	D1E	SEG19COM1
+#define	F4	SEG19COM2
+#define	D1F	SEG19COM3
+
+#define	D1B	SEG20COM0
+#define	D1C	SEG20COM1
+#define	D1D	SEG20COM2
+#define	D1G	SEG20COM3
+
+#define	D2A	SEG21COM0
+#define	D2E	SEG21COM1
+#define	D2D	SEG21COM2
+#define	D2F	SEG21COM3
+
+#define	D2B	SEG22COM0
+#define	D2C	SEG22COM1
+#define	COL	SEG22COM2
+#define	D2G	SEG22COM3
+
+#define	D3A	SEG23COM0
+#define	D3E	SEG23COM1
+#define	D3D	SEG23COM2
+#define	D3F	SEG23COM3
+
+#define	X9	SEG15COM0
+#define	X11	SEG15COM1
+#define	X12	SEG15COM2
+#define	X10	SEG15COM3
+
+#define	X16	SEG11COM0
+#define	X14	SEG11COM1
+#define	X13	SEG11COM2
+#define	X15	SEG11COM3
+
+#define	X17	SEG10COM0
+#define	X19	SEG10COM1
+#define	X20	SEG10COM2
+#define	X18	SEG10COM3
+
+#define	D3B	SEG6COM0
+#define	D3C	SEG6COM1
+#define	D3G	SEG6COM3
+
+#define	D4A	SEG5COM0
+#define	D4E	SEG5COM1
+#define	D4D	SEG5COM2
+#define	D4F	SEG5COM3
+
+#define	D4B	SEG4COM0
+#define	D4C	SEG4COM1
+#define	DP1	SEG4COM2
+#define	D4G	SEG4COM3
+
+#define	D5A	SEG3COM0
+#define	D5E	SEG3COM1
+#define	D5D	SEG3COM2
+#define	D5F	SEG3COM3
+
+#define	D5B	SEG2COM0
+#define	D5C	SEG2COM1
+#define	D5G	SEG2COM3
+
+#define	X23	SEG1COM0
+#define	X25	SEG1COM1
+#define	X26	SEG1COM2
+#define	X24	SEG1COM3
+
+
+

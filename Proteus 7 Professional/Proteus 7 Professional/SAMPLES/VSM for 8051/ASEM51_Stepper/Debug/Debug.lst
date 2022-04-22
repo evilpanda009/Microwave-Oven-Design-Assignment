@@ -1,0 +1,209 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	..\Stepper.asm
+	Object File:	Debug.HEX
+	List File:	Debug.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		N      0000	      ORG      00H
+    2:	  0000			START:
+    3:	  0000	90 00 5D	      MOV   DPTR,#TAB1
+    4:	  0003	78 03		      MOV   R0,#3
+    5:	  0005	7C 00		      MOV   R4,#0
+    6:	  0007	88 A0		      MOV   P2,R0
+    7:
+    8:	  0009	75 80 FF	WAIT: MOV   P0,#0FFH
+    9:	  000C	30 80 08	      JNB   P0.0,POS    ; Wait for a key pressed
+   10:	  000F	30 81 0F	      JNB   P0.1,NEG
+   11:	  0012	75 A0 00	      MOV   P2,#00H
+   12:	  0015	80 F2		      SJMP  WAIT
+   13:
+   14:	  0017	7C 01		POS:  MOV   R4,#1
+   15:	  0019	EC		      MOV   A,R4        ; Forward direction
+   16:	  001A	93		      MOVC  A,@A+DPTR
+   17:	  001B	F5 A0		      MOV   P2,A
+   18:	  001D	11 50		      ACALL DELAY
+   19:	  001F	01 2B		      AJMP  KEY
+   20:
+   21:	  0021	7C 07		NEG:  MOV   R4,#7       ; Reverse direction
+   22:	  0023	EC		      MOV   A,R4
+   23:	  0024	93		      MOVC  A,@A+DPTR
+   24:	  0025	F5 A0		      MOV   P2,A
+   25:	  0027	11 50		      ACALL DELAY
+   26:	  0029	01 2B		      AJMP  KEY
+   27:
+   28:	  002B	75 80 03	KEY:  MOV   P0,#03H
+   29:	  002E	20 80 0E	      JB    P0.0,NR1
+   30:	  0031	0C		      INC   R4
+   31:	  0032	BC 09 02	      CJNE  R4,#9,LOOPP
+   32:	  0035	7C 01		      MOV   R4,#1
+   33:
+   34:	  0037			LOOPP:
+   35:	  0037	EC		      MOV   A,R4
+   36:	  0038	93		      MOVC  A,@A+DPTR
+   37:	  0039	F5 A0		      MOV   P2,A
+   38:	  003B	11 50		      ACALL DELAY
+   39:	  003D	01 2B		      AJMP  KEY
+   40:
+   41:	  003F			NR1:
+   42:	  003F	20 81 BE	      JB    P0.1,START
+   43:	  0042	1C		      DEC   R4
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  0043	BC 00 02	      CJNE  R4,#0,LOOPN
+   45:	  0046	7C 08		      MOV   R4,#8
+   46:
+   47:	  0048			LOOPN:
+   48:	  0048	EC		      MOV   A,R4
+   49:	  0049	93		      MOVC  A,@A+DPTR
+   50:	  004A	F5 A0		      MOV   P2,A
+   51:	  004C	11 50		      ACALL DELAY
+   52:	  004E	01 2B		      AJMP  KEY
+   53:
+   54:	  0050			DELAY:
+   55:	  0050	7E 01		      MOV   R6,#1
+   56:	  0052	7D 80		DD1:  MOV   R5,#80H
+   57:	  0054	7F 00		DD2:  MOV   R7,#0
+   58:	  0056	DF FE		DD3:  DJNZ  R7,DD3
+   59:	  0058	DD FA		      DJNZ  R5,DD2
+   60:	  005A	DE F6		      DJNZ  R6,DD1
+   61:	  005C	22		      RET
+   62:
+   63:				      ; Table of Stepping Sequences
+   64:	  005D	00 02 06 04	TAB1: DB    00H,02H,06H,04H
+   65:	  0061	0C 08 09 01	      DB    0CH,08H,09H,01H,03H
+	  0065	03
+   66:				      END
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+CY				  BIT	      D7
+DD1				  CODE	    0052	  56
+DD2				  CODE	    0054	  57
+DD3				  CODE	    0056	  58
+DELAY				  CODE	    0050	  54
+DPH				  DATA	      83
+DPL				  DATA	      82
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+KEY				  CODE	    002B	  28
+LOOPN				  CODE	    0048	  47
+LOOPP				  CODE	    0037	  34
+NEG				  CODE	    0021	  21
+NR1				  CODE	    003F	  41
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+POS				  CODE	    0017	  14
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RD				  BIT	      B7
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+START				  CODE	    0000	   2
+T0				  BIT	      B4
+T1				  BIT	      B5
+TAB1				  CODE	    005D	  64
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WAIT				  CODE	    0009	   8
+WR				  BIT	      B6

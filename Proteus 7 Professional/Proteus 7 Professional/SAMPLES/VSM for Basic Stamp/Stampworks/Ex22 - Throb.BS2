@@ -1,0 +1,51 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex22 - Throb.BS2
+' Purpose... Output a variable voltage with PWM
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates how the PWM command can be used with an opamp
+' buffer to create a variable voltage output.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+D2Aout CON 0 ' analog out pin
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+OnTime CON 10 ' 10 milliseconds, BS2
+'OnTime CON 25 ' BS2sx
+'OnTime CON 15 ' BS2p
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+level VAR Byte ' analog level
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+
+PWM D2Aout, 0, OnTime
+PAUSE 2
+PWM D2Aout, 128, OnTime
+PAUSE 2
+PWM D2Aout, 255, OnTime
+PAUSE 2
+
+FOR level = 0 TO 255 ' increase voltage to LED
+PWM D2Aout, level, OnTime
+NEXT
+PAUSE 250
+FOR level = 255 TO 0 ' decrease voltage to LED
+PWM D2Aout, level, OnTime
+NEXT
+GOTO Main ' do it again

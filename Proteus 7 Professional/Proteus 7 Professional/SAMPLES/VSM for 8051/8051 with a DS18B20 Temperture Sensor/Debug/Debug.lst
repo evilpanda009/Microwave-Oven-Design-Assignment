@@ -1,0 +1,383 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	..\ds18b20.asm
+	Object File:	Debug.HEX
+	List File:	Debug.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		B	 B7	   DQ       BIT P3.7 ; 1 wire line
+    2:		N      00D2	   swpH     equ  0d2H
+    3:		N      00FF	   swpL     equ  0ffH
+    4:		N	 30	   WDLSB    DATA 30H ;
+    5:		N	 31	   WDMSB    DATA 31H ;
+    6:				;***************************************************************
+    7:		N      0000	   ORG 0000H
+    8:	  0000	02 00 28	   LJMP MAIN
+    9:		N      000B	   ORG 000BH
+   10:	  000B	02 00 0E	   LJMP TMR0   ; Timer0 isr
+   11:
+   12:				;********************************************************
+   13:				; Timer0 Interrupt Service Routine
+   14:	  000E	75 8C D2	TMR0:    MOV   TH0,#swpH
+   15:	  0011	75 8A FF	         MOV   TL0,#swpL
+   16:	  0014	20 21 08	         JB    21H,DSL
+   17:	  0017	85 42 80	         MOV   P0,42H
+   18:	  001A	43 80 20	         ORL   P0,#00100000B
+   19:	  001D	80 06		         SJMP  EXIT
+   20:	  001F			DSL:
+   21:	  001F	85 43 80	         MOV   P0,43H
+   22:	  0022	43 80 10	         ORL   P0,#00010000B
+   23:	  0025			EXIT:
+   24:	  0025	B2 21		         CPL   21H
+   25:	  0027	32		         RETI
+   26:
+   27:				; Main program
+   28:	  0028			MAIN:
+   29:	  0028			TOINIT:
+   30:	  0028	C2 AF		         CLR   EA
+   31:	  002A	75 89 01	         MOV   TMOD,#01H
+   32:	  002D	75 8C D2	         MOV   TH0,#swpH
+   33:	  0030	75 8A FF	         MOV   TL0,#swpL
+   34:	  0033	D2 AF		         SETB  EA
+   35:	  0035	D2 A9		         SETB  ET0
+   36:	  0037	D2 8C		         SETB  TR0
+   37:
+   38:				;***********************************************************
+   39:				;
+   40:	  0039	7A 02		         MOV   R2,#2
+   41:	  003B	78 42		         MOV   R0,#42H ;
+   42:	  003D			OVER:
+   43:	  003D	76 00		         MOV   @R0,#00H;
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  003F	08		         INC   R0
+   45:	  0040	DA FB		         DJNZ  R2,OVER
+   46:
+   47:	  0042			LOOP:
+   48:	  0042	12 00 47	         LCALL DSWD ;
+   49:	  0045	80 FB		         SJMP  LOOP
+   50:
+   51:				;**********************************************************
+   52:				; Read a temperature from the DS18B20
+   53:	  0047			DSWD:
+   54:	  0047	12 00 C7	         LCALL RSTSNR      ; Init of the DS18B20
+   55:	  004A	30 D5 3D	         JNB   F0,KEND
+   56:	  004D	78 CC		         MOV   R0,#0CCH
+   57:	  004F	12 00 AB	         LCALL SEND_BYTE
+   58:	  0052	78 44		         MOV   R0,#44H
+   59:	  0054	12 00 AB	         LCALL SEND_BYTE   ; Send a Convert Command
+   60:	  0057	D2 AF		         SETB  EA
+   61:	  0059	75 48 01	         MOV   48H,#1
+   62:	  005C			SS2:
+   63:	  005C	75 49 FF	         MOV   49H,#255
+   64:	  005F			SS1:
+   65:	  005F	75 4A FF	         MOV   4AH,#255
+   66:	  0062			SS0:
+   67:	  0062	D5 4A FD	         DJNZ  4AH,SS0
+   68:	  0065	D5 49 F7	         DJNZ  49H,SS1
+   69:	  0068	D5 48 F1	         DJNZ  48H,SS2
+   70:	  006B	C2 AF		         CLR   EA
+   71:	  006D	12 00 C7	         LCALL RSTSNR
+   72:	  0070	30 D5 17	         JNB   F0,KEND
+   73:	  0073	78 CC		         MOV   R0,#0CCH
+   74:	  0075	12 00 AB	         LCALL SEND_BYTE
+   75:	  0078	78 BE		         MOV   R0,#0BEH
+   76:	  007A	12 00 AB	         LCALL SEND_BYTE      ; Send Read Scratchpad command
+   77:	  007D	12 00 BD	         LCALL READ_BYTE      ; Read the low byte from scratchpad
+   78:	  0080	F5 30		         MOV   WDLSB,A        ; Save the temperature (low byte)
+   79:	  0082	12 00 BD	         LCALL READ_BYTE      ; Read the high byte from scratchpad
+   80:	  0085	F5 31		         MOV   WDMSB,A        ; Save the temperature (high byte)
+   81:	  0087	12 00 8D	         LCALL TRANS12
+   82:	  008A			KEND:
+   83:	  008A	D2 AF		         SETB  EA
+   84:	  008C	22		         RET
+   85:				;**********************************************************
+   86:				;
+   87:	  008D			TRANS12:
+   88:	  008D	E5 30		         MOV   A,30H
+   89:	  008F	54 F0		         ANL   A,#0F0H
+   90:	  0091	F5 3A		         MOV   3AH,A
+   91:	  0093	E5 31		         MOV   A,31H
+   92:	  0095	54 0F		         ANL   A,#0FH
+   93:	  0097	45 3A		         ORL   A,3AH
+   94:	  0099	C4		         SWAP  A
+   95:	  009A	75 F0 0A	         MOV   B,#10
+   96:	  009D	84		         DIV   AB
+   97:				         ;MOV 42H,A
+   98:	  009E	85 F0 43	         MOV   43H,B ;
+   99:	  00A1	75 F0 0A	         MOV   b,#10
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+ Line  I  Addr  Code            Source
+
+  100:	  00A4	84		         DIV   ab
+  101:	  00A5	85 F0 42	         MOV   42H,B
+  102:	  00A8	F5 41		         MOV   41H,A
+  103:	  00AA	22		         RET
+  104:				;*************************************************
+  105:				; Send a byte to the 1 wire line
+  106:	  00AB			SEND_BYTE: ;
+  107:	  00AB	E8		         MOV   A,R0
+  108:	  00AC	7D 08		         MOV   R5,#8
+  109:	  00AE	C3		SEN3:    CLR   C
+  110:	  00AF	13		         RRC   A
+  111:	  00B0	40 05		         JC    SEN1
+  112:	  00B2	12 00 F0	         LCALL WRITE_0
+  113:	  00B5	80 03		         SJMP  SEN2
+  114:	  00B7	12 00 F9	SEN1:    LCALL WRITE_1
+  115:	  00BA	DD F2		SEN2:    DJNZ  R5,SEN3 ;
+  116:	  00BC	22		         RET
+  117:				;*************************************************
+  118:				; Read a byte from the 1 wire line
+  119:	  00BD			READ_BYTE:
+  120:	  00BD	7D 08		         MOV   R5,#8
+  121:	  00BF	12 01 07	READ1:   LCALL READ
+  122:	  00C2	13		         RRC   A
+  123:	  00C3	DD FA		         DJNZ  R5,READ1 ;
+  124:	  00C5	F8		         MOV   R0,A
+  125:	  00C6	22		         RET
+  126:				;*************************************************
+  127:				; Reset 1 wire line
+  128:	  00C7	D2 B7		RSTSNR:  SETB  DQ
+  129:	  00C9	00		         NOP
+  130:	  00CA	00		         NOP
+  131:	  00CB	C2 B7		         CLR   DQ
+  132:	  00CD	7E FA		         MOV   R6,#250 ;
+  133:	  00CF	DE FE		         DJNZ  R6,$
+  134:	  00D1	7E 32		         MOV   R6,#50
+  135:	  00D3	DE FE		         DJNZ  R6,$
+  136:	  00D5	D2 B7		         SETB  DQ ;
+  137:	  00D7	7E 0F		         MOV   R6,#15
+  138:	  00D9	DE FE		         DJNZ  R6,$
+  139:	  00DB	12 00 E5	         CALL  CHCK ;
+  140:	  00DE	7E 3C		         MOV   R6,#60
+  141:	  00E0	DE FE		         DJNZ  R6,$
+  142:	  00E2	D2 B7		         SETB  DQ
+  143:	  00E4	22		         RET
+  144:
+  145:
+  146:				;*************************************************
+  147:				; low level subroutines
+  148:	  00E5	A2 B7		CHCK:    MOV   C,DQ
+  149:	  00E7	40 04		         JC    RST0
+  150:	  00E9	D2 D5		         SETB  F0 ;
+  151:	  00EB	80 02		         SJMP  CHCK0
+  152:	  00ED	C2 D5		RST0:    CLR   F0 ;
+  153:	  00EF	22		CHCK0:   RET
+  154:
+  155:				;*************************************************
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+ Line  I  Addr  Code            Source
+
+  156:	  00F0			WRITE_0:
+  157:	  00F0	C2 B7		         CLR   DQ
+  158:	  00F2	7E 1E		         MOV   R6,#30
+  159:	  00F4	DE FE		         DJNZ  R6,$
+  160:	  00F6	D2 B7		         SETB  DQ
+  161:	  00F8	22		         RET
+  162:				;*************************************************
+  163:	  00F9			WRITE_1:
+  164:	  00F9	C2 B7		         CLR   DQ
+  165:	  00FB	00		         NOP
+  166:	  00FC	00		         NOP
+  167:	  00FD	00		         NOP
+  168:	  00FE	00		         NOP
+  169:	  00FF	00		         NOP
+  170:	  0100	D2 B7		         SETB  DQ
+  171:	  0102	7E 1E		         MOV   R6,#30
+  172:	  0104	DE FE		         DJNZ  R6,$
+  173:	  0106	22		         RET
+  174:
+  175:				;*************************************************
+  176:	  0107	D2 B7		READ:    SETB  DQ ;
+  177:	  0109	00		         NOP
+  178:	  010A	00		         NOP
+  179:	  010B	C2 B7		         CLR   DQ
+  180:	  010D	00		         NOP
+  181:	  010E	00		         NOP
+  182:	  010F	D2 B7		         SETB  DQ ;
+  183:	  0111	00		         NOP
+  184:	  0112	00		         NOP
+  185:	  0113	00		         NOP
+  186:	  0114	00		         NOP
+  187:	  0115	00		         NOP
+  188:	  0116	00		         NOP
+  189:	  0117	00		         NOP
+  190:	  0118	A2 B7		         MOV   C,DQ
+  191:	  011A	7E 17		         MOV   R6,#23
+  192:	  011C	DE FE		         DJNZ  R6,$
+  193:	  011E	22		         RET
+  194:
+  195:				;**********************************************
+  196:	  011F	7C 14		DELAY10: MOV   R4,#20
+  197:	  0121	7D 1E		D2:      MOV   R5,#30
+  198:	  0123	DD FE		         DJNZ  R5,$
+  199:	  0125	DC FA		         DJNZ  R4,D2
+  200:	  0127	22		         RET
+  201:
+  202:				         end
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 5
+
+
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 6
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+CHCK				  CODE	    00E5	 148
+CHCK0				  CODE	    00EF	 153
+CY				  BIT	      D7
+D2				  CODE	    0121	 197
+DELAY10				  CODE	    011F	 196
+DPH				  DATA	      83
+DPL				  DATA	      82
+DQ				  BIT	      B7	   1
+DSL				  CODE	    001F	  20
+DSWD				  CODE	    0047	  53
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXIT				  CODE	    0025	  23
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+KEND				  CODE	    008A	  82
+LOOP				  CODE	    0042	  47
+MAIN				  CODE	    0028	  28
+OV				  BIT	      D2
+OVER				  CODE	    003D	  42
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 7
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+RB8				  BIT	      9A
+RD				  BIT	      B7
+READ				  CODE	    0107	 176
+READ1				  CODE	    00BF	 121
+READ_BYTE			  CODE	    00BD	 119
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RST0				  CODE	    00ED	 152
+RSTSNR				  CODE	    00C7	 128
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SEN1				  CODE	    00B7	 114
+SEN2				  CODE	    00BA	 115
+SEN3				  CODE	    00AE	 109
+SEND_BYTE			  CODE	    00AB	 106
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+SS0				  CODE	    0062	  66
+SS1				  CODE	    005F	  64
+SS2				  CODE	    005C	  62
+SWPH				  NUMBER    00D2	   2
+SWPL				  NUMBER    00FF	   3
+T0				  BIT	      B4
+T1				  BIT	      B5
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TMR0				  CODE	    000E	  14
+TOINIT				  CODE	    0028	  29
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TRANS12				  CODE	    008D	  87
+TXD				  BIT	      B1
+WDLSB				  DATA	      30	   4
+WDMSB				  DATA	      31	   5
+WR				  BIT	      B6
+WRITE_0				  CODE	    00F0	 156
+WRITE_1				  CODE	    00F9	 163

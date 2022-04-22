@@ -1,0 +1,51 @@
+#
+# Revolution Education Ltd PICAXE syntax highlighter definition file for ISIS
+# (c) Revolution Education Ltd 2008
+#
+# keyword=      PICAXE Commands
+# extensions=   PICAXE Variables
+# macro=        PICAXE # Directives
+# operator=     PICAXE Math Operators
+# constant=     PICAXE Named Constants
+#
+
+block_comment_open=(?i)\#[ ]*rem.*$
+block_comment_close=(?i)\#[ ]*end[ ]*rem.*$
+
+line_comment=(?i)(rem|[;'`]).*$
+
+string=\"[^\"]*\"
+
+constant=%[01]+|(\$|0x|0X)[0-9a-fA-F]+|\b([0-9]+)\b
+
+keyword=(?i)\b(adcsetup|backward|bcdtoascii|bcdtobin|bintoascii|bintobcd|booti2c|branch|button|calibadc(10)?|calibfreq|case|count|data|debug|dec|disablebod|disconnect|do|doze|eeprom|else(if)?|enablebod|end(if|select)?|exit|for|forward|get|gosub|goto|halt|hi2cin|hi2cout|hi2csetup)\b
+
+keyword=(?i)\b(hibernate|high|hintsetup|hpwm|hpwmduty|hserin|hserout|hsersetup|hshin|hshout|hspiin|hspiout|hspisetup|i2cmaster|i2cread|i2cslave|i2cwrite|if|inc|infrain(2)?|infraout|input|irin|irout|kbin|kbled|keyin|keyled|let|lookdown|lookup|loop|low|nap|next|off|on|output|owin|owout|pause(us)?)\b
+
+keyword=(?i)\b(peek(sfr)?|play|poke(sfr)?|porta|portb|portc|pot|pulsin|pulsout|put|pwm(duty|out)?|random|read(adc(10)?|i2c|mem|outputs|owclk|owsn|pinsc|portc|revision|table|temp(12)?|version)?|reconnect|reset(owclk)?|return|reverse|run)\b
+
+keyword=(?i)\b(select|sensor|serin|serout|serrxd|sertxd|servo|servopos|setfreq|setint|setintflags|settimer|shiftin|shiftout|shin|shout|sleep|sound|spiin|spiout|step|stop|swap|switch([ ]*off|[ ]*on)?|symbol|table|then|to|toggle|tune|until|vartoascii|wait|while|word|write(i2c|mem)?)\b
+
+macro=(?i)^#[ ]*(com|define|error|freq|gosubs|if(def|ndef)?|include|picaxe[ ]*08[M]?|picaxe[ ]*14[M]|picaxe[ ]*18[AXM]?|picaxe[ ]*20[M]|picaxe[ ]*28(A|X1|X2|X)?|picaxe[ ]*40(A|X1|X2|X)?|sim(speed)?|slot|terminal|undefine)
+
+extensions=(?i)\b(b0|b1|b2|b3|b4|b5|b6|b7|b8|b9|b10|b11|b12|b13|b14|b15|b16|b17|b18|b19|b20|b21|b22|b23|b24|b25|b26|b27|b28|b29|b30|b31|b32|b33|b34|b35|b36|b37|b38|b39|b40|b41|b42|b43|b44|b45|b46|b47|b48|b49|b50|b51|b52|b53|b54|b55|bit0|bit1|bit2|bit3|bit4|bit5|bit6|bit7|bit8|bit9|bit10)\b
+
+extensions=(?i)\b(bit11|bit12|bit13|bit14|bit15|bit16|bit17|bit18|bit19|bit20|bit21|bit22|bit23|bit24|bit25|bit26|bit27|bit28|bit29|bit30|bit31|dir(s(a|b|c|d)?|a|b|c|d|[0-7])|infra)\b
+
+extensions=(?i)\b(input[0-7]|keyvalue|outpin(s|[0-7])|pin(s(a|b|c|d)?|[0-7])|port|trisc|w0|w1|w2|w3|w4|w5|w6|w7|w8|w9|w10|w11|w12|w13|w14|w15|w16|w17|w18|w19|w20|w21|w22|w23|w24|w25|w26|w27)\b
+
+extensions=(?i)\b(s_w[0-7]|hi2clast|hserptr|hserinptr|timer|ptr(l|h|0|2|3|4|5|6|7|8|9|10|11|12|13|14|15|inc|dec)?|\@ptr(inc|dec)?|flags(h|l)?|flag(0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15)|int0flag|int1flag|int2flag|toflag|hserinflag|hserflag|hi2cflag)\b
+
+operator=\+|\-|\*|\*\*|\/|\%|\<\<|\>\>|\&|\||\^|\&\/|\|\/|\^\/
+
+operator=(?i)\b(and(not)?|cos|dcd|dig|inv|is|mod|nand|ncd|nor|not|or(not)?|rev|sin|sqr|xnor|xor(not)?)\b
+
+constant=(?i)\b(b300(_4|_8|_16|_20)|b600(_4|_8|_16|_20)|b1200(_4|_8|_16|_20)|b2400(_4|_8|_16|_20)|b4800(_4|_8|_16|_20)|b9600(_4|_8|_16|_20)|b19200(_4|_8|_16|_20)|b38400(_4|_8|_16|_20)|b57600(_4|_8|_16|_20)|b115200(_4|_8|_16|_20))\b
+
+constant=(?i)\b(cls|cr|em4|em8|em16|em20|em32|em40|i2cbyte|i2cword|i2cfast(4|8|16|_4|_8|_16)?|i2cslow(4|8|16|_4|_8|_16)?|k31|k125|k250|k500|lf|lsbfirst(_h|_l)?|lsbpost(_h|_l)?|lsbpre(_h|_l)?|msbfirst(_h|_l)?|msbpost(_h|_l)?|msbpre(_h|_l)?|m1|m2|m4|m8|m16)\b
+
+constant=(?i)\b(n300(_4)?|n600(_4|_8)?|n1200(_4|_8|_16)?|n2400(_4|_8|_16)?|n4800(_4|_8|_16)?|n9600(_8|_16)|n19200_16|output[0-7]|ownoreset|ownoreset_bit|owresetafter|owresetafter_bit\b)
+
+constant=(?i)\b(owresetboth(_bit)?|owresetfirst(_bit)?|pwmfull(_f|_r)|pwmhalf|pwmsingle|pwmhhhh|pwmhlhl|pwmlhlh|pwmllll|spifast|spimedium|spislow|spimode(00|00e|01|01e|10|10e|11|11e)|t1s_4|t1s_8|t1s_16)\b
+
+constant=(?i)\b(t300(_4)?|t600(_4|_8)?|t1200(_4|_8|_16)?|t2400(_4|_8|_16)?|t4800(_4|_8|_16)?|t9600(_8|_16)|t19200_16)\b

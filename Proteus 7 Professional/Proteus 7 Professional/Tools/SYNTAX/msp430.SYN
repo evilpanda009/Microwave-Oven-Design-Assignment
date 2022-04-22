@@ -1,0 +1,26 @@
+#
+# Labcenter Electronics
+#
+# MSP430 syntax highlighter definition file.
+#
+line_comment=;.*$
+operator=@|&
+string='([^'\\]|\\.)*'
+
+
+constant=#([0-9a-fA-F]*h|[0-9]*)
+
+extensions=\b(r[0-9]*|sp|pc|sr|cg(1|2))
+extensions=\b(R[0-9]*|SP|PC|SR|CG(1|2))
+
+keyword=\b(mov|add|addc|subb|sub|cmp|dadd|bi(t|c|s)|xor|and|dec)\.(b|w)
+keyword=\b((rr(c|a)|push).(b|w)?|swpb|call|reti|sxt)
+keyword=\bj(z|nz|eq|ne|c|nc|n|ge|l|mp)
+
+keyword=\b(MOV|ADD|ADDC|SUB|SUBB|CMP|DADD|BI(T|C|S)|XOR|AND|DEC)\.(B|W)
+keyword=\b((RR(C|A)|PUSH).(B|W)?|SWPB|CALL|RETI|SXT)
+keyword=\bJ(Z|NZ|EQ|NE|C|NC|N|GE|L|MP)
+
+macro=\b(short|end)
+
+operator=(\+|-|<|>|/)

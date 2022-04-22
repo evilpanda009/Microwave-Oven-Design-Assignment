@@ -1,0 +1,202 @@
+000B,,,   DQ       BIT P3.7 ; 1 wire line
+,,,   swpH     equ  0d2H
+,,,   swpL     equ  0ffH
+,,,   WDLSB    DATA 30H ;
+,,,   WDMSB    DATA 31H ;
+,,,;***************************************************************
+,,,   ORG 0000H
+0000,02 00 28,,   LJMP MAIN
+,,,   ORG 000BH
+000B,02 00 0E,,   LJMP TMR0   ; Timer0 isr
+,,,
+,,,;********************************************************
+,,,; Timer0 Interrupt Service Routine
+000E,75 8C D2,TMR0,TMR0:    MOV   TH0,#swpH
+0011,75 8A FF,,         MOV   TL0,#swpL
+0014,20 21 08,,         JB    21H,DSL
+0017,85 42 80,,         MOV   P0,42H
+001A,43 80 20,,         ORL   P0,#00100000B
+001D,80 06,,         SJMP  EXIT
+001F,,DSL,DSL:
+001F,85 43 80,,         MOV   P0,43H
+0022,43 80 10,,         ORL   P0,#00010000B
+0025,,EXIT,EXIT:
+0025,B2 21,,         CPL   21H
+0027,32,,         RETI
+,,,
+,,,; Main program
+0028,,MAIN,MAIN:
+0028,,TOINIT,TOINIT:
+0028,C2 AF,,         CLR   EA
+002A,75 89 01,,         MOV   TMOD,#01H
+002D,75 8C D2,,         MOV   TH0,#swpH
+0030,75 8A FF,,         MOV   TL0,#swpL
+0033,D2 AF,,         SETB  EA
+0035,D2 A9,,         SETB  ET0
+0037,D2 8C,,         SETB  TR0
+,,,
+,,,;***********************************************************
+,,,;
+0039,7A 02,,         MOV   R2,#2
+003B,78 42,,         MOV   R0,#42H ;
+003D,,OVER,OVER:
+003D,76 00,,         MOV   @R0,#00H;
+003F,08,,         INC   R0
+0040,DA FB,,         DJNZ  R2,OVER
+,,,
+0042,,LOOP,LOOP:
+0042,12 00 47,,         LCALL DSWD ;
+0045,80 FB,,         SJMP  LOOP
+,,,
+,,,;**********************************************************
+,,,; Read a temperature from the DS18B20
+0047,,DSWD,DSWD:
+0047,12 00 C7,,         LCALL RSTSNR      ; Init of the DS18B20
+004A,30 D5 3D,,         JNB   F0,KEND
+004D,78 CC,,         MOV   R0,#0CCH
+004F,12 00 AB,,         LCALL SEND_BYTE
+0052,78 44,,         MOV   R0,#44H
+0054,12 00 AB,,         LCALL SEND_BYTE   ; Send a Convert Command
+0057,D2 AF,,         SETB  EA
+0059,75 48 01,,         MOV   48H,#1
+005C,,SS2,SS2:
+005C,75 49 FF,,         MOV   49H,#255
+005F,,SS1,SS1:
+005F,75 4A FF,,         MOV   4AH,#255
+0062,,SS0,SS0:
+0062,D5 4A FD,,         DJNZ  4AH,SS0
+0065,D5 49 F7,,         DJNZ  49H,SS1
+0068,D5 48 F1,,         DJNZ  48H,SS2
+006B,C2 AF,,         CLR   EA
+006D,12 00 C7,,         LCALL RSTSNR
+0070,30 D5 17,,         JNB   F0,KEND
+0073,78 CC,,         MOV   R0,#0CCH
+0075,12 00 AB,,         LCALL SEND_BYTE
+0078,78 BE,,         MOV   R0,#0BEH
+007A,12 00 AB,,         LCALL SEND_BYTE      ; Send Read Scratchpad command
+007D,12 00 BD,,         LCALL READ_BYTE      ; Read the low byte from scratchpad
+0080,F5 30,,         MOV   WDLSB,A        ; Save the temperature (low byte)
+0082,12 00 BD,,         LCALL READ_BYTE      ; Read the high byte from scratchpad
+0085,F5 31,,         MOV   WDMSB,A        ; Save the temperature (high byte)
+0087,12 00 8D,,         LCALL TRANS12
+008A,,KEND,KEND:
+008A,D2 AF,,         SETB  EA
+008C,22,,         RET
+,,,;**********************************************************
+,,,;
+008D,,TRANS12,TRANS12:
+008D,E5 30,,         MOV   A,30H
+008F,54 F0,,         ANL   A,#0F0H
+0091,F5 3A,,         MOV   3AH,A
+0093,E5 31,,         MOV   A,31H
+0095,54 0F,,         ANL   A,#0FH
+0097,45 3A,,         ORL   A,3AH
+0099,C4,,         SWAP  A
+009A,75 F0 0A,,         MOV   B,#10
+009D,84,,         DIV   AB
+,,,         ;MOV 42H,A
+009E,85 F0 43,,         MOV   43H,B ;
+00A1,75 F0 0A,,         MOV   b,#10
+00A4,84,,         DIV   ab
+00A5,85 F0 42,,         MOV   42H,B
+00A8,F5 41,,         MOV   41H,A
+00AA,22,,         RET
+,,,;*************************************************
+,,,; Send a byte to the 1 wire line
+00AB,,SEND_BYTE,SEND_BYTE: ;
+00AB,E8,,         MOV   A,R0
+00AC,7D 08,,         MOV   R5,#8
+00AE,C3,SEN3,SEN3:    CLR   C
+00AF,13,,         RRC   A
+00B0,40 05,,         JC    SEN1
+00B2,12 00 F0,,         LCALL WRITE_0
+00B5,80 03,,         SJMP  SEN2
+00B7,12 00 F9,SEN1,SEN1:    LCALL WRITE_1
+00BA,DD F2,SEN2,SEN2:    DJNZ  R5,SEN3 ;
+00BC,22,,         RET
+,,,;*************************************************
+,,,; Read a byte from the 1 wire line
+00BD,,READ_BYTE,READ_BYTE:
+00BD,7D 08,,         MOV   R5,#8
+00BF,12 01 07,READ1,READ1:   LCALL READ
+00C2,13,,         RRC   A
+00C3,DD FA,,         DJNZ  R5,READ1 ;
+00C5,F8,,         MOV   R0,A
+00C6,22,,         RET
+,,,;*************************************************
+,,,; Reset 1 wire line
+00C7,D2 B7,RSTSNR,RSTSNR:  SETB  DQ
+00C9,00,,         NOP
+00CA,00,,         NOP
+00CB,C2 B7,,         CLR   DQ
+00CD,7E FA,,         MOV   R6,#250 ;
+00CF,DE FE,,         DJNZ  R6,$
+00D1,7E 32,,         MOV   R6,#50
+00D3,DE FE,,         DJNZ  R6,$
+00D5,D2 B7,,         SETB  DQ ;
+00D7,7E 0F,,         MOV   R6,#15
+00D9,DE FE,,         DJNZ  R6,$
+00DB,12 00 E5,,         CALL  CHCK ;
+00DE,7E 3C,,         MOV   R6,#60
+00E0,DE FE,,         DJNZ  R6,$
+00E2,D2 B7,,         SETB  DQ
+00E4,22,,         RET
+,,,
+,,,
+,,,;*************************************************
+,,,; low level subroutines
+00E5,A2 B7,CHCK,CHCK:    MOV   C,DQ
+00E7,40 04,,         JC    RST0
+00E9,D2 D5,,         SETB  F0 ;
+00EB,80 02,,         SJMP  CHCK0
+00ED,C2 D5,RST0,RST0:    CLR   F0 ;
+00EF,22,CHCK0,CHCK0:   RET
+,,,
+,,,;*************************************************
+00F0,,WRITE_0,WRITE_0:
+00F0,C2 B7,,         CLR   DQ
+00F2,7E 1E,,         MOV   R6,#30
+00F4,DE FE,,         DJNZ  R6,$
+00F6,D2 B7,,         SETB  DQ
+00F8,22,,         RET
+,,,;*************************************************
+00F9,,WRITE_1,WRITE_1:
+00F9,C2 B7,,         CLR   DQ
+00FB,00,,         NOP
+00FC,00,,         NOP
+00FD,00,,         NOP
+00FE,00,,         NOP
+00FF,00,,         NOP
+0100,D2 B7,,         SETB  DQ
+0102,7E 1E,,         MOV   R6,#30
+0104,DE FE,,         DJNZ  R6,$
+0106,22,,         RET
+,,,
+,,,;*************************************************
+0107,D2 B7,READ,READ:    SETB  DQ ;
+0109,00,,         NOP
+010A,00,,         NOP
+010B,C2 B7,,         CLR   DQ
+010D,00,,         NOP
+010E,00,,         NOP
+010F,D2 B7,,         SETB  DQ ;
+0111,00,,         NOP
+0112,00,,         NOP
+0113,00,,         NOP
+0114,00,,         NOP
+0115,00,,         NOP
+0116,00,,         NOP
+0117,00,,         NOP
+0118,A2 B7,,         MOV   C,DQ
+011A,7E 17,,         MOV   R6,#23
+011C,DE FE,,         DJNZ  R6,$
+011E,22,,         RET
+,,,
+,,,;**********************************************
+011F,7C 14,DELAY10,DELAY10: MOV   R4,#20
+0121,7D 1E,D2,D2:      MOV   R5,#30
+0123,DD FE,,         DJNZ  R5,$
+0125,DC FA,,         DJNZ  R4,D2
+0127,22,,         RET
+,,,
+000E,,,         end

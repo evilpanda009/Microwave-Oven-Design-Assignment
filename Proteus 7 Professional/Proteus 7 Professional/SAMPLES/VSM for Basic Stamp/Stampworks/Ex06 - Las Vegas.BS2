@@ -1,0 +1,85 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex06 - Las Vegas.BS2
+' Purpose... Stamp Game
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' Stamp-based slot machine game that uses lights and sound.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+LEDs VAR OutL ' LED outputs
+Speaker CON 6 ' speaker output
+PlayBtn CON 7 ' button input to play game
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+randW VAR Word ' random number
+pattern VAR Byte ' light pattern
+tone VAR Word ' tone output
+swData VAR Byte ' workspace variable for BUTTON
+delay VAR Word ' delay while "spinning"
+spin1 VAR Byte ' loop counter
+spin2 VAR Byte ' loop counter
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %00111111 ' make LEDs outputs
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Get_Random ' get a random number and tone
+FREQOUT Speaker,35,tone ' sound the tone
+PAUSE 100
+BUTTON PlayBtn, 0, 255, 10, swData, 1, Spin ' check for play
+GOTO Main
+Spin:
+LEDs = %00111111 ' simulate machine reset
+PAUSE 750
+LEDs = %00000000
+PAUSE 500
+delay = 75 ' initialize delay
+FOR spin1 = 1 TO 25 ' spin the wheel
+GOSUB Get_Random ' get random number
+FREQOUT Speaker, 25, 425 ' wheel click
+PAUSE delay ' pause between clicks
+delay = delay */ $0119 ' multiply delay by 1.1
+NEXT
+IF pattern = %00111111 THEN You_Win ' if all lit, you win
+FREQOUT Speaker, 1000, 150 ' otherwise, groan...
+LEDs = %00000000 ' clear LEDs
+PAUSE 1000
+GOTO Main ' do it again
+You_Win: ' winning lights/sound display
+FOR spin1 = 1 TO 5
+FOR spin2 = 0 TO 3
+LOOKUP spin2, [$00, $0C, $12, $21], LEDs
+LOOKUP spin2, [665, 795, 995, 1320], tone
+FREQOUT Speaker, 35, tone
+PAUSE 65
+NEXT
+NEXT
+LEDs = %00000000 ' clear LEDs
+PAUSE 1000
+GOTO Main ' do it again
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Get_Random:
+RANDOM randW ' get pseudo-random number
+tone = randW & $7FF ' don't let tone go too high
+pattern = randW & %00111111 ' mask out unused bits
+LEDs = pattern ' show the pattern
+RETURN

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Application Note AN696: PIC18Fxxx DC Servomotor Demo.">
+ <KEYWORDS>
+  <KEYWORD NAME="Application Note"/>
+  <KEYWORD NAME="Motor Control"/>
+  <KEYWORD NAME="RS232 Comms"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Linker Script Files" NAME="18f452.lkr"/>
+  <FILE GROUP="Source Files" NAME="18motor.c"/>
+  <FILE GROUP="Design Files" NAME="AN696.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPLAB C18" NAME="Debug">
+  <CONTROLLER FAMILY="PIC18" CLOCK="20MHz" TYPE="PIC18F452"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="18f452_g.lkr"/>
+   <FILE TOOL="CC" NAME="Debug/18motor.o">
+    <FILE NAME="18motor.c"/>
+   </FILE>
+   <FILE NAME="18f452.lkr"/>
+  </FILE>
+  <FILE NAME="AN696.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-u" VALUE="_CRUNTIME"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-l" VALUE="&quot;%COMPILER_DOS_DIR%\..\lib&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION TOOL="CC" NAME="-I=" VALUE="&quot;%COMPILER_DOS_DIR%\..\h&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-p" VALUE="18f452"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="MPLAB C18" NAME="Release">
+  <CONTROLLER FAMILY="PIC18" CLOCK="20MHz" TYPE="PIC18F452"/>
+  <FILE TOOL="LD" NAME="Release/Release.hex">
+   <FILE TOOL="CC" NAME="Release/18motor.o">
+    <FILE NAME="18motor.c"/>
+   </FILE>
+   <FILE NAME="18f452.lkr"/>
+  </FILE>
+  <FILE NAME="AN696.DSN"/>
+  <OPTION TOOL="ASM" NAME="/p" VALUE="18f452"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-u" VALUE="_CRUNTIME"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-l" VALUE="&quot;%COMPILER_DOS_DIR%\..\lib&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-p" VALUE="18f452"/>
+  <OPTION TOOL="CC" NAME="-I=" VALUE="&quot;%COMPILER_DOS_DIR%\..\h&quot;"/>
+ </CONFIGURATION>
+</PROJECT>

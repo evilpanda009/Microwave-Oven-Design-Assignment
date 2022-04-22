@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Application Note AN940: Digital Temperature Sensing with TC72 and PIC16F676">
+ <KEYWORDS>
+  <KEYWORD NAME="Application Note"/>
+  <KEYWORD NAME="Temperature Sensing"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Linker Script" NAME="16f676.lkr"/>
+  <FILE GROUP="Header" NAME="P16F676.INC"/>
+  <FILE GROUP="Source" NAME="TC72.asm"/>
+  <FILE GROUP="Design" NAME="TC72PICtail.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="PIC16" CLOCK="4MHz" TYPE="PIC16F676"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="16f676_g.lkr"/>
+   <FILE TOOL="ASM" NAME="TC72.o">
+    <FILE NAME="TC72.asm"/>
+   </FILE>
+   <FILE NAME="16f676.lkr"/>
+  </FILE>
+  <FILE NAME="P16F676.INC"/>
+  <FILE NAME="TC72PICtail.DSN"/>
+  <FILE NAME="Debug.cof"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="16f676"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="MPASM (Proteus)" NAME="Release">
+  <CONTROLLER FAMILY="PIC16" CLOCK="4MHz" TYPE="PIC16F676"/>
+  <FILE TOOL="LD" NAME="Release.hex">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="16f676_g.lkr"/>
+   <FILE NAME="16f676.lkr"/>
+   <FILE TOOL="ASM" NAME="TC72.o">
+    <FILE NAME="TC72.asm"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="P16F676.INC"/>
+  <FILE NAME="TC72PICtail.DSN"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="16f676"/>
+ </CONFIGURATION>
+</PROJECT>

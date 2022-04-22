@@ -1,0 +1,193 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex30 - DS1302.BS2
+' Purpose... RTC Control
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates the control and use of an external real-time clcok
+' chip, the DS1302 from Dallas Semiconductor.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+DataIO CON 0 ' DS1302.6
+Clock CON 1 ' DS1302.7
+CS1302 CON 2 ' DS1302.5
+BtnsIn VAR InB ' button input
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+WrSecs CON $80 ' write seconds
+RdSecs CON $81 ' read seconds
+WrMins CON $82 ' write minutes
+RdMins CON $83 ' read minutes
+WrHrs CON $84 ' write hours
+RdHrs CON $85 ' read hours
+CWPr CON $8E ' write protect register
+WPr1 CON $80 ' set write protect
+WPr0 CON $00 ' clear write protect
+WrBurst CON $BE ' write burst of data
+RdBurst CON $BF ' read burst of data
+WrRam CON $C0 ' RAM address control
+RdRam CON $C1
+Yes CON 1
+No CON 0
+Hr24 CON 0
+Hr12 CON 1
+ClockMode CON Hr12 ' use AM/PM mode
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+index VAR Byte ' loop counter
+reg VAR Byte ' DS1302 address to read/write
+ioByte VAR Byte ' data to/from DS1302
+secs VAR Byte ' seconds
+secs01 VAR secs.LowNib
+secs10 VAR secs.HighNib
+mins VAR Byte ' minutes
+mins01 VAR mins.LowNib
+mins10 VAR mins.HighNib
+hrs VAR Byte ' hours
+hrs01 VAR hrs.LowNib
+hrs10 VAR hrs.HighNib
+day VAR Byte ' day
+ampm VAR hrs.Bit5 ' 0 = AM, 1 = PM
+tMode VAR hrs.Bit7 ' 0 = 24, 1 = 12
+rawTime VAR Word ' raw storage of time values
+work VAR Byte ' work variable for display output
+oldSecs VAR Byte ' previous seconds value
+apChar VAR Byte ' "A" or "P"
+btns VAR Nib ' button inputs
+btnMin VAR btns.Bit0 ' update minutes
+btnHrs VAR btns.Bit1 ' update hours
+btnDay VAR btns.Bit2 ' update day
+btnBack VAR btns.Bit3 ' go backward
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+Su DATA "Sunday", 0
+Mo DATA "Monday", 0
+Tu DATA "Tuesday", 0
+We DATA "Wednesday", 0
+Th DATA "Thursday", 0
+Fr DATA "Friday", 0
+Sa DATA "Saturday", 0
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %00000111 ' switches are ins, others outs
+reg = CWPr ' clear write protect register
+ioByte = WPr0
+GOSUB RTC_Out
+oldSecs = $99 ' set the display flag
+hrs = $06 ' preset time to 6:00 AM
+mins = $00
+secs = $00
+GOSUB Set_Time
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main1:
+GOSUB Get_Time ' read the DS1302
+IF (secs = oldSecs) THEN Check_Buttons ' time for update?
+Main2:
+GOSUB Show_Time ' yes, show it
+oldSecs = secs ' mark it
+Check_Buttons:
+GOSUB Get_Buttons
+IF (btns = 0) THEN Do_Some_Task ' let Stamp do other work
+IF (btnBack = Yes) THEN Go_Back ' back button pressed?
+Go_Forward:
+rawTime = rawTime + btnMin ' add one minute
+rawTime = rawTime + (btnHrs * 60) ' add one hour
+day = (day + btnDay) // 7 ' next day
+GOTO Update_Clock
+Go_Back:
+IF (btns <= %1000) THEN Do_Some_Task ' no update button pressed
+rawTime = rawTime + (btnMin * 1439) ' subtract one minute
+rawTime = rawTime + (btnHrs * 1380) ' subtract one hour
+day = (day + (btnDay * 6)) // 7 ' previous day
+Update_Clock: ' send updated value to DS1302
+rawTime = rawTime // 1440 ' clean-up time mods
+GOSUB Set_Raw_Time ' set the clock with rawTime
+GOTO Main2
+Do_Some_Task: ' work when not setting clock
+' other code here
+GOTO Main1
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Show_Time:
+DEBUG Home
+LOOKUP day,[Su,Mo,Tu,We,Th,Fr,Sa],work ' get address of day string
+Get_Day_Char:
+READ work, ioByte ' grab a character
+IF (ioByte = 0) THEN Check_Clock_Mode ' if 0, string is complete
+DEBUG ioByte ' print the character
+work = work + 1 ' point to next
+GOTO Get_Day_Char
+Check_Clock_Mode:
+DEBUG " " ' clear day name debris
+IF (ClockMode = Hr24) THEN Show24
+Show12:
+DEBUG DEC2 12 - (24 - (hrs10 * 10 + hrs01) // 12)
+DEBUG ":", HEX2 mins, ":", HEX2 secs
+apChar = "A" ' assume AM
+IF (hrs < $12) THEN Show_AMPM ' check time
+apChar = "P" ' hrs was >= $12
+Show_AMPM:
+DEBUG " ", apChar, "M" ' print AM or PM
+GOTO Show_Time_Done
+Show24:
+DEBUG HEX2 hrs, ":", HEX2 mins, ":", HEX2 secs
+Show_Time_Done:
+DEBUG CR
+RETURN
+Get_Buttons:
+btns = %1111 ' enable all button inputs
+FOR index = 1 TO 10
+btns = btns & ~BtnsIn ' test inputs
+PAUSE 5 ' delay between tests
+NEXT
+PAUSE 200 ' slow held button(s)
+RETURN
+RTC_Out: ' send ioByte to reg in DS1302
+HIGH CS1302
+SHIFTOUT DataIO, Clock, LSBFirst, [reg, ioByte]
+LOW CS1302
+RETURN
+RTC_In: ' read ioByte from reg in DS1302
+HIGH CS1302
+SHIFTOUT DataIO, Clock, LSBFirst, [reg]
+SHIFTIN DataIO, Clock, LSBPre, [ioByte]
+LOW CS1302
+RETURN
+Set_Raw_Time: ' convert rawTime to BCD
+hrs10 = rawTime / 600
+hrs01 = (rawTime // 600) / 60
+mins10 = (rawTime // 60) / 10
+mins01 = rawTime // 10
+Set_Time: ' write data with burst mode
+HIGH CS1302
+SHIFTOUT DataIO, Clock, LSBFirst, [WrBurst]
+SHIFTOUT DataIO, Clock, LSBFirst, [secs, mins, hrs, 0, 0, day, 0, 0]
+LOW CS1302
+RETURN
+Get_Time: ' read data with burst mode
+HIGH CS1302
+SHIFTOUT DataIO, Clock, LSBFirst, [RdBurst]
+SHIFTIN DataIO, Clock, LSBPre, [secs, mins, hrs, day, day, day]
+LOW CS1302
+rawTime = ((hrs10 & %11) * 600) + (hrs01 * 60)
+rawTime = rawTime + (mins10 * 10) + mins01
+RETURN
+

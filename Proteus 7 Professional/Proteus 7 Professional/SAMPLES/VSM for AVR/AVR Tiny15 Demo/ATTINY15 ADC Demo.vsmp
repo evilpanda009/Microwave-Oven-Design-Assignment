@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="ATTINY15 micro processing ADC signal to a multiplexed seven segment display.">
+ <KEYWORDS>
+  <KEYWORD NAME="ADC/DAC"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="t15demo.asm"/>
+  <FILE GROUP="Design Files" NAME="t15demo.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="AVRASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="AVR" CLOCK="1600KHz" TYPE="ATtiny15"/>
+  <FILE TOOL="ASM">
+   <FILE NAME="t15demo.asm"/>
+  </FILE>
+  <FILE NAME="t15demo.DSN"/>
+  <OPTION TOOL="ASM" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\appnotes\tn15def.inc&quot;"/>
+  <OPTION TOOL="ASM" NAME="-f" VALUE="I"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="AVRASM (Proteus)" NAME="Release">
+  <CONTROLLER FAMILY="AVR" CLOCK="4MHz" TYPE="ATtiny15"/>
+  <FILE TOOL="ASM">
+   <FILE NAME="t15demo.asm"/>
+  </FILE>
+  <FILE NAME="t15demo.DSN"/>
+  <OPTION TOOL="ASM" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\appnotes\tn15def.inc&quot;"/>
+  <OPTION TOOL="ASM" NAME="-f" VALUE="I"/>
+ </CONFIGURATION>
+</PROJECT>

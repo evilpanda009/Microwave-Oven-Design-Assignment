@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="">
+ <KEYWORDS/>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="main.c"/>
+  <FILE GROUP="Source Files" NAME="vtable.c"/>
+  <FILE GROUP="Source Files" NAME="crt.c"/>
+  <FILE GROUP="Source Files" NAME="cmsis/device/system_lm3s.c"/>
+  <FILE GROUP="Source Files" NAME="cmsis/core/core_cm3.c"/>
+  <FILE GROUP="Design Files" NAME="project.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="GCC for ARM" NAME="Debug">
+  <CONTROLLER FAMILY="Cortex-M3" CLOCK="25MHz" TYPE="LM3S308"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.elf">
+   <OPTION TOOL="LD" ID="LKR" NAME="-T " VALUE="lm3s308_flash.ld "/>
+   <FILE TOOL="CC" NAME="Debug/main.o">
+    <FILE NAME="main.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/vtable.o">
+    <FILE NAME="vtable.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/crt.o">
+    <FILE NAME="crt.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/system_lm3s.o">
+    <FILE NAME="cmsis/device/system_lm3s.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/core_cm3.o">
+    <FILE NAME="cmsis/core/core_cm3.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="project.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mcpu=" VALUE="cortex-m3"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mthumb"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-nostartfiles"/>
+  <OPTION TOOL="CC" NAME="-O" VALUE="0"/>
+  <OPTION TOOL="CC" NAME="-g" VALUE="dwarf-2"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-fomit-frame-pointer"/>
+  <OPTION TOOL="CC" NAME="-W" VALUE="all"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-fverbose-asm"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MD"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MP"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-fsigned-char"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mcpu=" VALUE="cortex-m3"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mthumb"/>
+  <OPTION TOOL="CC" NAME="-I" VALUE="&quot;./cmsis/core&quot;"/>
+  <OPTION TOOL="CC" NAME="-I" VALUE="&quot;./cmsis/device&quot;"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="GCC for ARM" NAME="Release">
+  <CONTROLLER FAMILY="Cortex-M3" CLOCK="25000000" TYPE="LM3S308"/>
+  <FILE NAME="main.c"/>
+  <FILE NAME="vtable.c"/>
+  <FILE NAME="crt.c"/>
+  <FILE NAME="cmsis/device/system_lm3s.c"/>
+  <FILE NAME="cmsis/core/core_cm3.c"/>
+  <FILE NAME="project.DSN"/>
+ </CONFIGURATION>
+</PROJECT>

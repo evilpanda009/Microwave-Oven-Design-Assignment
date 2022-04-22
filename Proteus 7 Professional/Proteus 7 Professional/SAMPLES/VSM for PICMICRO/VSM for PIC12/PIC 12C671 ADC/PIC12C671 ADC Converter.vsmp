@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Operation of the ADC in a PIC12C671">
+ <KEYWORDS>
+  <KEYWORD NAME="ADC/DAC"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source" NAME="pic12adc.asm"/>
+  <FILE GROUP="Design" NAME="PIC12ADC.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="PIC12" CLOCK="4MHz" TYPE="PIC12C671"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="12c671_g.lkr"/>
+   <FILE TOOL="ASM" NAME="pic12adc.o">
+    <FILE NAME="pic12adc.asm"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="PIC12ADC.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="12c671"/>
+ </CONFIGURATION>
+</PROJECT>

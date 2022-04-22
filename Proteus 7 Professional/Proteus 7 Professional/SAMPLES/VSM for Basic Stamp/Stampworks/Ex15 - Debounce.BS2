@@ -1,0 +1,45 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex15 - Debounce.BS2
+' Purpose... Multi-input button debouncing
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates the simultaneous debouncing of multiple inputs. The
+' input subroutine is easily adjusted to handle any number of inputs.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+SwInputs VAR InA ' four inputs, pins 0 - 3
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+switches VAR Nib ' debounced inputs
+x VAR Nib ' loop counter
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Get_Switches ' get debounced inputs
+DEBUG Home, "Inputs = ", IBIN4 switches, CR ' display in binary mode
+PAUSE 50 ' a little time between readings
+GOTO Main ' do it again
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Get_Switches:
+switches = %1111 ' enable all four inputs
+FOR x = 1 TO 10
+switches = switches & ~SwInputs ' test inputs
+PAUSE 5 ' delay between tests
+NEXT
+RETURN

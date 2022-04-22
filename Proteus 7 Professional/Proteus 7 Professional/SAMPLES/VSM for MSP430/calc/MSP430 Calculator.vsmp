@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="Calculator using a MSP430F1121 with LCD display">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+  <KEYWORD NAME="Keypad Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Design Files" NAME="calc.DSN"/>
+  <FILE GROUP="Header Files" NAME="calc.h"/>
+  <FILE GROUP="Source Files" NAME="keypadctrl.cpp"/>
+  <FILE GROUP="Source Files" NAME="lcdctrl.cpp"/>
+  <FILE GROUP="Source Files" NAME="main.cpp"/>
+  <FILE GROUP="Linker Script Files" NAME="lnk_msp430f1121.cmd"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="CodeComposer for MSP430" NAME="Debug">
+  <CONTROLLER FAMILY="MSP430" CLOCK="4MHz" TYPE="MSP430F1121"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.cof">
+   <FILE TOOL="CC" NAME="Debug/keypadctrl.obj">
+    <FILE NAME="keypadctrl.cpp"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/lcdctrl.obj">
+    <FILE NAME="lcdctrl.cpp"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/main.obj">
+    <FILE NAME="main.cpp"/>
+   </FILE>
+   <FILE NAME="lnk_msp430f1121.cmd"/>
+  </FILE>
+  <FILE NAME="calc.DSN"/>
+  <FILE NAME="calc.h"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-z"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--reread_libs"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--rom_model"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--warn_sections"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--search_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\lib&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-c"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--symdebug:" VALUE="dwarf"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\include&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\..\..\..\msp430\include&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--fp_reassoc=" VALUE="off"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--sat_reassoc=" VALUE="off"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--keep_unneeded_statics"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--plain_char=" VALUE="unsigned"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--silicon_version=" VALUE="msp"/>
+ </CONFIGURATION>
+</PROJECT>

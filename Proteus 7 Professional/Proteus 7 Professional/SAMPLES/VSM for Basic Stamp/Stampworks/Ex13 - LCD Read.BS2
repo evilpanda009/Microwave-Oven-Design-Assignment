@@ -1,0 +1,144 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex13 - LCD Read.BS2
+' Purpose... Read data from LCD
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program demonstrates how to read data from the LCD's display or CGRAM
+' areas.
+'
+' The connections for this program conform to the BS2p LCDIN and LCDOUT
+' commands. Use this program for the BS2, BS2e or BS2sx. There is a separate
+' program for the BS2p.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+E CON 0 ' LCD Enable pin (1 = enabled)
+RW CON 2 ' LCD Read/Write pin (1 = write)
+RS CON 3 ' Register Select (1 = char)
+LCDdirs VAR DirB
+LCDbusOut VAR OutB ' 4-bit LCD data bus
+LCDbusIn VAR InB
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+ClrLCD CON $01 ' clear the LCD
+CrsrHm CON $02 ' move cursor to home position
+CrsrLf CON $10 ' move cursor left
+CrsrRt CON $14 ' move cursor right
+DispLf CON $18 ' shift displayed chars left
+DispRt CON $1C ' shift displayed chars right
+DDRam CON $80 ' Display Data RAM control
+CGRam CON $40 ' Custom character RAM
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+char VAR Byte ' character sent to LCD
+index VAR Byte ' loop counter
+rVar VAR Word ' for random number
+addr VAR Byte ' address to write/read
+tOut VAR Byte ' test value to write to LCD
+tIn VAR Byte ' test value to read from LCD
+temp VAR Word ' temp value for numeric display
+width VAR Nib ' width of number to display
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111101 ' setup pins for LCD
+LCD_Init:
+PAUSE 500 ' let the LCD settle
+LCDbusOut = %0011 ' 8-bit mode
+PULSOUT E, 1
+PAUSE 5
+PULSOUT E, 1
+PULSOUT E, 1
+LCDbusOut = %0010 ' 4-bit mode
+PULSOUT E, 1
+char = %00001100 ' disp on, crsr off, blink off
+GOSUB LCD_Command
+char = %00000110 ' inc crsr, no disp shift
+GOSUB LCD_Command
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+char = ClrLCD ' clear the LCD
+GOSUB LCD_Command
+FOR index = 0 TO 14 ' create display
+LOOKUP index, ["ADDR=?? ???/???"], char
+GOSUB LCD_Write
+NEXT
+Loop:
+RANDOM rVar ' generate random number
+addr = rVar.LowByte & $3F ' create address (0 to 63)
+tOut = rVar.HighByte ' create test value (0 to 255)
+char = CGRam + addr ' set CGRAM pointer
+GOSUB LCD_Command
+char = tOut
+GOSUB LCD_Write ' move the value to CGRAM
+PAUSE 100 ' wait a bit, then go get it
+char = CGRam + addr ' set CGRAM pointer
+GOSUB LCD_Command
+GOSUB LCD_Read ' read value from LCD
+tIn = char
+' display results
+char = DDRam + 5 ' show address at position 5
+GOSUB LCD_Command
+temp = addr
+width = 2
+GOSUB Put_Val
+char = DDRam + 9 ' show output at position 8
+GOSUB LCD_Command
+temp = tOut
+width = 3
+GOSUB Put_Val
+char = DDRam + 13 ' show input at position 12
+GOSUB LCD_Command
+temp = tIn
+width = 3
+GOSUB Put_Val
+PAUSE 1000
+GOTO Loop ' do it again
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Put_Val:
+FOR index = (width - 1) TO 0 ' display digits left to right
+char = (temp DIG index) + 48 ' convert digit to ASCII
+GOSUB LCD_Write ' put digit in display
+NEXT
+RETURN
+LCD_Command:
+LOW RS ' enter command mode
+LCD_Write:
+LCDbusOut = char.HighNib ' output high nibble
+PULSOUT E, 1 ' strobe the Enable line
+LCDbusOut = char.LowNib ' output low nibble
+PULSOUT E, 1
+HIGH RS ' return to character mode
+RETURN
+LCD_Read:
+HIGH RS ' data command
+HIGH RW ' read
+LCDdirs = %0000 ' make data lines inputs
+HIGH E
+char.HighNib = LCDbusIn ' get high nibble
+LOW E
+HIGH E
+char.LowNib = LCDbusIn ' get low nibble
+LOW E
+LCDdirs = %1111 ' return data lines to outputs
+LOW RW
+RETURN

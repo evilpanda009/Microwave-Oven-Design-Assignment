@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="80C51 based ADC using an AD1674 with output to a virtual terminal">
+ <KEYWORDS>
+  <KEYWORD NAME="RS232 comms"/>
+  <KEYWORD NAME="ADC/DAC"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="AD1674.c"/>
+  <FILE GROUP="Design Files" NAME="AD1674 &amp; 80C51.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="SDCC for 8051" NAME="Debug">
+  <CONTROLLER FAMILY="8051" CLOCK="11059KHz" TYPE="80C51"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.cdb">
+   <FILE TOOL="CC" NAME="Debug/AD1674.rel">
+    <FILE NAME="AD1674.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="AD1674 &amp; 80C51.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-m" VALUE="mcs51"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--model-" VALUE="small"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--noinduction"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--nooverlay"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-c"/>
+  <OPTION TOOL="CC" NAME="-m" VALUE="mcs51"/>
+  <OPTION TOOL="CC" NAME="--model-" VALUE="small"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--debug"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--noinduction"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--nooverlay"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="SDCC for 8051" NAME="Release">
+  <CONTROLLER FAMILY="8051" CLOCK="11059KHz" TYPE="80C51"/>
+  <FILE TOOL="LD">
+   <FILE TOOL="CC">
+    <FILE NAME="AD1674.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="AD1674 &amp; 80C51.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-m" VALUE="mcs51"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="--model-" VALUE="small"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-c"/>
+  <OPTION TOOL="CC" NAME="-m" VALUE="mcs51"/>
+  <OPTION TOOL="CC" NAME="--model-" VALUE="small"/>
+ </CONFIGURATION>
+</PROJECT>

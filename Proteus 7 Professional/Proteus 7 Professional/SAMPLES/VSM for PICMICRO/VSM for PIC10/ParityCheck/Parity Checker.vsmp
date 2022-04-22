@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="PIC10 RS232 Parity Checker.">
+ <KEYWORDS>
+  <KEYWORD NAME="RS232 Comms"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source" NAME="ParityCheck.ASM"/>
+  <FILE GROUP="Design" NAME="ParityCheck.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="PIC10" CLOCK="4MHz" TYPE="PIC10F202"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="10f202_g.lkr"/>
+   <FILE TOOL="ASM" NAME="ParityCheck.o">
+    <FILE NAME="ParityCheck.ASM"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="ParityCheck.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="10f202"/>
+ </CONFIGURATION>
+</PROJECT>

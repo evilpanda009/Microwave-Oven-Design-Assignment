@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="AVR ATMega16 controlled Stepper Motor">
+ <KEYWORDS>
+  <KEYWORD NAME="Motor Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="stepper.c"/>
+  <FILE GROUP="Design Files" NAME="stepper.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="WinAVR" NAME="Debug">
+  <CONTROLLER FAMILY="AVR" CLOCK="8MHz" TYPE="ATmega16"/>
+  <FILE TOOL="LD">
+   <FILE TOOL="CC">
+    <FILE NAME="stepper.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="stepper.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mmcu=" VALUE="atmega16"/>
+  <OPTION TOOL="CC" NAME="-W" VALUE="all"/>
+  <OPTION TOOL="CC" NAME="-g" VALUE="dwarf-2"/>
+  <OPTION TOOL="CC" NAME="-f" VALUE="signed-char"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MD"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MP"/>
+  <OPTION TOOL="CC" NAME="-D" VALUE="F_CPU=%CLOCK%"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-O" VALUE="1"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mmcu=" VALUE="atmega16"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="WinAVR" NAME="Release">
+  <CONTROLLER FAMILY="AVR" CLOCK="8000000" TYPE="ATmega16"/>
+  <FILE TOOL="LD">
+   <FILE TOOL="CC">
+    <FILE NAME="stepper.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="stepper.DSN"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-mmcu=" VALUE="atmega16"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-W" VALUE="all"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-g" VALUE="dwarf-2"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-f" VALUE="signed-char"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MD"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-MP"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-D" VALUE="F_CPU=%CLOCK%"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-O" VALUE="s"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-mmcu=" VALUE="atmega16"/>
+ </CONFIGURATION>
+</PROJECT>

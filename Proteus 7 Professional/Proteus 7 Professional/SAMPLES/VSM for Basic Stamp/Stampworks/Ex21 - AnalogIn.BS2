@@ -1,0 +1,43 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex21 - AnalogIn.BS2
+' Purpose... Analog input using PULSIN
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program "reads" an analog value by using that component to control the
+' output frequency of a 555-based oscillator. PULSIN is used to measure the
+' high portion of the signal as it is controlled by the varialbe resistance.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+PulseInput CON 0
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+P75 CON $00C0 ' 0.75
+P50 CON $0080 ' 0.50
+P25 CON $0040 ' 0.25
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+rValue VAR Word ' raw value
+sValue VAR Word ' smoothed value
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+PULSIN PulseInput, 1, rValue ' get high portion of input
+sValue = (rValue */ P25) + (sValue */ P75)
+DEBUG Home
+DEBUG "Raw value... ", DEC rValue, " ", CR
+DEBUG "Filtered.... ", DEC sValue, " ", CR
+GOTO Main ' do it again

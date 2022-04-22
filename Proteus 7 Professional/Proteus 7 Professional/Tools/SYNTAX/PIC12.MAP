@@ -1,0 +1,8 @@
+#Syntax Highlight Extension Mappings for PIC12
+SDI=PIC16.SYN
+ASM=PIC16.SYN
+INC=PIC16.SYN
+AS=PIC16.SYN
+BAS=PROTON.SYN
+H=C.SYN
+C=C.SYN

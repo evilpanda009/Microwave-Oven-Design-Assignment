@@ -1,0 +1,87 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex28 - DS1620.BS2
+' Purpose... Temperature measurement
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program measures temperature using the Dallas Semiconductor DS1620
+' temperature sensor.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+DQ CON 0 ' DS1620.1 (data I/O)
+Clock CON 1 ' DS1620.2
+Reset CON 2 ' DS1620.3
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+RdTmp CON $AA ' read temperature
+WrHi CON $01 ' write TH (high temp)
+WrLo CON $02 ' write TL (low temp)
+RdHi CON $A1 ' read TH
+RdLo CON $A2 ' read TL
+StartC CON $EE ' start conversion
+StopC CON $22 ' stop conversion
+WrCfg CON $0C ' write config register
+RdCfg CON $AC ' read config register
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+tempIn VAR Word ' raw temperature
+sign VAR tempIn.Bit8 ' 1 = negative temperature
+tSign VAR Bit
+tempC VAR Word ' Celsius
+tempF VAR Word ' Fahrenheit
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+HIGH Reset ' alert the DS1620
+SHIFTOUT DQ, Clock, LSBFirst, [WrCfg, %10] ' use with CPU; free-run
+LOW Reset
+PAUSE 10
+HIGH Reset
+SHIFTOUT DQ, Clock, LSBFirst, [StartC] ' start conversions
+LOW Reset
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+GOSUB Get_Temperature ' read the DS1620
+DEBUG Home
+DEBUG "DS1620", CR
+DEBUG "------", CR
+DEBUG SDEC tempC, " C ", CR
+DEBUG SDEC tempF, " F ", CR
+PAUSE 1000 ' pause between readings
+GOTO Main
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+Get_Temperature:
+HIGH Reset ' alert the DS1620
+SHIFTOUT DQ, Clock, LSBFIRST, [RdTmp] ' give command to read temp
+SHIFTIN DQ, Clock, LSBPRE, [tempIn\9] ' read it in
+LOW Reset ' release the DS1620
+tSign = sign ' save sign bit
+tempIn = tempIn / 2 ' round to whole degrees
+IF (tSign = 0) THEN No_Neg1
+tempIn = tempIn | $FF00 ' extend sign bits for negative
+No_Neg1:
+tempC = tempIn ' save Celsius value
+tempIn = tempIn */ $01CC ' multiply by 1.8
+IF (tSign = 0) THEN No_Neg2 ' if negative, extend sign bits
+tempIn = tempIn | $FF00
+No_Neg2:
+tempIn = tempIn + 32 ' finish C -> F conversion
+tempF = tempIn ' save Fahrenheit value
+RETURN

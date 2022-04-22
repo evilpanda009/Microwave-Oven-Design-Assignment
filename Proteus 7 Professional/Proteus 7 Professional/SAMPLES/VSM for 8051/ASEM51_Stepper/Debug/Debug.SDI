@@ -1,0 +1,66 @@
+,,,      ORG      00H
+0000,,START,START:
+0000,90 00 5D,,      MOV   DPTR,#TAB1
+0003,78 03,,      MOV   R0,#3
+0005,7C 00,,      MOV   R4,#0
+0007,88 A0,,      MOV   P2,R0
+,,,
+0009,75 80 FF,WAIT,WAIT: MOV   P0,#0FFH
+000C,30 80 08,,      JNB   P0.0,POS    ; Wait for a key pressed
+000F,30 81 0F,,      JNB   P0.1,NEG
+0012,75 A0 00,,      MOV   P2,#00H
+0015,80 F2,,      SJMP  WAIT
+,,,
+0017,7C 01,POS,POS:  MOV   R4,#1
+0019,EC,,      MOV   A,R4        ; Forward direction
+001A,93,,      MOVC  A,@A+DPTR
+001B,F5 A0,,      MOV   P2,A
+001D,11 50,,      ACALL DELAY
+001F,01 2B,,      AJMP  KEY
+,,,
+0021,7C 07,NEG,NEG:  MOV   R4,#7       ; Reverse direction
+0023,EC,,      MOV   A,R4
+0024,93,,      MOVC  A,@A+DPTR
+0025,F5 A0,,      MOV   P2,A
+0027,11 50,,      ACALL DELAY
+0029,01 2B,,      AJMP  KEY
+,,,
+002B,75 80 03,KEY,KEY:  MOV   P0,#03H
+002E,20 80 0E,,      JB    P0.0,NR1
+0031,0C,,      INC   R4
+0032,BC 09 02,,      CJNE  R4,#9,LOOPP
+0035,7C 01,,      MOV   R4,#1
+,,,
+0037,,LOOPP,LOOPP:
+0037,EC,,      MOV   A,R4
+0038,93,,      MOVC  A,@A+DPTR
+0039,F5 A0,,      MOV   P2,A
+003B,11 50,,      ACALL DELAY
+003D,01 2B,,      AJMP  KEY
+,,,
+003F,,NR1,NR1:
+003F,20 81 BE,,      JB    P0.1,START
+0042,1C,,      DEC   R4
+0043,BC 00 02,,      CJNE  R4,#0,LOOPN
+0046,7C 08,,      MOV   R4,#8
+,,,
+0048,,LOOPN,LOOPN:
+0048,EC,,      MOV   A,R4
+0049,93,,      MOVC  A,@A+DPTR
+004A,F5 A0,,      MOV   P2,A
+004C,11 50,,      ACALL DELAY
+004E,01 2B,,      AJMP  KEY
+,,,
+0050,,DELAY,DELAY:
+0050,7E 01,,      MOV   R6,#1
+0052,7D 80,DD1,DD1:  MOV   R5,#80H
+0054,7F 00,DD2,DD2:  MOV   R7,#0
+0056,DF FE,DD3,DD3:  DJNZ  R7,DD3
+0058,DD FA,,      DJNZ  R5,DD2
+005A,DE F6,,      DJNZ  R6,DD1
+005C,22,,      RET
+,,,
+,,,      ; Table of Stepping Sequences
+005D,00 02 06 04,TAB1,TAB1: DB    00H,02H,06H,04H
+0061,0C 08 09 01,,      DB    0CH,08H,09H,01H,03H
+000E,,,      END

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="PIC24 Calculator Demo.">
+ <KEYWORDS>
+  <KEYWORD NAME="LCD Control"/>
+  <KEYWORD NAME="Keypad Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE TYPE="Source" NAME="calc.c"/>
+  <FILE TYPE="Header" NAME="CALC.H"/>
+  <FILE TYPE="Source" NAME="kbdio.c"/>
+  <FILE TYPE="Source" NAME="lcdio.c"/>
+  <FILE TYPE="Design" NAME="PIC24 Calculator.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPLAB C30" NAME="Debug">
+  <CONTROLLER FAMILY="PIC24" CLOCK="4MHz" TYPE="PIC24FJ64GA006"/>
+  <FILE TOOL="LD">
+   <FILE TOOL="CC">
+    <FILE NAME="calc.c"/>
+   </FILE>
+   <FILE TOOL="CC">
+    <FILE NAME="kbdio.c"/>
+   </FILE>
+   <FILE TOOL="CC">
+    <FILE NAME="lcdio.c"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="CALC.H"/>
+  <FILE NAME="PIC24 Calculator.DSN"/>
+  <OPTION TOOL="CC" NAME="-mcpu=" VALUE="24FJ64GA006"/>
+  <OPTION TOOL="LD" NAME="-mcpu=" VALUE="24FJ64GA006"/>
+  <OPTION TOOL="LD" NAME="-Xlinker --script=&quot;p24FJ64GA006.gld&quot;"/>
+  <OPTION TOOL="LD" NAME="-g"/>
+  <OPTION TOOL="LD" NAME="--debug"/>
+  <OPTION TOOL="CC" NAME="-g"/>
+  <OPTION TOOL="CC" NAME="--debug"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="MPLAB C30" NAME="Release">
+  <CONTROLLER FAMILY="PIC24" CLOCK="4MHz" TYPE="PIC24FJ64GA006"/>
+  <FILE TOOL="BIN2HEX">
+   <FILE TOOL="LD">
+    <FILE TOOL="CC">
+     <FILE NAME="calc.c"/>
+    </FILE>
+   </FILE>
+  </FILE>
+  <FILE NAME="CALC.H"/>
+  <FILE NAME="kbdio.c"/>
+  <FILE NAME="lcdio.c"/>
+  <FILE NAME="PIC24 Calculator.DSN"/>
+  <OPTION TOOL="CC" NAME="-mcpu=" VALUE="24FJ64GA006"/>
+  <OPTION TOOL="LD" NAME="-mcpu=" VALUE="24FJ64GA006"/>
+  <OPTION TOOL="LD" NAME="-Xlinker --script=&quot;p24FJ64GA006.gld&quot;"/>
+ </CONFIGURATION>
+</PROJECT>

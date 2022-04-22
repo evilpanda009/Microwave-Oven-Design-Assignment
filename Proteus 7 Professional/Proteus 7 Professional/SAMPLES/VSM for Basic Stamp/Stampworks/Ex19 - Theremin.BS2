@@ -1,0 +1,45 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex19 - Theremin.BS2
+' Purpose... Simple Digital Theremin
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program uses RCTIME with a photocell to create a light-controlled
+' theremin.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+Speaker CON 0 ' piezo speaker output
+PitchCtrl CON 1 ' pitch control (RCTIME) input
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+Scale CON $0100 ' divider for BS2/BS2e
+'Scale CON $0066 ' divider for BS2sx
+'Scale CON $0073 ' divider for BS2p
+Threshold CON 200 ' cutoff frequency to play
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+tone VAR Word ' frequency output
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+HIGH PitchCtrl ' discharge cap
+PAUSE 1 ' for 1 ms
+RCTIME PitchCtrl, 1, tone ' read the light sensor
+tone = tone */ Scale ' scale input
+IF (tone < Threshold) THEN Main ' skip for ambient light
+FREQOUT Speaker, 25, tone ' output the tone
+GOTO Main
+END

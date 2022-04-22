@@ -1,0 +1,1805 @@
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;**********************************************************************
+                      00002 ;*                                                                    *
+                      00003 ;* Software License Agreement                                         *
+                      00004 ;*                                                                    *
+                      00005 ;* The software supplied herewith by Microchip Technology             *
+                      00006 ;* Incorporated (the "Company") is intended and supplied to you, the  *
+                      00007 ;* Company’s customer, for use solely and exclusively on Microchip    *
+                      00008 ;* products. The software is owned by the Company and/or its supplier,*
+                      00009 ;* and is protected under applicable copyright laws. All rights are   *
+                      00010 ;* reserved. Any use in violation of the foregoing restrictions may   *
+                      00011 ;* subject the user to criminal sanctions under applicable laws, as   *
+                      00012 ;* well as to civil liability for the breach of the terms and         *
+                      00013 ;* conditions of this license.                                        *
+                      00014 ;*                                                                    *
+                      00015 ;* THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,  *
+                      00016 ;* WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED  *
+                      00017 ;* TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A        *
+                      00018 ;* PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,  *
+                      00019 ;* IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR         *
+                      00020 ;* CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.                  *
+                      00021 ;*                                                                    *
+                      00022 ;**********************************************************************
+                      00023 ;                                                                     *
+                      00024 ;    Filename:      snsrless.asm                                      *
+                      00025 ;    Date:          14 Jan 2002                                       *
+                      00026 ;    File Version:  1.0                                               *
+                      00027 ;                                                                     *
+                      00028 ;    Author:        W.R.Brown                                         *
+                      00029 ;    Company:       Microchip Technolgy Incorporated                  *
+                      00030 ;                                                                     * 
+                      00031 ;                                                                     *
+                      00032 ;**********************************************************************
+                      00033 ;                                                                     *
+                      00034 ;    Files required: p16f877.inc                                      *
+                      00035 ;                                                                     *
+                      00036 ;                                                                     *
+                      00037 ;                                                                     *
+                      00038 ;**********************************************************************
+                      00039 ;                                                                     *
+                      00040 ;    Notes: Sensorless brushless motor control                        *
+                      00041 ;                                                                     *
+                      00042 ;       Closed loop 3 phase brushless DC motor control.               *
+                      00043 ;       Two potentiometers control operation. One potentiometer (A0)  *
+                      00044 ;       controls PWM (voltage) and RPM (from table). The other        *
+                      00045 ;       potentiometer (A1) provides a PWM offset to the PWM derived   *
+                      00046 ;       from A0. Phase A motor terminal is connected via voltage      *
+                      00047 ;       divider to A3. This is read while the drive is on during      *
+                      00048 ;       phase 4. The result is the peak applied voltage (Vsupply).    * 
+                      00049 ;       A3 is also read while the drive is on at two times during     *
+                      00050 ;       phase 5. The result is the BEMF voltage. The BEMF voltage is  *
+                      00051 ;       read at the quarter (t1) and mid (t2) points of the phase 5   *
+                      00052 ;       period. BEMF is compared to VSupply/2. If BEMF is above       *
+                      00053 ;       VSupply/2 at t1 and below VSupply/2w at t2 then no speed      *
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054 ;       adjustment is made. If BEMF is high at both t1 and t2 then    *
+                      00055 ;       the speed is reduced. If BEMF is low at t1 and t2 then the    *
+                      00056 ;       speed is increased.                                           *
+                      00057 ;                                                                     *
+                      00058 ;**********************************************************************
+                      00059 ;
+                      00060         list P = PIC16F877
+                      00061         include "p16f877.inc"
+                      00001         LIST
+                      00002 ; P16F877.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00373         LIST
+2007   3DF2           00062         __CONFIG _CP_OFF & _WRT_ENABLE_OFF & _HS_OSC & _WDT_OFF & _PWRTE_ON & _BODEN_ON
+                      00063 
+                      00064 ; Acceleration/Deceleration Time = RampRate * 256 * 256 * Timer 0 prescale / Fosc
+                      00065 
+                      00066 #define         AccelDelay      D'255'          ; determines full range acceleration time
+                      00067 #define         DecelDelay      D'200'          ; determines full range deceleration time
+                      00068 
+                      00069 #define         ManThresh       0x3f            ; Manual threshold is the PWM potentiomenter
+                      00070                                                 ; reading above which RPM is adjusted automatically
+                      00071 #define         AutoThresh      0x100-ManThresh
+                      00072 
+  000000D5            00073 OffMask equ     B'11010101'     ; PWM off kills the high drives
+  00000000            00074 Invalid equ     B'00000000'     ; invalid
+  00000021            00075 Phase1  equ     B'00100001'     ; phase 1 C high, A low
+  00000024            00076 Phase2  equ     B'00100100'     ; phase 2 C high, B low
+  00000006            00077 Phase3  equ     B'00000110'     ; phase 3 A high, B low
+  00000012            00078 Phase4  equ     B'00010010'     ; phase 4 A high, C low
+  00000018            00079 Phase5  equ     B'00011000'     ; phase 5 B high, C low
+  00000009            00080 Phase6  equ     B'00001001'     ; phase 6 B high, A low
+                      00081 
+                      00082 #define CARRY   STATUS,C
+                      00083 #define ZERO    STATUS,Z
+                      00084 #define subwl   sublw
+                      00085 
+                      00086 ;*********************************************************************************
+                      00087 ;*
+                      00088 ;*      Define I/O Ports
+                      00089 ;*
+                      00090 
+                      00091 #define ReadIndicator   PORTB,0         ; diagnostic scope trigger for BEMF readings
+                      00092 #define DrivePort       PORTC           ; motor drive and lock status
+                      00093 
+                      00094 ;*********************************************************************************
+                      00095 ;*
+                      00096 ;*      Define RAM variables
+                      00097 ;*
+                      00098 
+                      00099         CBLOCK 0x20
+                      00100 
+  00000020            00101         STATE           ; Machine state
+  00000021            00102         PWMThresh       ; PWM threshold
+  00000022            00103         PhaseIndx       ; Current motor phase index
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000023            00104         Drive           ; Motor drive word
+  00000024            00105         RPMIndex        ; RPM Index workspace
+  00000025            00106         ADCRPM          ; ADC RPM value
+  00000026            00107         ADCOffset       ; Delta offset to ADC PWM threshold
+  00000027            00108         PresetHi        ; speed control timer compare MS byte
+  00000028            00109         PresetLo        ; speed control timer compare LS byte
+  00000029            00110         Flags           ; general purpose flags
+  0000002A            00111         Vsupply         ; Supply voltage ADC reading
+  0000002B            00112         DeltaV1         ; Difference between expected and actual BEMF at T/4
+  0000002C            00113         DeltaV2         ; Difference between expected and actual BEMF at T/2
+  0000002D            00114         CCPSaveH        ; Storage for phase time when finding DeltaV
+  0000002E            00115         CCPSaveL        ; Storage for phase time when finding DeltaV
+  0000002F            00116         CCPT2H          ; Workspace for determining T/2 and T/4
+  00000030            00117         CCPT2L          ; Workspace for determining T/2 and T/4
+  00000031            00118         RampTimer       ; Timer 0 post scaler for accel/decel ramp rate
+  00000032            00119         xCount          ; general purpose counter workspace
+  00000033            00120         Status          ; relative speed indicator status
+                      00121         
+                      00122         ENDC
+                      00123 
+                      00124 ;*********************************************************************************
+                      00125 ;*
+                      00126 ;*      Define Flags
+                      00127 ;*
+                      00128 
+                      00129 #define DriveOnFlag     Flags,0         ; Flag for invoking drive disable mask when clear
+                      00130 #define AutoRPM         Flags,1         ; RPM timer is adjusted automatically
+                      00131 ;                       Flags,3         ; Undefined
+                      00132 #define FullOnFlag      Flags,4         ; PWM threshold is set to maximum drive
+                      00133 #define Tmr0Ovf         Flags,5         ; Timer 0 overflow flag
+                      00134 #define Tmr0Sync        Flags,6         ; Second Timer 0 overflow flag
+                      00135 ;                       Flags,7         ; undefined
+                      00136 
+                      00137 #define BEMF1Low        DeltaV1,7       ; BEMF1 is low if DeltaV1 is negative
+                      00138 #define BEMF2Low        DeltaV2,7       ; BEMF2 is low if DeltaV2 is negative
+                      00139 
+                      00140 ;*********************************************************************************
+                      00141 ;*
+                      00142 ;*      Define State machine states and index numbers
+                      00143 ;*
+                      00144 
+  00000000            00145 sRPMSetup       equ     D'0'            ; Wait for Phase1, Set ADC GO, RA1->ADC
+  00000001            00146 sRPMRead        equ     sRPMSetup+1     ; Wait for ADC nDONE, Read ADC->RPM
+  00000002            00147 sOffsetSetup    equ     sRPMRead+1      ; Wait for Phase2, Set ADC GO, RA3->ADC
+  00000003            00148 sOffsetRead     equ     sOffsetSetup+1  ; Wait for ADC nDONE, Read ADC->ADCOffset
+  00000004            00149 sVSetup         equ     sOffsetRead+1   ; Wait for Phase4, Drive On, wait 9 uSec, Set ADC GO
+  00000005            00150 sVIdle          equ     sVSetup+1       ; Wait for Drive On, wait Tacq, set ADC GO                      
+                                    
+  00000006            00151 sVRead          equ     sVIdle+1        ; Wait for ADC nDONE, Read ADC->Vsupply
+  00000007            00152 sBEMFSetup      equ     sVRead+1        ; Wait for Phase5, set Timer1 compare to half phase time
+  00000008            00153 sBEMFIdle       equ     sBEMFSetup+1    ; Wait for Timer1 compare, Force Drive on and wait 9 uSec,
+                      00154                                         ; Set ADC GO, RA0->ADC
+  00000009            00155 sBEMFRead       equ     sBEMFIdle+1     ; Wait for ADC nDONE, Read ADC->Vbemf
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  0000000A            00156 sBEMF2Idle      equ     sBEMFRead+1     ; Wait for Timer1 compare, Force Drive on and wait 9 uSec,
+                      00157                                         ; Set ADC GO, RA0->ADC
+  0000000B            00158 sBEMF2Read      equ     sBEMF2Idle+1    ; Wait for ADC nDONE, Read ADC->Vbemf
+                      00159 
+                      00160 ;*********************************************************************************
+                      00161 ;*
+                      00162 ;*      The ADC input is changed depending on the STATE
+                      00163 ;*      Each STATE assumes a previous input selection and changes the selection
+                      00164 ;*      by XORing the control register with the appropriate ADC input change mask
+                      00165 ;*      defined here:
+                      00166 ;*
+                      00167 
+  00000008            00168 ADC0to1         equ     B'00001000'     ; changes ADCON0<5:3> from 000 to 001
+  00000010            00169 ADC1to3         equ     B'00010000'     ; changes ADCON0<5:3> from 001 to 011
+  00000018            00170 ADC3to0         equ     B'00011000'     ; changes ADCON0<5:3> from 011 to 000
+                      00171 
+                      00172 ;*********************************************************************************
+                      00173 ;**************************** PROGRAM STARTS HERE ********************************
+                      00174 ;*********************************************************************************
+                      00175     org 0x000
+0000   0000           00176         nop
+0001   2???           00177         goto    Initialize
+                      00178 
+                      00179         org     0x004
+0004   2???           00180     goto    SVR_timer0
+                      00181     
+                      00182     org 0x08
+                      00183 
+0008                  00184 SVR_timer0
+0008   16A9           00185         bsf     Tmr0Ovf         ; Timer 0 overflow flag used by accel/decel timer
+0009   1729           00186         bsf     Tmr0Sync        ; Timer 0 overflow flag used to synchronize code execution
+000A   110B           00187         bcf     INTCON,T0IF
+000B   0009           00188         retfie                  ;
+                      00189     
+000C                  00190 Initialize
+000C   0187           00191         clrf    PORTC           ; all drivers off
+000D   0186           00192         clrf    PORTB
+                      00193 
+000E   1683 1303      00194         banksel TRISA
+                      00195 ; setup I/O
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0010   0187           00196         clrf    TRISC           ; motor drivers on PORTC
+0011   300B           00197         movlw   B'00001011'     ; A/D on RA0 (PWM), RA1 (Speed) and RA3 (BEMF)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   0085           00198         movwf   TRISA           ; 
+0013   30FE           00199         movlw   B'11111110'     ; RB0 is locked indicator
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0014   0086           00200         movwf   TRISB
+                      00201 ; setup Timer0
+                      00202         ;movlw  B'11010000'     ; Timer0: Fosc, 1:2
+0015   30D7           00203     movlw   B'11010111'     ; Timer0: Fosc, 1:2
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0016   0081           00204         movwf   OPTION_REG
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0017   168B           00205         bsf     INTCON,T0IE     ; enable timer 0 interrupts
+                      00206 ; Setup ADC
+0018   3004           00207         movlw   B'00000100'     ; ADC left justified, AN0, AN1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0019   009F           00208         movwf   ADCON1
+                      00209 
+001A   1283 1303      00210         banksel PORTA
+001C   3081           00211         movlw   B'10000001'     ; ADC clk = Fosc/32, AN0, ADC on
+001D   009F           00212         movwf   ADCON0
+                      00213 ; setup Timer 1
+001E   3021           00214         movlw   B'00100001'     ; 1:4 prescale, internal clock, timer on
+001F   0090           00215         movwf   T1CON
+                      00216 ; setup Timer 1 compare
+0020   30FF           00217         movlw   0xFF            ; set compare to maximum count
+0021   0095           00218         movwf   CCPR1L          ; LS compare register
+0022   0096           00219         movwf   CCPR1H          ; MS compare register
+0023   300B           00220         movlw   B'00001011'     ; Timer 1 compare mode, special event - clears timer1
+0024   0097           00221         movwf   CCP1CON
+                      00222 
+                      00223 ; initialize RAM
+                      00224 
+0025   01A1           00225         clrf    PWMThresh
+0026   3006           00226         movlw   D'6'
+0027   00A2           00227         movwf   PhaseIndx
+0028   01A9           00228         clrf    Flags
+0029   01B3           00229         clrf    Status          ;
+002A   01A0           00230         clrf    STATE           ; LoopIdle->STATE
+002B   110B           00231         bcf     INTCON,T0IF     ; ensure timer 0 overflow flag is cleared
+002C   178B           00232         bsf     INTCON,GIE      ; enable interrupts
+                      00233 
+002D                  00234 MainLoop
+                      00235 ;*****************************************************************
+                      00236 ;
+                      00237 ;       PWM, Commutation, State machine loop
+                      00238 ;
+                      00239 ;*****************************************************************
+                      00240 
+002D   190C           00241         btfsc   PIR1,CCP1IF     ; time for phase change?
+002E   2???           00242         call    Commutate       ; yes - change motor drive
+002F                  00243 PWM
+002F   1429           00244         bsf     DriveOnFlag     ; pre-set flag
+0030   1A29           00245         btfsc   FullOnFlag      ; is PWM level at maximum?
+0031   2???           00246         goto    PWM02           ; yes - only commutation is necessary
+                      00247         
+0032   0821           00248         movf    PWMThresh,w     ; get PWM threshold
+0033   0701           00249         addwf   TMR0,w          ; compare to timer 0
+0034   1C03           00250         btfss   CARRY           ; drive is on if carry is set
+0035   1029           00251         bcf     DriveOnFlag     ; timer has not reached threshold, disable drive
+                      00252         
+0036   2???           00253         call    DriveMotor      ; output drive word
+0037                  00254 PWM02
+0037   2???           00255         call    LockTest
+0038   2???           00256         call    StateMachine    ; service state machine
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0039   2???           00257         goto    MainLoop        ; repeat loop
+                      00258         
+003A                  00259 StateMachine
+003A   300F           00260         movlw   SMTableEnd-SMTable-1    ; STATE table must have 2^n entries
+003B   05A0           00261         andwf   STATE,f         ; limit STATE index to state table
+003C   30??           00262         movlw   high SMTable    ; get high byte of table address
+003D   008A           00263         movwf   PCLATH          ; prepare for computed goto
+003E   30??           00264         movlw   low SMTable     ; get low byte of table address
+003F   0720           00265         addwf   STATE,w         ; add STATE index to table root
+0040   1803           00266         btfsc   CARRY           ; test for page change in table
+0041   0A8A           00267         incf    PCLATH,f        ; page change adjust
+0042   0082           00268         movwf   PCL             ; jump into table
+                      00269 
+0043                  00270 SMTable                         ; number of STATE table entries MUST be evenly divisible by 2
+0043   2???           00271         goto    RPMSetup        ; Wait for Phase1, Set ADC GO, RA1->ADC, clear timer0 overflow
+0044   2???           00272         goto    RPMRead         ; Wait for ADC nDONE, Read ADC->RPM
+0045   2???           00273         goto    OffsetSetup     ; Wait for Phase2, Set ADC GO, RA3->ADC
+0046   2???           00274         goto    OffsetRead      ; Wait for ADC nDONE, Read ADC->ADCOffset
+0047   2???           00275         goto    VSetup          ; Wait for Phase4
+0048   2???           00276         goto    VIdle           ; Wait for Drive On, wait Tacq, set ADC GO                              
+0049   2???           00277         goto    VRead           ; Wait for ADC nDONE, Read ADC->Vsupply
+004A   2???           00278         goto    BEMFSetup       ; Wait for Phase5, set Timer1 compare to half phase time
+004B   2???           00279         goto    BEMFIdle        ; When Timer1 compares force Drive on, Set ADC GO after Tacq, RA0->ADC
+004C   2???           00280         goto    BEMFRead        ; Wait for ADC nDONE, Read ADC->Vbemf
+004D   2???           00281         goto    BEMF2Idle       ; When Timer1 compares force Drive on, Set ADC GO after Tacq, RA0->ADC
+004E   2???           00282         goto    BEMF2Read       ; Wait for ADC nDONE, Read ADC->Vbemf
+                      00283 
+                      00284 ; fill out table with InvalidStates to make number of table entries evenly divisible by 2       
+                      00285 
+004F   2???           00286         goto    InvalidState    ; invalid state - reset state machine
+0050   2???           00287         goto    InvalidState    ; invalid state - reset state machine
+0051   2???           00288         goto    InvalidState    ; invalid state - reset state machine
+0052   2???           00289         goto    InvalidState    ; invalid state - reset state machine
+0053                  00290 SMTableEnd      
+                      00291 
+                      00292 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0053                  00293 RPMSetup                        ; Wait for Phase1, Set ADC GO, RA1->ADC, clear timer0 overflow
+                      00294 
+0053   3021           00295         movlw   Phase1          ; compare Phase1 word...
+0054   0623           00296         xorwf   Drive,w         ; ...with current drive word
+0055   1D03           00297         btfss   ZERO            ; ZERO if equal
+0056   0008           00298         return                  ; not Phase1 - remain in current STATE
+                      00299 
+0057   151F           00300         bsf     ADCON0,GO       ; start ADC
+0058   3008           00301         movlw   ADC0to1         ; prepare to change ADC input
+0059   069F           00302         xorwf   ADCON0,f        ; change from AN0 to AN1
+005A   0AA0           00303         incf    STATE,f         ; next STATE
+005B   1329           00304         bcf     Tmr0Sync        ; clear timer0 overflow
+005C   0008           00305         return                  ; back to Main Loop
+                      00306         
+                      00307 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+005D                  00308 RPMRead                         ; Wait for ADC nDONE, Read ADC->RPM
+                      00309 
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005D   191F           00310         btfsc   ADCON0,GO       ; is ADC conversion finished?
+005E   0008           00311         return                  ; no - remain in current STATE
+                      00312         
+005F   081E           00313         movf    ADRESH,w        ; get ADC result
+0060   00A5           00314         movwf   ADCRPM          ; save in RPM
+                      00315         
+0061   0AA0           00316         incf    STATE,f         ; next STATE
+0062   0008           00317         return                  ; back to Main Loop
+                      00318         
+                      00319 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0063                  00320 OffsetSetup                     ; Wait for Phase2, Set ADC GO, RA3->ADC
+                      00321 
+0063   3024           00322         movlw   Phase2          ; compare Phase2 word...
+0064   0623           00323         xorwf   Drive,w         ; ...with current drive word
+0065   1D03           00324         btfss   ZERO            ; ZERO if equal
+0066   0008           00325         return                  ; not Phase2 - remain in current STATE
+                      00326         
+0067   151F           00327         bsf     ADCON0,GO       ; start ADC
+0068   3010           00328         movlw   ADC1to3         ; prepare to change ADC input
+0069   069F           00329         xorwf   ADCON0,f        ; change from AN1 to AN3
+006A   0AA0           00330         incf    STATE,f         ; next STATE
+006B   0008           00331         return                  ; back to Main Loop
+                      00332 
+                      00333 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+006C                  00334 OffsetRead                      ; Wait for ADC nDONE, Read ADC->ADCOffset
+                      00335 
+006C   191F           00336         btfsc   ADCON0,GO       ; is ADC conversion finished?
+006D   0008           00337         return                  ; no - remain in current STATE
+                      00338         
+006E   081E           00339         movf    ADRESH,w        ; get ADC result
+006F   3A80           00340         xorlw   H'80'           ; complement MSB for +/- offset
+0070   00A6           00341         movwf   ADCOffset       ; save in offset
+0071   0725           00342         addwf   ADCRPM,w        ; add offset to PWM result
+0072   1FA6           00343         btfss   ADCOffset,7     ; is offset a negative number?
+0073   2???           00344         goto    OverflowTest    ; no - test for overflow
+                      00345 
+0074   1C03           00346         btfss   CARRY           ; underflow?
+0075   3900           00347         andlw   H'00'           ; yes - force minimum
+0076   2???           00348         goto    Threshold       ;
+                      00349         
+0077                  00350 OverflowTest    
+0077   1803           00351         btfsc   CARRY           ; overflow?
+0078   30FF           00352         movlw   H'ff'           ; yes - force maximum
+                      00353 
+0079                  00354 Threshold       
+0079   00A1           00355         movwf   PWMThresh       ; PWM threshold is RPM result plus offset
+007A   1903           00356         btfsc   ZERO            ; is drive off?
+007B   2???           00357         goto    DriveOff        ; yes - skip voltage measurements
+                      00358         
+007C   1229           00359         bcf     FullOnFlag      ; pre-clear flag in preparation of compare
+007D   3CFD           00360         sublw   0xFD            ; full on threshold
+007E   1C03           00361         btfss   CARRY           ; CY = 0 if PWMThresh > FullOn
+007F   1629           00362         bsf     FullOnFlag      ; set full on flag
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0080   0AA0           00363         incf    STATE,f         ; next STATE
+0081   0008           00364         return                  ; back to Main Loop
+                      00365 
+0082                  00366 DriveOff
+0082   01B3           00367         clrf    Status          ; clear speed indicators
+0083   30C7           00368         movlw   B'11000111'     ; reset ADC input to AN0
+0084   059F           00369         andwf   ADCON0,f        ;
+0085   01A0           00370         clrf    STATE           ; reset state machine
+0086   0008           00371         return
+                      00372 
+                      00373 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0087                  00374 VSetup                          ; Wait for Phase4
+                      00375 
+0087   3012           00376         movlw   Phase4          ; compare Phase4 word...
+0088   0623           00377         xorwf   Drive,w         ; ...with current Phase drive word
+0089   1D03           00378         btfss   ZERO            ; ZERO if equal
+008A   0008           00379         return                  ; not Phase4 - remain in current STATE
+                      00380         
+008B   2???           00381         call    SetTimer        ; set timer value from RPM table
+008C   0AA0           00382         incf    STATE,f         ; next STATE
+008D   0008           00383         return                  ; back to Main Loop
+                      00384 
+                      00385 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+008E                  00386 VIdle                           ; Wait for Drive On, wait Tacq, set ADC GO                              
+                      00387 
+008E   1C29           00388         btfss   DriveOnFlag     ; is Drive active?
+008F   0008           00389         return                  ; no - remain in current STATE
+                      00390 
+0090   1406           00391         bsf     ReadIndicator   ; Diagnostic    
+0091   2???           00392         call    Tacq            ; motor Drive is active - wait ADC Tacq time
+0092   151F           00393         bsf     ADCON0,GO       ; start ADC     
+0093   1006           00394         bcf     ReadIndicator   ; Diagnostic
+0094   0AA0           00395         incf    STATE,f         ; next STATE
+0095   0008           00396         return                  ; back to Main Loop
+                      00397 
+                      00398 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0096                  00399 VRead                           ; Wait for ADC nDONE, Read ADC->Vsupply
+                      00400 
+0096   191F           00401         btfsc   ADCON0,GO       ; is ADC conversion finished?
+0097   0008           00402         return                  ; no - remain in current STATE
+                      00403         
+0098   081E           00404         movf    ADRESH,w        ; get ADC result
+0099   00AA           00405         movwf   Vsupply         ; save as supply voltage
+009A   0AA0           00406         incf    STATE,f         ; next STATE
+009B   1329           00407         bcf     Tmr0Sync        ; clear timer 0 overflow
+009C   0008           00408         return                  ; back to Main Loop
+                      00409 
+                      00410 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+009D                  00411 BEMFSetup                       ; Wait for Phase5, set Timer1 compare to half phase time
+                      00412 
+009D   3018           00413         movlw   Phase5          ; compare Phase5 word...
+009E   0623           00414         xorwf   Drive,w         ; ...with current drive word
+009F   1D03           00415         btfss   ZERO            ; ZERO if equal
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00A0   0008           00416         return                  ; not Phase5 - remain in current STATE
+                      00417         
+00A1   1F29           00418         btfss   Tmr0Sync        ; synchronize with timer 0
+00A2   0008           00419         return                  ;
+                      00420 
+00A3   1FA1           00421         btfss   PWMThresh,7     ; if PWMThresh > 0x80 then ON is longer than OFF
+00A4   2???           00422         goto    BEMFS1          ; OFF is longer and motor is currently off - compute now
+                      00423         
+00A5   1C29           00424         btfss   DriveOnFlag     ; ON is longer - wait for drive cycle to start
+00A6   0008           00425         return                  ; not started - wait
+                      00426 
+00A7                  00427 BEMFS1
+00A7   1017           00428         bcf     CCP1CON,0       ; disable special event on compare
+00A8   0816           00429         movf    CCPR1H,w        ; save current capture compare state
+00A9   00AD           00430         movwf   CCPSaveH        ; 
+00AA   00AF           00431         movwf   CCPT2H          ; save copy in workspace
+00AB   0815           00432         movf    CCPR1L,w        ; low byte
+00AC   00AE           00433         movwf   CCPSaveL        ; save
+00AD   00B0           00434         movwf   CCPT2L          ; and save copy
+00AE   1003           00435         bcf     CARRY           ; pre-clear carry for rotate
+00AF   0CAF           00436         rrf     CCPT2H,f        ; divide phase time by 2
+00B0   0CB0           00437         rrf     CCPT2L,f        ; 
+00B1   1003           00438         bcf     CARRY           ; pre-clear carry
+00B2   0C2F           00439         rrf     CCPT2H,w        ; divide phase time by another 2
+00B3   0096           00440         movwf   CCPR1H          ; first BEMF reading at phase T/4
+00B4   0C30           00441         rrf     CCPT2L,w        ; 
+00B5   0095           00442         movwf   CCPR1L          ;
+                      00443                                         
+00B6   0AA0           00444         incf    STATE,f         ; next STATE
+00B7   0008           00445         return                  ; back to Main Loop
+                      00446 
+                      00447 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+00B8                  00448 BEMFIdle                        ; When Timer1 compares force Drive on, Set ADC GO after Tacq, RA0->ADC
+                      00449 
+00B8   1D0C           00450         btfss   PIR1,CCP1IF     ; timer compare?
+00B9   0008           00451         return                  ; no - remain in current STATE
+                      00452         
+00BA   1429           00453         bsf     DriveOnFlag     ; force drive on for BEMF reading
+00BB   2???           00454         call    DriveMotor      ; activate motor drive
+00BC   1406           00455         bsf     ReadIndicator   ; Diagnostic
+00BD   2???           00456         call    Tacq            ; wait ADC acqisition time
+00BE   151F           00457         bsf     ADCON0,GO       ; start ADC     
+00BF   1006           00458         bcf     ReadIndicator   ; Diagnostic
+                      00459 
+                      00460 ; setup to capture BEMF at phase 3/4 T 
+                      00461 
+00C0   082F           00462         movf    CCPT2H,w
+00C1   0796           00463         addwf   CCPR1H,f        ; next compare at phase 3/4 T
+00C2   0830           00464         movf    CCPT2L,w        ; 
+00C3   0795           00465         addwf   CCPR1L,f        ; set T/2 lsb
+00C4   1803           00466         btfsc   CARRY           ; test for carry into MSb
+00C5   0A96           00467         incf    CCPR1H,f        ; perform carry
+00C6   110C           00468         bcf     PIR1,CCP1IF     ; clear timer compare interrupt flag
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00C7   0AA0           00469         incf    STATE,f         ; next STATE
+00C8   0008           00470         return                  ; back to Main Loop
+                      00471 
+                      00472 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+00C9                  00473 BEMFRead                        ; Wait for ADC nDONE, Read ADC->Vbemf
+                      00474 
+00C9   191F           00475         btfsc   ADCON0,GO       ; is ADC conversion finished?
+00CA   0008           00476         return                  ; no - remain in current STATE
+                      00477         
+00CB   0C2A           00478         rrf     Vsupply,w       ; divide supply voltage by 2    
+00CC   021E           00479         subwf   ADRESH,w        ; Vbemf - Vsupply/2
+                      00480 
+00CD   00AB           00481         movwf   DeltaV1         ; save error voltage
+00CE   0AA0           00482         incf    STATE,f         ; next STATE
+00CF   0008           00483         return                  ; back to Main Loop
+                      00484 
+                      00485 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+00D0                  00486 BEMF2Idle                       ; When Timer1 compares force Drive on, Set ADC GO after Tacq, RA0->ADC
+                      00487 
+00D0   1D0C           00488         btfss   PIR1,CCP1IF     ; timer compare?
+00D1   0008           00489         return                  ; no - remain in current STATE
+                      00490         
+00D2   1429           00491         bsf     DriveOnFlag     ; force drive on for BEMF reading
+00D3   2???           00492         call    DriveMotor      ; activate motor drive
+00D4   1406           00493         bsf     ReadIndicator   ; Diagnostic
+00D5   2???           00494         call    Tacq            ; wait ADC acqisition time
+00D6   151F           00495         bsf     ADCON0,GO       ; start ADC     
+00D7   1006           00496         bcf     ReadIndicator   ; Diagnostic
+00D8   3018           00497         movlw   ADC3to0         ; prepare to change ADC input
+00D9   069F           00498         xorwf   ADCON0,f        ; change from AN3 to AN0
+                      00499 
+                      00500 ; restore Timer1 phase time and special event compare mode
+                      00501 
+00DA   082D           00502         movf    CCPSaveH,w
+00DB   0096           00503         movwf   CCPR1H          ; next compare at phase T
+00DC   082E           00504         movf    CCPSaveL,w      ; 
+00DD   0095           00505         movwf   CCPR1L          ; set T lsb
+00DE   110C           00506         bcf     PIR1,CCP1IF     ; clear timer compare interrupt flag
+00DF   1417           00507         bsf     CCP1CON,0       ; enable special event on compare
+00E0   0AA0           00508         incf    STATE,f         ; next STATE
+00E1   0008           00509         return                  ; back to Main Loop
+                      00510 
+                      00511 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+00E2                  00512 BEMF2Read                       ; Wait for ADC nDONE, Read ADC->Vbemf
+                      00513 
+00E2   191F           00514         btfsc   ADCON0,GO       ; is ADC conversion finished?
+00E3   0008           00515         return                  ; no - remain in current STATE
+                      00516         
+00E4   0C2A           00517         rrf     Vsupply,w       ; divide supply voltage by 2    
+00E5   021E           00518         subwf   ADRESH,w        ; Vbemf - Vsupply/2
+                      00519 
+00E6   00AC           00520         movwf   DeltaV2         ; save error voltage
+                      00521 
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00E7   01A0           00522         clrf    STATE           ; reset state machine to beginning 
+00E8   0008           00523         return                  ; back to Main Loop
+                      00524 
+                      00525 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+00E9                  00526 InvalidState                    ; trap for invalid STATE index
+00E9   30C7           00527         movlw   B'11000111'     ; reset ADC input to AN0
+00EA   059F           00528         andwf   ADCON0,f        ;
+00EB   01A0           00529         clrf    STATE
+00EC   0008           00530         return  
+                      00531 ;______________________________________________________________________________________________________
+                      00532 
+00ED                  00533 Tacq
+                      00534 ;*****************************************************************
+                      00535 ;
+                      00536 ;       Software delay for ADC acquisition time
+                      00537 ;       Delay time = Tosc*(3+3*xCount)
+                      00538 ;
+                      00539 ;*****************************************************************
+                      00540 
+00ED   300E           00541         movlw   D'14'           ; 14 equates to approx 9 uSec delay
+00EE   00B2           00542         movwf   xCount  ;
+00EF   0BB2           00543         decfsz  xCount,f        ;
+00F0   2???           00544         goto    $-1             ; loop here until time complete
+00F1   0008           00545         return
+                      00546 
+00F2                  00547 LockTest
+                      00548 ;*****************************************************************
+                      00549 ;
+                      00550 ;       T is the commutation phase period. Back EMF is measured on the
+                      00551 ;       floating motor terminal at two times during T to determine
+                      00552 ;       the approximate zero crossing of the BEMF. BEMF low means that
+                      00553 ;       the measured BEMF is below (supply voltage)/2.
+                      00554 ;       If BEMF is low at 1/4 T then accelerate.
+                      00555 ;       If BEMF is high at 1/4 T and low at 3/4 T then speed is OK.
+                      00556 ;       If BEMF is high at 1/4 T and 3/4 T then decelerate.
+                      00557 ;
+                      00558 ;       Lock test computation is synchronized to the PWM clock such
+                      00559 ;       that the computation is performed during the PWM ON or OFF
+                      00560 ;       time whichever is longer.
+                      00561 ;
+                      00562 ;*****************************************************************
+                      00563 
+                      00564 ; synchronize test with start of timer 0        
+                      00565 
+00F2   1EA9           00566         btfss   Tmr0Ovf         ; has timer 0 wrapped around?
+00F3   0008           00567         return                  ; no - skip lock test
+                      00568         
+00F4   1FA1           00569         btfss   PWMThresh,7     ; if PWMThresh > 0x80 then ON is longer than OFF
+00F5   2???           00570         goto    LT05            ; OFF is longer and motor is currently off - compute now
+                      00571 
+00F6   1C29           00572         btfss   DriveOnFlag     ; ON is longer - wait for drive cycle to start
+00F7   0008           00573         return                  ; not started - wait
+                      00574 
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00F8                  00575 LT05
+00F8   12A9           00576         bcf     Tmr0Ovf         ; clear synchronization flag
+00F9   0BB1           00577         decfsz  RampTimer,f     ; RampTimer controls the acceleration/deceleration rate
+00FA   0008           00578         return
+                      00579                 
+                      00580 ; use lock results to control RPM only if not manual mode               
+                      00581 
+00FB   14A9           00582         bsf     AutoRPM         ; preset flag
+00FC   0825           00583         movf    ADCRPM,w        ; compare RPM potentiometer...
+00FD   3EC1           00584         addlw   AutoThresh      ; ...to the auto control threshold
+00FE   1C03           00585         btfss   CARRY           ; CARRY is set if RPM is > auto threshold
+00FF   10A9           00586         bcf     AutoRPM         ; not in auto range - reset flag
+                      00587 
+0100   1FAB           00588         btfss   BEMF1Low        ; is first BEMF below Supply/2
+0101   2???           00589         goto    LT20            ; no - test second BEMF
+                      00590 
+0102                  00591 LT10
+                      00592 ; accelerate if BEMF at 1/4 T is below Supply/2
+                      00593 
+0102   3080           00594         movlw   B'10000000'     ; indicate lock test results
+0103   00B3           00595         movwf   Status          ; status is OR'd with drive word later  
+0104   30FF           00596         movlw   AccelDelay      ; set the timer for acceleration delay
+0105   00B1           00597         movwf   RampTimer       ;
+                      00598 
+0106   1CA9           00599         btfss   AutoRPM         ; is RPM in auto range?
+0107   2???           00600         goto    ManControl      ; no - skip RPM adjustment
+                      00601 
+0108   0FA4           00602         incfsz  RPMIndex,f      ; increment the RPM table index
+0109   0008           00603         return                  ; return if Index didn't wrap around
+                      00604         
+010A   03A4           00605         decf    RPMIndex,f      ; top limit is 0xFF
+010B   0008           00606         return
+010C                  00607 LT20    
+010C   1BAC           00608         btfsc   BEMF2Low        ; BEMF1 was high...
+010D   2???           00609         goto    ShowLocked      ; ... and BEMF2 is low - show locked
+                      00610         
+                      00611 ; decelerate if BEMF at 3/4 T is above Supply/2
+                      00612 
+010E   3040           00613         movlw   B'01000000'     ; indicate lock test results
+010F   00B3           00614         movwf   Status          ; status is OR'd with drive word later
+0110   30C8           00615         movlw   DecelDelay      ; set the timer for deceleration delay
+0111   00B1           00616         movwf   RampTimer       ;
+                      00617         
+0112   1CA9           00618         btfss   AutoRPM         ; is RPM in auto range?
+0113   2???           00619         goto    ManControl      ; no - skip RPM adjustment
+                      00620 
+0114   0BA4           00621         decfsz  RPMIndex,f      ; set next lower RPM table index
+0115   0008           00622         return                  ; return if index didn't wrap around
+                      00623         
+0116   0AA4           00624         incf    RPMIndex,f      ; bottom limit is 0x01
+0117   0008           00625         return
+                      00626 
+0118                  00627 ShowLocked
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0118   30C0           00628         movlw   B'11000000'     ; indicate lock test results 
+0119   00B3           00629         movwf   Status          ; status is OR'd with drive word later
+011A   30C8           00630         movlw   DecelDelay      ; set the timer for deceleration delay
+011B   00B1           00631         movwf   RampTimer       ;
+                      00632 
+011C   18A9           00633         btfsc   AutoRPM         ; was RPM set automatically?
+011D   0008           00634         return                  ; yes - we're done
+                      00635 
+011E                  00636 ManControl
+011E   0825           00637         movf    ADCRPM,w        ; get RPM potentiometer reading...
+011F   00A4           00638         movwf   RPMIndex        ; ...and set table index directly
+0120   0008           00639         return
+                      00640         
+0121                  00641 Commutate
+                      00642 ;*****************************************************************
+                      00643 ;
+                      00644 ;       Commutation is triggered by PIR1<CCP1IF> flag.
+                      00645 ;       This flag is set when timer1 equals the compare register.
+                      00646 ;       When BEMF measurement is active the compare time is not
+                      00647 ;       cleared automatically (special event trigger is off).
+                      00648 ;       Ignore the PIR1<CCP1IF> flag when special trigger is off
+                      00649 ;       because the flag is for BEMF measurment.
+                      00650 ;       If BEMF measurement is not active then decrement phase table
+                      00651 ;       index and get the drive word from the table. Save the
+                      00652 ;       drive word in a global variable and output to motor drivers.
+                      00653 ;
+                      00654 ;*****************************************************************
+                      00655 
+0121   1C17           00656         btfss   CCP1CON,0       ; is special event on compare enabled?
+0122   0008           00657         return                  ; no - this is a BEMF measurment, let state machine handle this
+                      00658         
+0123   110C           00659         bcf     PIR1,CCP1IF     ; clear interrupt flag
+                      00660 
+0124   30??           00661         movlw   high OnTable    ; set upper program counter bits
+0125   008A           00662         movwf   PCLATH
+0126   0B22           00663         decfsz  PhaseIndx,w     ; decrement to next phase
+0127   2???           00664         goto    $+2             ; skip reset if not zero
+0128   3006           00665         movlw   D'6'            ; phase counts 6 to 1
+0129   00A2           00666         movwf   PhaseIndx       ; save the phase index
+012A   3E??           00667         addlw   LOW OnTable
+012B   1803           00668         btfsc   CARRY           ; test for possible page boundry
+012C   0A8A           00669         incf    PCLATH,f        ; page boundry adjust
+012D   2???           00670         call    GetDrive
+012E   00A3           00671         movwf   Drive           ; save motor drive word
+012F                  00672 DriveMotor
+012F   0823           00673         movf    Drive,w         ; restore motor drive word
+0130   1C29           00674         btfss   DriveOnFlag     ; test drive enable flag
+0131   39D5           00675         andlw   OffMask         ; kill high drive if PWM is off
+0132   0433           00676         iorwf   Status,w        ; show speed indicators
+0133   0087           00677         movwf   DrivePort       ; output to motor drivers
+0134   0008           00678         return
+                      00679 
+0135                  00680 GetDrive
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0135   0082           00681         movwf   PCL             ; computed goto
+0136                  00682 OnTable
+0136   3400           00683         retlw   Invalid
+0137   3409           00684         retlw   Phase6
+0138   3418           00685         retlw   Phase5
+0139   3412           00686         retlw   Phase4
+013A   3406           00687         retlw   Phase3
+013B   3424           00688         retlw   Phase2
+013C   3421           00689         retlw   Phase1
+013D   3400           00690         retlw   Invalid
+                      00691 
+013E                  00692 SetTimer
+                      00693 ;*****************************************************************
+                      00694 ;
+                      00695 ;       This sets the CCP module compare registers for timer 1. 
+                      00696 ;       The motor phase period is the time it takes timer 1
+                      00697 ;       to count from 0 to the compare value. The CCP module
+                      00698 ;       is configured to clear timer 1 when the compare occurs.
+                      00699 ;       Get the timer1 compare variable from two lookup tables, one
+                      00700 ;       for the compare high byte and the other for the low byte.
+                      00701 ;
+                      00702 ;*****************************************************************
+                      00703 
+013E   2???           00704         call    SetTimerHigh
+013F   0096           00705         movwf   CCPR1H                  ; Timer1 High byte preset
+0140   2???           00706         call    SetTimerLow
+0141   0095           00707         movwf   CCPR1L                  ; Timer1 Low byte preset
+0142   0008           00708         return
+                      00709 
+0143                  00710 SetTimerHigh
+0143   30??           00711         movlw   high T1HighTable        ; lookup preset values
+0144   008A           00712         movwf   PCLATH                  ; high bytes first
+0145   30??           00713         movlw   low T1HighTable         ;
+0146   0724           00714         addwf   RPMIndex,w              ; add table index
+0147   1803           00715         btfsc   STATUS,C                ; test for table page crossing
+0148   0A8A           00716         incf    PCLATH,f                ;
+0149   0082           00717         movwf   PCL                     ; lookup - result returned in W
+014A                  00718 SetTimerLow
+014A   30??           00719         movlw   high T1LowTable         ; repeat for lower byte 
+014B   008A           00720         movwf   PCLATH                  ; 
+014C   30??           00721         movlw   low T1LowTable          ;
+014D   0724           00722         addwf   RPMIndex,w              ; add table index
+014E   1803           00723         btfsc   STATUS,C                ; test for table page crossing
+014F   0A8A           00724         incf    PCLATH,f                ;
+0150   0082           00725         movwf   PCL                     ; lookup - result returned in W
+                      00726 
+                      00727 #include "BLDCspd4.inc"
+                      00001 ; file : BLDCSpd4.inc
+                      00002 ;
+                      00003 ; NOTE: This file is built using the Excel 
+                      00004 ;       "BLDC Table Generator" Spreadsheet
+                      00005 ;       Enter the motor specifics in the spreadsheet
+                      00006 ;       then cut the resulting MS Byte code and LS Byte code 
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00007 ;       from the spreadsheet and paste to the respective tables.
+                      00008 ;
+                      00009 ; BLDC speed lookup table
+                      00010 ; MaxRPM = 8000
+                      00011 ; MinRPM = 96
+                      00012 ; Phases per mechanical revolution = 12
+                      00013 ; Fosc = 20 MHz
+                      00014 ; Timer 1 prescale = 4
+                      00015 ; 0 RPM Axis intercept = -345 RPM
+                      00016 ;
+                      00017 
+0151                  00018 T1HighTable        ; MS Byte code
+0151   34FD           00019         retlw high D'64854'
+0152   34FD           00020         retlw high D'64854'
+0153   34FD           00021         retlw high D'64854'
+0154   34FD           00022         retlw high D'64854'
+0155   34FD           00023         retlw high D'64854'
+0156   34FD           00024         retlw high D'64854'
+0157   34FD           00025         retlw high D'64854'
+0158   34FD           00026         retlw high D'64854'
+0159   34FD           00027         retlw high D'64854'
+015A   34FD           00028         retlw high D'64854'
+015B   34FD           00029         retlw high D'64854'
+015C   34FD           00030         retlw high D'64854'
+015D   34FD           00031         retlw high D'64854'
+015E   34FD           00032         retlw high D'64854'
+015F   34FD           00033         retlw high D'64854'
+0160   34FD           00034         retlw high D'64854'
+0161   34C0           00035         retlw high D'49189'
+0162   3498           00036         retlw high D'39062'
+0163   347E           00037         retlw high D'32393'
+0164   346C           00038         retlw high D'27669'
+0165   345E           00039         retlw high D'24147'
+0166   3453           00040         retlw high D'21421'
+0167   344B           00041         retlw high D'19248'
+0168   3444           00042         retlw high D'17475'
+0169   343E           00043         retlw high D'16001'
+016A   3439           00044         retlw high D'14756'
+016B   3435           00045         retlw high D'13692'
+016C   3431           00046         retlw high D'12770'
+016D   342E           00047         retlw high D'11965'
+016E   342B           00048         retlw high D'11255'
+016F   3429           00049         retlw high D'10625'
+0170   3427           00050         retlw high D'10061'
+0171   3425           00051         retlw high D'9554'
+0172   3423           00052         retlw high D'9096'
+0173   3421           00053         retlw high D'8680'
+0174   3420           00054         retlw high D'8300'
+0175   341F           00055         retlw high D'7952'
+0176   341D           00056         retlw high D'7632'
+0177   341C           00057         retlw high D'7337'
+0178   341B           00058         retlw high D'7064'
+0179   341A           00059         retlw high D'6810'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+017A   3419           00060         retlw high D'6574'
+017B   3418           00061         retlw high D'6354'
+017C   3418           00062         retlw high D'6148'
+017D   3417           00063         retlw high D'5955'
+017E   3416           00064         retlw high D'5774'
+017F   3415           00065         retlw high D'5603'
+0180   3415           00066         retlw high D'5443'
+0181   3414           00067         retlw high D'5291'
+0182   3414           00068         retlw high D'5147'
+0183   3413           00069         retlw high D'5011'
+0184   3413           00070         retlw high D'4882'
+0185   3412           00071         retlw high D'4760'
+0186   3412           00072         retlw high D'4643'
+0187   3411           00073         retlw high D'4532'
+0188   3411           00074         retlw high D'4427'
+0189   3410           00075         retlw high D'4326'
+018A   3410           00076         retlw high D'4229'
+018B   3410           00077         retlw high D'4137'
+018C   340F           00078         retlw high D'4049'
+018D   340F           00079         retlw high D'3964'
+018E   340F           00080         retlw high D'3883'
+018F   340E           00081         retlw high D'3805'
+0190   340E           00082         retlw high D'3730'
+0191   340E           00083         retlw high D'3658'
+0192   340E           00084         retlw high D'3589'
+0193   340D           00085         retlw high D'3522'
+0194   340D           00086         retlw high D'3458'
+0195   340D           00087         retlw high D'3396'
+0196   340D           00088         retlw high D'3336'
+0197   340C           00089         retlw high D'3279'
+0198   340C           00090         retlw high D'3223'
+0199   340C           00091         retlw high D'3169'
+019A   340C           00092         retlw high D'3117'
+019B   340B           00093         retlw high D'3067'
+019C   340B           00094         retlw high D'3018'
+019D   340B           00095         retlw high D'2971'
+019E   340B           00096         retlw high D'2925'
+019F   340B           00097         retlw high D'2880'
+01A0   340B           00098         retlw high D'2837'
+01A1   340A           00099         retlw high D'2796'
+01A2   340A           00100         retlw high D'2755'
+01A3   340A           00101         retlw high D'2716'
+01A4   340A           00102         retlw high D'2677'
+01A5   340A           00103         retlw high D'2640'
+01A6   340A           00104         retlw high D'2604'
+01A7   340A           00105         retlw high D'2568'
+01A8   3409           00106         retlw high D'2534'
+01A9   3409           00107         retlw high D'2501'
+01AA   3409           00108         retlw high D'2468'
+01AB   3409           00109         retlw high D'2436'
+01AC   3409           00110         retlw high D'2406'
+01AD   3409           00111         retlw high D'2375'
+01AE   3409           00112         retlw high D'2346'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01AF   3409           00113         retlw high D'2317'
+01B0   3408           00114         retlw high D'2289'
+01B1   3408           00115         retlw high D'2262'
+01B2   3408           00116         retlw high D'2235'
+01B3   3408           00117         retlw high D'2209'
+01B4   3408           00118         retlw high D'2184'
+01B5   3408           00119         retlw high D'2159'
+01B6   3408           00120         retlw high D'2135'
+01B7   3408           00121         retlw high D'2111'
+01B8   3408           00122         retlw high D'2088'
+01B9   3408           00123         retlw high D'2065'
+01BA   3407           00124         retlw high D'2043'
+01BB   3407           00125         retlw high D'2021'
+01BC   3407           00126         retlw high D'2000'
+01BD   3407           00127         retlw high D'1979'
+01BE   3407           00128         retlw high D'1958'
+01BF   3407           00129         retlw high D'1938'
+01C0   3407           00130         retlw high D'1919'
+01C1   3407           00131         retlw high D'1900'
+01C2   3407           00132         retlw high D'1881'
+01C3   3407           00133         retlw high D'1862'
+01C4   3407           00134         retlw high D'1844'
+01C5   3407           00135         retlw high D'1826'
+01C6   3407           00136         retlw high D'1809'
+01C7   3407           00137         retlw high D'1792'
+01C8   3406           00138         retlw high D'1775'
+01C9   3406           00139         retlw high D'1759'
+01CA   3406           00140         retlw high D'1742'
+01CB   3406           00141         retlw high D'1727'
+01CC   3406           00142         retlw high D'1711'
+01CD   3406           00143         retlw high D'1696'
+01CE   3406           00144         retlw high D'1681'
+01CF   3406           00145         retlw high D'1666'
+01D0   3406           00146         retlw high D'1651'
+01D1   3406           00147         retlw high D'1637'
+01D2   3406           00148         retlw high D'1623'
+01D3   3406           00149         retlw high D'1609'
+01D4   3406           00150         retlw high D'1596'
+01D5   3406           00151         retlw high D'1582'
+01D6   3406           00152         retlw high D'1569'
+01D7   3406           00153         retlw high D'1557'
+01D8   3406           00154         retlw high D'1544'
+01D9   3405           00155         retlw high D'1531'
+01DA   3405           00156         retlw high D'1519'
+01DB   3405           00157         retlw high D'1507'
+01DC   3405           00158         retlw high D'1495'
+01DD   3405           00159         retlw high D'1483'
+01DE   3405           00160         retlw high D'1472'
+01DF   3405           00161         retlw high D'1461'
+01E0   3405           00162         retlw high D'1449'
+01E1   3405           00163         retlw high D'1438'
+01E2   3405           00164         retlw high D'1428'
+01E3   3405           00165         retlw high D'1417'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01E4   3405           00166         retlw high D'1406'
+01E5   3405           00167         retlw high D'1396'
+01E6   3405           00168         retlw high D'1386'
+01E7   3405           00169         retlw high D'1376'
+01E8   3405           00170         retlw high D'1366'
+01E9   3405           00171         retlw high D'1356'
+01EA   3405           00172         retlw high D'1346'
+01EB   3405           00173         retlw high D'1337'
+01EC   3405           00174         retlw high D'1328'
+01ED   3405           00175         retlw high D'1318'
+01EE   3405           00176         retlw high D'1309'
+01EF   3405           00177         retlw high D'1300'
+01F0   3405           00178         retlw high D'1291'
+01F1   3405           00179         retlw high D'1283'
+01F2   3404           00180         retlw high D'1274'
+01F3   3404           00181         retlw high D'1266'
+01F4   3404           00182         retlw high D'1257'
+01F5   3404           00183         retlw high D'1249'
+01F6   3404           00184         retlw high D'1241'
+01F7   3404           00185         retlw high D'1233'
+01F8   3404           00186         retlw high D'1225'
+01F9   3404           00187         retlw high D'1217'
+01FA   3404           00188         retlw high D'1209'
+01FB   3404           00189         retlw high D'1201'
+01FC   3404           00190         retlw high D'1194'
+01FD   3404           00191         retlw high D'1186'
+01FE   3404           00192         retlw high D'1179'
+01FF   3404           00193         retlw high D'1172'
+0200   3404           00194         retlw high D'1165'
+0201   3404           00195         retlw high D'1157'
+0202   3404           00196         retlw high D'1150'
+0203   3404           00197         retlw high D'1143'
+0204   3404           00198         retlw high D'1137'
+0205   3404           00199         retlw high D'1130'
+0206   3404           00200         retlw high D'1123'
+0207   3404           00201         retlw high D'1117'
+0208   3404           00202         retlw high D'1110'
+0209   3404           00203         retlw high D'1104'
+020A   3404           00204         retlw high D'1097'
+020B   3404           00205         retlw high D'1091'
+020C   3404           00206         retlw high D'1085'
+020D   3404           00207         retlw high D'1078'
+020E   3404           00208         retlw high D'1072'
+020F   3404           00209         retlw high D'1066'
+0210   3404           00210         retlw high D'1060'
+0211   3404           00211         retlw high D'1054'
+0212   3404           00212         retlw high D'1049'
+0213   3404           00213         retlw high D'1043'
+0214   3404           00214         retlw high D'1037'
+0215   3404           00215         retlw high D'1031'
+0216   3404           00216         retlw high D'1026'
+0217   3403           00217         retlw high D'1020'
+0218   3403           00218         retlw high D'1015'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0219   3403           00219         retlw high D'1009'
+021A   3403           00220         retlw high D'1004'
+021B   3403           00221         retlw high D'999'
+021C   3403           00222         retlw high D'994'
+021D   3403           00223         retlw high D'988'
+021E   3403           00224         retlw high D'983'
+021F   3403           00225         retlw high D'978'
+0220   3403           00226         retlw high D'973'
+0221   3403           00227         retlw high D'968'
+0222   3403           00228         retlw high D'963'
+0223   3403           00229         retlw high D'958'
+0224   3403           00230         retlw high D'954'
+0225   3403           00231         retlw high D'949'
+0226   3403           00232         retlw high D'944'
+0227   3403           00233         retlw high D'939'
+0228   3403           00234         retlw high D'935'
+0229   3403           00235         retlw high D'930'
+022A   3403           00236         retlw high D'926'
+022B   3403           00237         retlw high D'921'
+022C   3403           00238         retlw high D'917'
+022D   3403           00239         retlw high D'912'
+022E   3403           00240         retlw high D'908'
+022F   3403           00241         retlw high D'904'
+0230   3403           00242         retlw high D'899'
+0231   3403           00243         retlw high D'895'
+0232   3403           00244         retlw high D'891'
+0233   3403           00245         retlw high D'887'
+0234   3403           00246         retlw high D'883'
+0235   3403           00247         retlw high D'878'
+0236   3403           00248         retlw high D'874'
+0237   3403           00249         retlw high D'870'
+0238   3403           00250         retlw high D'866'
+0239   3403           00251         retlw high D'862'
+023A   3403           00252         retlw high D'859'
+023B   3403           00253         retlw high D'855'
+023C   3403           00254         retlw high D'851'
+023D   3403           00255         retlw high D'847'
+023E   3403           00256         retlw high D'843'
+023F   3403           00257         retlw high D'840'
+0240   3403           00258         retlw high D'836'
+0241   3403           00259         retlw high D'832'
+0242   3403           00260         retlw high D'829'
+0243   3403           00261         retlw high D'825'
+0244   3403           00262         retlw high D'821'
+0245   3403           00263         retlw high D'818'
+0246   3403           00264         retlw high D'814'
+0247   3403           00265         retlw high D'811'
+0248   3403           00266         retlw high D'807'
+0249   3403           00267         retlw high D'804'
+024A   3403           00268         retlw high D'801'
+024B   3403           00269         retlw high D'797'
+024C   3403           00270         retlw high D'794'
+024D   3403           00271         retlw high D'791'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+024E   3403           00272         retlw high D'787'
+024F   3403           00273         retlw high D'784'
+0250   3403           00274         retlw high D'781'
+                      00275 
+0251                  00276 T1LowTable              ; LS Byte code
+0251   3456           00277         retlw low D'64854'
+0252   3456           00278         retlw low D'64854'
+0253   3456           00279         retlw low D'64854'
+0254   3456           00280         retlw low D'64854'
+0255   3456           00281         retlw low D'64854'
+0256   3456           00282         retlw low D'64854'
+0257   3456           00283         retlw low D'64854'
+0258   3456           00284         retlw low D'64854'
+0259   3456           00285         retlw low D'64854'
+025A   3456           00286         retlw low D'64854'
+025B   3456           00287         retlw low D'64854'
+025C   3456           00288         retlw low D'64854'
+025D   3456           00289         retlw low D'64854'
+025E   3456           00290         retlw low D'64854'
+025F   3456           00291         retlw low D'64854'
+0260   3456           00292         retlw low D'64854'
+0261   3425           00293         retlw low D'49189'
+0262   3496           00294         retlw low D'39062'
+0263   3489           00295         retlw low D'32393'
+0264   3415           00296         retlw low D'27669'
+0265   3453           00297         retlw low D'24147'
+0266   34AD           00298         retlw low D'21421'
+0267   3430           00299         retlw low D'19248'
+0268   3443           00300         retlw low D'17475'
+0269   3481           00301         retlw low D'16001'
+026A   34A4           00302         retlw low D'14756'
+026B   347C           00303         retlw low D'13692'
+026C   34E2           00304         retlw low D'12770'
+026D   34BD           00305         retlw low D'11965'
+026E   34F7           00306         retlw low D'11255'
+026F   3481           00307         retlw low D'10625'
+0270   344D           00308         retlw low D'10061'
+0271   3452           00309         retlw low D'9554'
+0272   3488           00310         retlw low D'9096'
+0273   34E8           00311         retlw low D'8680'
+0274   346C           00312         retlw low D'8300'
+0275   3410           00313         retlw low D'7952'
+0276   34D0           00314         retlw low D'7632'
+0277   34A9           00315         retlw low D'7337'
+0278   3498           00316         retlw low D'7064'
+0279   349A           00317         retlw low D'6810'
+027A   34AE           00318         retlw low D'6574'
+027B   34D2           00319         retlw low D'6354'
+027C   3404           00320         retlw low D'6148'
+027D   3443           00321         retlw low D'5955'
+027E   348E           00322         retlw low D'5774'
+027F   34E3           00323         retlw low D'5603'
+0280   3443           00324         retlw low D'5443'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0281   34AB           00325         retlw low D'5291'
+0282   341B           00326         retlw low D'5147'
+0283   3493           00327         retlw low D'5011'
+0284   3412           00328         retlw low D'4882'
+0285   3498           00329         retlw low D'4760'
+0286   3423           00330         retlw low D'4643'
+0287   34B4           00331         retlw low D'4532'
+0288   344B           00332         retlw low D'4427'
+0289   34E6           00333         retlw low D'4326'
+028A   3485           00334         retlw low D'4229'
+028B   3429           00335         retlw low D'4137'
+028C   34D1           00336         retlw low D'4049'
+028D   347C           00337         retlw low D'3964'
+028E   342B           00338         retlw low D'3883'
+028F   34DD           00339         retlw low D'3805'
+0290   3492           00340         retlw low D'3730'
+0291   344A           00341         retlw low D'3658'
+0292   3405           00342         retlw low D'3589'
+0293   34C2           00343         retlw low D'3522'
+0294   3482           00344         retlw low D'3458'
+0295   3444           00345         retlw low D'3396'
+0296   3408           00346         retlw low D'3336'
+0297   34CF           00347         retlw low D'3279'
+0298   3497           00348         retlw low D'3223'
+0299   3461           00349         retlw low D'3169'
+029A   342D           00350         retlw low D'3117'
+029B   34FB           00351         retlw low D'3067'
+029C   34CA           00352         retlw low D'3018'
+029D   349B           00353         retlw low D'2971'
+029E   346D           00354         retlw low D'2925'
+029F   3440           00355         retlw low D'2880'
+02A0   3415           00356         retlw low D'2837'
+02A1   34EC           00357         retlw low D'2796'
+02A2   34C3           00358         retlw low D'2755'
+02A3   349C           00359         retlw low D'2716'
+02A4   3475           00360         retlw low D'2677'
+02A5   3450           00361         retlw low D'2640'
+02A6   342C           00362         retlw low D'2604'
+02A7   3408           00363         retlw low D'2568'
+02A8   34E6           00364         retlw low D'2534'
+02A9   34C5           00365         retlw low D'2501'
+02AA   34A4           00366         retlw low D'2468'
+02AB   3484           00367         retlw low D'2436'
+02AC   3466           00368         retlw low D'2406'
+02AD   3447           00369         retlw low D'2375'
+02AE   342A           00370         retlw low D'2346'
+02AF   340D           00371         retlw low D'2317'
+02B0   34F1           00372         retlw low D'2289'
+02B1   34D6           00373         retlw low D'2262'
+02B2   34BB           00374         retlw low D'2235'
+02B3   34A1           00375         retlw low D'2209'
+02B4   3488           00376         retlw low D'2184'
+02B5   346F           00377         retlw low D'2159'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+02B6   3457           00378         retlw low D'2135'
+02B7   343F           00379         retlw low D'2111'
+02B8   3428           00380         retlw low D'2088'
+02B9   3411           00381         retlw low D'2065'
+02BA   34FB           00382         retlw low D'2043'
+02BB   34E5           00383         retlw low D'2021'
+02BC   34D0           00384         retlw low D'2000'
+02BD   34BB           00385         retlw low D'1979'
+02BE   34A6           00386         retlw low D'1958'
+02BF   3492           00387         retlw low D'1938'
+02C0   347F           00388         retlw low D'1919'
+02C1   346C           00389         retlw low D'1900'
+02C2   3459           00390         retlw low D'1881'
+02C3   3446           00391         retlw low D'1862'
+02C4   3434           00392         retlw low D'1844'
+02C5   3422           00393         retlw low D'1826'
+02C6   3411           00394         retlw low D'1809'
+02C7   3400           00395         retlw low D'1792'
+02C8   34EF           00396         retlw low D'1775'
+02C9   34DF           00397         retlw low D'1759'
+02CA   34CE           00398         retlw low D'1742'
+02CB   34BF           00399         retlw low D'1727'
+02CC   34AF           00400         retlw low D'1711'
+02CD   34A0           00401         retlw low D'1696'
+02CE   3491           00402         retlw low D'1681'
+02CF   3482           00403         retlw low D'1666'
+02D0   3473           00404         retlw low D'1651'
+02D1   3465           00405         retlw low D'1637'
+02D2   3457           00406         retlw low D'1623'
+02D3   3449           00407         retlw low D'1609'
+02D4   343C           00408         retlw low D'1596'
+02D5   342E           00409         retlw low D'1582'
+02D6   3421           00410         retlw low D'1569'
+02D7   3415           00411         retlw low D'1557'
+02D8   3408           00412         retlw low D'1544'
+02D9   34FB           00413         retlw low D'1531'
+02DA   34EF           00414         retlw low D'1519'
+02DB   34E3           00415         retlw low D'1507'
+02DC   34D7           00416         retlw low D'1495'
+02DD   34CB           00417         retlw low D'1483'
+02DE   34C0           00418         retlw low D'1472'
+02DF   34B5           00419         retlw low D'1461'
+02E0   34A9           00420         retlw low D'1449'
+02E1   349E           00421         retlw low D'1438'
+02E2   3494           00422         retlw low D'1428'
+02E3   3489           00423         retlw low D'1417'
+02E4   347E           00424         retlw low D'1406'
+02E5   3474           00425         retlw low D'1396'
+02E6   346A           00426         retlw low D'1386'
+02E7   3460           00427         retlw low D'1376'
+02E8   3456           00428         retlw low D'1366'
+02E9   344C           00429         retlw low D'1356'
+02EA   3442           00430         retlw low D'1346'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+02EB   3439           00431         retlw low D'1337'
+02EC   3430           00432         retlw low D'1328'
+02ED   3426           00433         retlw low D'1318'
+02EE   341D           00434         retlw low D'1309'
+02EF   3414           00435         retlw low D'1300'
+02F0   340B           00436         retlw low D'1291'
+02F1   3403           00437         retlw low D'1283'
+02F2   34FA           00438         retlw low D'1274'
+02F3   34F2           00439         retlw low D'1266'
+02F4   34E9           00440         retlw low D'1257'
+02F5   34E1           00441         retlw low D'1249'
+02F6   34D9           00442         retlw low D'1241'
+02F7   34D1           00443         retlw low D'1233'
+02F8   34C9           00444         retlw low D'1225'
+02F9   34C1           00445         retlw low D'1217'
+02FA   34B9           00446         retlw low D'1209'
+02FB   34B1           00447         retlw low D'1201'
+02FC   34AA           00448         retlw low D'1194'
+02FD   34A2           00449         retlw low D'1186'
+02FE   349B           00450         retlw low D'1179'
+02FF   3494           00451         retlw low D'1172'
+0300   348D           00452         retlw low D'1165'
+0301   3485           00453         retlw low D'1157'
+0302   347E           00454         retlw low D'1150'
+0303   3477           00455         retlw low D'1143'
+0304   3471           00456         retlw low D'1137'
+0305   346A           00457         retlw low D'1130'
+0306   3463           00458         retlw low D'1123'
+0307   345D           00459         retlw low D'1117'
+0308   3456           00460         retlw low D'1110'
+0309   3450           00461         retlw low D'1104'
+030A   3449           00462         retlw low D'1097'
+030B   3443           00463         retlw low D'1091'
+030C   343D           00464         retlw low D'1085'
+030D   3436           00465         retlw low D'1078'
+030E   3430           00466         retlw low D'1072'
+030F   342A           00467         retlw low D'1066'
+0310   3424           00468         retlw low D'1060'
+0311   341E           00469         retlw low D'1054'
+0312   3419           00470         retlw low D'1049'
+0313   3413           00471         retlw low D'1043'
+0314   340D           00472         retlw low D'1037'
+0315   3407           00473         retlw low D'1031'
+0316   3402           00474         retlw low D'1026'
+0317   34FC           00475         retlw low D'1020'
+0318   34F7           00476         retlw low D'1015'
+0319   34F1           00477         retlw low D'1009'
+031A   34EC           00478         retlw low D'1004'
+031B   34E7           00479         retlw low D'999'
+031C   34E2           00480         retlw low D'994'
+031D   34DC           00481         retlw low D'988'
+031E   34D7           00482         retlw low D'983'
+031F   34D2           00483         retlw low D'978'
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0320   34CD           00484         retlw low D'973'
+0321   34C8           00485         retlw low D'968'
+0322   34C3           00486         retlw low D'963'
+0323   34BE           00487         retlw low D'958'
+0324   34BA           00488         retlw low D'954'
+0325   34B5           00489         retlw low D'949'
+0326   34B0           00490         retlw low D'944'
+0327   34AB           00491         retlw low D'939'
+0328   34A7           00492         retlw low D'935'
+0329   34A2           00493         retlw low D'930'
+032A   349E           00494         retlw low D'926'
+032B   3499           00495         retlw low D'921'
+032C   3495           00496         retlw low D'917'
+032D   3490           00497         retlw low D'912'
+032E   348C           00498         retlw low D'908'
+032F   3488           00499         retlw low D'904'
+0330   3483           00500         retlw low D'899'
+0331   347F           00501         retlw low D'895'
+0332   347B           00502         retlw low D'891'
+0333   3477           00503         retlw low D'887'
+0334   3473           00504         retlw low D'883'
+0335   346E           00505         retlw low D'878'
+0336   346A           00506         retlw low D'874'
+0337   3466           00507         retlw low D'870'
+0338   3462           00508         retlw low D'866'
+0339   345E           00509         retlw low D'862'
+033A   345B           00510         retlw low D'859'
+033B   3457           00511         retlw low D'855'
+033C   3453           00512         retlw low D'851'
+033D   344F           00513         retlw low D'847'
+033E   344B           00514         retlw low D'843'
+033F   3448           00515         retlw low D'840'
+0340   3444           00516         retlw low D'836'
+0341   3440           00517         retlw low D'832'
+0342   343D           00518         retlw low D'829'
+0343   3439           00519         retlw low D'825'
+0344   3435           00520         retlw low D'821'
+0345   3432           00521         retlw low D'818'
+0346   342E           00522         retlw low D'814'
+0347   342B           00523         retlw low D'811'
+0348   3427           00524         retlw low D'807'
+0349   3424           00525         retlw low D'804'
+034A   3421           00526         retlw low D'801'
+034B   341D           00527         retlw low D'797'
+034C   341A           00528         retlw low D'794'
+034D   3417           00529         retlw low D'791'
+034E   3413           00530         retlw low D'787'
+034F   3410           00531         retlw low D'784'
+0350   340D           00532         retlw low D'781'
+                      00533 
+                      00728 
+3DF2                  00729         end
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADC0to1                           00000008
+ADC1to3                           00000010
+ADC3to0                           00000018
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCOffset                         00000026
+ADCRPM                            00000025
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+AccelDelay                        D'255'
+AutoRPM                           Flags,1
+AutoThresh                        0x100-ManThresh
+BCLIE                             00000003
+BCLIF                             00000003
+BEMF1Low                          DeltaV1,7
+BEMF2Idle                         000000D0
+BEMF2Low                          DeltaV2,7
+BEMF2Read                         000000E2
+BEMFIdle                          000000B8
+BEMFRead                          000000C9
+BEMFS1                            000000A7
+BEMFSetup                         0000009D
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+CARRY                             STATUS,C
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CCPSaveH                          0000002D
+CCPSaveL                          0000002E
+CCPT2H                            0000002F
+CCPT2L                            00000030
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CKE                               00000006
+CKP                               00000004
+CREN                              00000004
+CSRC                              00000007
+Commutate                         00000121
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+DecelDelay                        D'200'
+DeltaV1                           0000002B
+DeltaV2                           0000002C
+Drive                             00000023
+DriveMotor                        0000012F
+DriveOff                          00000082
+DriveOnFlag                       Flags,0
+DrivePort                         PORTC
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+Flags                             00000029
+FullOnFlag                        Flags,4
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GetDrive                          00000135
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Initialize                        0000000C
+Invalid                           00000000
+InvalidState                      000000E9
+LT05                              000000F8
+LT10                              00000102
+LT20                              0000010C
+LockTest                          000000F2
+MainLoop                          0000002D
+ManControl                        0000011E
+ManThresh                         0x3f
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+OffMask                           000000D5
+OffsetRead                        0000006C
+OffsetSetup                       00000063
+OnTable                           00000136
+OverflowTest                      00000077
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+PWM                               0000002F
+PWM02                             00000037
+PWMThresh                         00000021
+Phase1                            00000021
+Phase2                            00000024
+Phase3                            00000006
+Phase4                            00000012
+Phase5                            00000018
+Phase6                            00000009
+PhaseIndx                         00000022
+PresetHi                          00000027
+PresetLo                          00000028
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RPMIndex                          00000024
+RPMRead                           0000005D
+RPMSetup                          00000053
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+RampTimer                         00000031
+ReadIndicator                     PORTB,0
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SMTable                           00000043
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SMTableEnd                        00000053
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATE                             00000020
+STATUS                            00000003
+SVR_timer0                        00000008
+SYNC                              00000004
+SetTimer                          0000013E
+SetTimerHigh                      00000143
+SetTimerLow                       0000014A
+ShowLocked                        00000118
+StateMachine                      0000003A
+Status                            00000033
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1HighTable                       00000151
+T1INSYNC                          00000002
+T1LowTable                        00000251
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+Tacq                              000000ED
+Threshold                         00000079
+Tmr0Ovf                           Flags,5
+Tmr0Sync                          Flags,6
+UA                                00000001
+VIdle                             0000008E
+VRead                             00000096
+VSetup                            00000087
+Vsupply                           0000002A
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+ZERO                              STATUS,Z
+_.org_2_00F0                      000000F0
+_.org_2_0127                      00000127
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00000FCF
+_CP_HALF                          00001FDF
+_CP_OFF                           00003FFF
+_CP_UPPER_256                     00002FEF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+MPASM  5.35                      SNSRLESS.ASM   10-20-2010  16:06:10         PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_ENABLE_OFF                   00003DFF
+_WRT_ENABLE_ON                    00003FFF
+_XT_OSC                           00003FFD
+__16F877                          00000001
+sBEMF2Idle                        0000000A
+sBEMF2Read                        0000000B
+sBEMFIdle                         00000008
+sBEMFRead                         00000009
+sBEMFSetup                        00000007
+sOffsetRead                       00000003
+sOffsetSetup                      00000002
+sRPMRead                          00000001
+sRPMSetup                         00000000
+sVIdle                            00000005
+sVRead                            00000006
+sVSetup                           00000004
+subwl                             sublw
+xCount                            00000032
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     5 reported,     0 suppressed
+
+

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="A PID Controlled oven using an F28027">
+ <KEYWORDS/>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="demo.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_CodeStartBranch.asm"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_DefaultIsr.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_GlobalVariableDefs.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_PieCtrl.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_PieVect.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_SysCtrl.c"/>
+  <FILE GROUP="Source Files" NAME="../f2802x/src/DSP2802x_usDelay.asm"/>
+  <FILE GROUP="Design Files" NAME="pid_controller.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="CodeComposer for Piccolo" NAME="Debug">
+  <CONTROLLER FAMILY="PICCOLO" CLOCK="60MHz" TYPE="TMS320F28027PT"/>
+  <FILE TOOL="LD" NAME="Debug/Debug.cof">
+   <FILE TOOL="CC" NAME="Debug/demo.obj">
+    <FILE NAME="demo.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_CodeStartBranch.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_CodeStartBranch.asm"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_DefaultIsr.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_DefaultIsr.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_GlobalVariableDefs.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_GlobalVariableDefs.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_PieCtrl.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_PieCtrl.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_PieVect.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_PieVect.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_SysCtrl.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_SysCtrl.c"/>
+   </FILE>
+   <FILE TOOL="CC" NAME="Debug/DSP2802x_usDelay.obj">
+    <FILE NAME="../f2802x/src/DSP2802x_usDelay.asm"/>
+   </FILE>
+  </FILE>
+  <FILE NAME="pid_controller.DSN"/>
+  <OPTION TOOL="LD" NAME="-z"/>
+  <OPTION TOOL="LD" NAME="--rom_model"/>
+  <OPTION TOOL="LD" NAME="--reread_libs"/>
+  <OPTION TOOL="LD" NAME="--warn_sections"/>
+  <OPTION TOOL="LD" NAME="--stack_size=" VALUE="0x300"/>
+  <OPTION TOOL="LD" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\..\lib&quot;"/>
+  <OPTION TOOL="LD" NAME="-i" VALUE="&quot;%COMPILER_DIR_DOS%\..\include&quot;"/>
+  <OPTION TOOL="LD" NAME="-i" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\lib&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\link\DSP2802x_Headers_nonBIOS.cmd&quot;"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\link\28027_RAM_lnk.cmd&quot;"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-c"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="-ml"/>
+  <OPTION TOOL="CC" NAME="--define=" VALUE="_DEBUG"/>
+  <OPTION TOOL="CC" NAME="--define=" VALUE="LARGE_MODEL"/>
+  <OPTION TOOL="CC" NAME="--symdebug:" VALUE="dwarf"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\include&quot;"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%COMPILER_DIR_DOS%\..\..\..\..\C2000\include&quot;"/>
+  <OPTION TOOL="CC" NAME="--include_path=" VALUE="&quot;%PROTEUS_DIR_DOS%\Samples\VSM for PICCOLO\f2802x\inc&quot;"/>
+  <OPTION TOOL="CC" NAME="--fp_reassoc=" VALUE="off"/>
+  <OPTION TOOL="CC" NAME="--sat_reassoc=" VALUE="off"/>
+  <OPTION DEFAULT="1" TOOL="CC" NAME="--keep_unneeded_statics"/>
+  <OPTION TOOL="CC" NAME="--silicon_version=" VALUE="28"/>
+ </CONFIGURATION>
+</PROJECT>

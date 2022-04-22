@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="8051 based stepper motor controller written in assembler">
+ <KEYWORDS>
+  <KEYWORD NAME="Motor Control"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Source Files" NAME="Stepper.asm"/>
+  <FILE GROUP="Design Files" NAME="Stepper.DSN"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="ASEM-51 (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="8051" CLOCK="12MHz" TYPE="AT89C51"/>
+  <FILE TOOL="ASM">
+   <FILE NAME="Stepper.asm"/>
+  </FILE>
+  <FILE NAME="Stepper.DSN"/>
+ </CONFIGURATION>
+ <CONFIGURATION TARGET="Release" COMPILER="ASEM-51 (Proteus)" NAME="Release">
+  <CONTROLLER FAMILY="8051" CLOCK="12000000" TYPE="AT89C51"/>
+  <FILE TOOL="ASM">
+   <FILE NAME="Stepper.asm"/>
+  </FILE>
+  <FILE NAME="Stepper.DSN"/>
+ </CONFIGURATION>
+</PROJECT>

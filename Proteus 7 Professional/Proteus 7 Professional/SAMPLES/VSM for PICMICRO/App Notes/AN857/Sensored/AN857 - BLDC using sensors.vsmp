@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<PROJECT DESCRIPTION="AN857 (Sensor) : Brushless Motor Control Made Easy.">
+ <KEYWORDS>
+  <KEYWORD NAME="Motor Control"/>
+  <KEYWORD NAME="Application Note"/>
+ </KEYWORDS>
+ <FILES>
+  <FILE GROUP="Linker Script" NAME="16f877.lkr"/>
+  <FILE GROUP="Design" NAME="AN857.DSN"/>
+  <FILE GROUP="Header" NAME="P16F877.INC"/>
+  <FILE GROUP="Source" NAME="sensbldc.asm"/>
+ </FILES>
+ <CONFIGURATION TARGET="Debug" COMPILER="MPASM (Proteus)" NAME="Debug">
+  <CONTROLLER FAMILY="PIC16" CLOCK="20MHz" TYPE="PIC16F877"/>
+  <FILE TOOL="LD" NAME="Debug.cof">
+   <OPTION DEFAULT="1" TOOL="LD" ID="OUTFILE" NAME="-o " VALUE="%OUTFILE_DIR%/%OUTFILE_NAME%.cof"/>
+   <OPTION DEFAULT="1" TOOL="LD" ID="LKR" NAME="" VALUE="16f877_g.lkr"/>
+   <FILE TOOL="ASM" NAME="sensbldc.o">
+    <FILE NAME="sensbldc.asm"/>
+   </FILE>
+   <FILE NAME="16f877.lkr"/>
+  </FILE>
+  <FILE NAME="AN857.DSN"/>
+  <FILE NAME="P16F877.INC"/>
+  <OPTION DEFAULT="1" TOOL="LD" NAME="-x"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/q" VALUE="+"/>
+  <OPTION DEFAULT="1" TOOL="ASM" NAME="/p" VALUE="16f877"/>
+ </CONFIGURATION>
+</PROJECT>

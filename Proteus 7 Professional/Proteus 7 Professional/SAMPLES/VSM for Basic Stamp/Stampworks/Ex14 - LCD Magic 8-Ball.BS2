@@ -1,0 +1,148 @@
+' {$STAMP BS2}
+' ==============================================================================
+'
+' File...... Ex14 - LCD Magic 8-Ball.BS2
+' Purpose... Magic 8-Ball simulation
+' Author.... Parallax
+' E-mail.... stamptech@parallaxinc.com
+' Started...
+' Updated... 01 MAY 2002
+'
+'
+' ==============================================================================
+' ------------------------------------------------------------------------------
+' Program Description
+' ------------------------------------------------------------------------------
+' This program simulates a Magic 8-Ball. Ask a question, then press the
+' button to get your answer.
+'
+' The program also demonstrates using a 2-Line display as a single-line display
+' with the 5x10 font set. When using the 5x10 font, true descended characters
+' are available but must be remapped from the LCD ROM.
+'
+' The connections for this program conform to the BS2p LCDIN and LCDOUT
+' commands. Use this program for the BS2, BS2e or BS2sx. There is a separate
+' program for the BS2p.
+' ------------------------------------------------------------------------------
+' I/O Definitions
+' ------------------------------------------------------------------------------
+E CON 0 ' LCD Enable pin (1 = enabled)
+RS CON 3 ' Register Select (1 = char)
+LCDbus VAR OutB ' 4-bit LCD data out
+AskButton CON 15 ' Ask button input pin
+' ------------------------------------------------------------------------------
+' Constants
+' ------------------------------------------------------------------------------
+ClrLCD CON $01 ' clear the LCD
+CrsrHm CON $02 ' move cursor to home position
+CrsrLf CON $10 ' move cursor left
+CrsrRt CON $14 ' move cursor right
+DispLf CON $18 ' shift displayed chars left
+DispRt CON $1C ' shift displayed chars right
+DDRam CON $80 ' Display Data RAM control
+CGRam CON $40 ' Custom character RAM control
+NumAnswers CON 6 ' 6 possible answers
+_g CON $E7 ' DDROM addresses of descenders
+_j CON $EA
+_p CON $F0
+_q CON $F1
+_y CON $F9
+' ------------------------------------------------------------------------------
+' Variables
+' ------------------------------------------------------------------------------
+char VAR Byte ' character sent to LCD
+addr VAR Byte ' message address
+swData VAR Byte ' workspace for BUTTON
+answer VAR Nib ' answer pointer
+clock VAR Nib ' animation clock
+pntr VAR Nib ' pointer to animation character
+' ------------------------------------------------------------------------------
+' EEPROM Data
+' ------------------------------------------------------------------------------
+Prompt DATA "Ask a question", 0
+Ans0 DATA "Definitely YES", 0
+Ans1 DATA "Possible...", 0
+Ans2 DATA "Definitely NO", 0
+Ans3 DATA "Not likely...", 0
+Ans4 DATA "Answer uncertain", 0
+Ans5 DATA "Please ask again", 0
+' ------------------------------------------------------------------------------
+' Initialization
+' ------------------------------------------------------------------------------
+Initialize:
+DirL = %11111101 ' setup pins for LCD
+LCD_Init:
+PAUSE 500 ' let the LCD settle
+LCDbus = %0011 ' 8-bit mode
+PULSOUT E, 1
+PAUSE 5
+PULSOUT E, 1
+PULSOUT E, 1
+LCDbus = %0010 ' 4-bit mode
+PULSOUT E, 1
+char = %00100100 ' select 5x10 font
+GOSUB LCD_Command
+char = %00001100 ' disp on, crsr off, blink off
+GOSUB LCD_Command
+char = %00000110 ' inc crsr, no disp shift
+GOSUB LCD_Command
+' ------------------------------------------------------------------------------
+' Program Code
+' ------------------------------------------------------------------------------
+Main:
+char = ClrLCD ' clear the LCD
+GOSUB LCD_Command
+addr = Prompt
+GOSUB Show_Message ' print prompt
+Rollem:
+GOSUB Shuffle ' shuffle until button pressed
+PAUSE 5
+BUTTON AskButton, 0, 255, 10, swData, 1, Show_Answer
+GOTO Rollem
+Show_Answer:
+' get address of answer message
+LOOKUP answer, [Ans0, Ans1, Ans2, Ans3, Ans4, Ans5], addr
+char = ClrLCD
+GOSUB LCD_Command
+GOSUB Show_Message
+PAUSE 2000 ' give time to read answer
+GOTO Main ' do it all over
+END
+' ------------------------------------------------------------------------------
+' Subroutines
+' ------------------------------------------------------------------------------
+LCD_Command:
+LOW RS ' enter command mode
+LCD_Write:
+LCDbus = char.HighNib ' output high nibble
+PULSOUT E,1 ' strobe the Enable line
+LCDbus = char.LowNib ' output low nibble
+PULSOUT E,1
+HIGH RS ' return to character mode
+RETURN
+Show_Message:
+READ addr,char ' read a character from EEPROM
+IF (char = 0) THEN Msg_Done ' if 0, message is complete
+GOSUB Translate ' fix letters with descenders
+GOSUB LCD_Write ' write the character
+addr = addr + 1 ' point to next character
+GOTO Show_Message
+Msg_Done:
+RETURN
+' convert to descender font
+' - does not change other characters
+Translate:
+LOOKDOWN char, ["g", "j", "q", "p", "y"], char
+LOOKUP char, [_g, _j, _q, _p, _y], char
+RETURN
+Shuffle:
+answer = (answer + 1) // NumAnswers ' update answer pointer
+clock = (clock + 1) // 15 ' update pointer clock
+IF (clock > 0) THEN Shuffle_Done ' time to update animation?
+char = DDRam + 15 ' yes, write at pos 15
+GOSUB LCD_Command
+LOOKUP pntr, ["-+|*"], char ' load animation character
+GOSUB LCD_Write ' write it
+pntr = (pntr + 1) // 4 ' update animation char
+Shuffle_Done:
+RETURN
